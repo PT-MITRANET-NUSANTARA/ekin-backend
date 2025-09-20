@@ -5,6 +5,10 @@ export interface IdAsnConfig {
   jwtUrl: string;
   clientId: string;
   responseType: string;
+  apiUrl: string;
+  endpoints: {
+    [key: string]: string;
+  };
 }
 
 export default registerAs(
@@ -18,5 +22,16 @@ export default registerAs(
       'https://account.idasn.pohuwatokab.go.id/oauth/openid/certs',
     clientId: process.env.IDASN_CLIENT_ID || 'ekin',
     responseType: process.env.IDASN_RESPONSE_TYPE || 'token',
+    apiUrl:
+      process.env.IDASN_API_URL ||
+      'https://api.idasn.pohuwatokab.go.id/int/ekin',
+    endpoints: {
+      userProfile: '/user/profile',
+      userList: '/user/list',
+      attendance: '/attendance',
+      performance: '/performance',
+      unorAll: '/unor/all',
+      // Tambahkan endpoint lainnya sesuai kebutuhan
+    },
   }),
 );

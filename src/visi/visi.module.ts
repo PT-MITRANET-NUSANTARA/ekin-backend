@@ -6,10 +6,7 @@ import { Visi } from './entities/visi.entity';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Visi]),
-    AuthModule
-  ],
+  imports: [TypeOrmModule.forFeature([Visi]), AuthModule],
   controllers: [VisiController],
   providers: [VisiService],
 })

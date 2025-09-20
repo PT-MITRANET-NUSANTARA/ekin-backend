@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { VisiModule } from './visi/visi.module';
 import { MisiModule } from './misi/misi.module';
+import { UnitKerjaModule } from './unit-kerja/unit-kerja.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { MisiModule } from './misi/misi.module';
     AuthModule,
     VisiModule,
     MisiModule,
+    UnitKerjaModule,
   ],
   controllers: [AppController],
   providers: [

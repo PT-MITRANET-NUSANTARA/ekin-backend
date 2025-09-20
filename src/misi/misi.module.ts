@@ -6,10 +6,7 @@ import { Misi } from './entities/misi.entity';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Misi]),
-    AuthModule
-  ],
+  imports: [TypeOrmModule.forFeature([Misi]), AuthModule],
   controllers: [MisiController],
   providers: [MisiService],
 })

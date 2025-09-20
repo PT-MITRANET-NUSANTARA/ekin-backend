@@ -29,6 +29,151 @@
   ],
   "item": [
     {
+      "name": "Unit Kerja",
+      "item": [
+        {
+          "name": "Get All Unit Kerja",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/unit-kerja",
+              "host": ["{{base_url}}"],
+              "path": ["unit-kerja"]
+            },
+            "description": "Get all unit kerja data from IDASN API"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unit Kerja By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/unit-kerja/123",
+              "host": ["{{base_url}}"],
+              "path": ["unit-kerja", "123"]
+            },
+            "description": "Get a specific unit kerja by ID Simpeg"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unit Kerja By SAPK ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/unit-kerja/sapk/456",
+              "host": ["{{base_url}}"],
+              "path": ["unit-kerja", "sapk", "456"]
+            },
+            "description": "Get a specific unit kerja by ID SAPK"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Unit Organisasi",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/unit-kerja/123/unor",
+              "host": ["{{base_url}}"],
+              "path": ["unit-kerja", "123", "unor"]
+            },
+            "description": "Get all unit organisasi data for a specific unit kerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unit Organisasi By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/unit-kerja/123/unor/abc123",
+              "host": ["{{base_url}}"],
+              "path": ["unit-kerja", "123", "unor", "abc123"]
+            },
+            "description": "Get a specific unit organisasi by ID for a unit kerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unit Organisasi Hierarchy",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/unit-kerja/123/unor-hierarchy",
+              "host": ["{{base_url}}"],
+              "path": ["unit-kerja", "123", "unor-hierarchy"]
+            },
+            "description": "Get complete hierarchy structure of unit organisasi for a specific unit kerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Jabatan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/unit-kerja/123/jabatan",
+              "host": ["{{base_url}}"],
+              "path": ["unit-kerja", "123", "jabatan"]
+            },
+            "description": "Get all jabatan data for a specific unit kerja"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "App",
       "item": [
         {

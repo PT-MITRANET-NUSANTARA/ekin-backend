@@ -41,19 +41,19 @@ export class MisiService {
 
       // Build query with search filter if provided
       let whereCondition: any = {};
-      
+
       if (search) {
         whereCondition = [
-          { name: Like(`%${search}%`) }, 
-          { desc: Like(`%${search}%`) }
+          { name: Like(`%${search}%`) },
+          { desc: Like(`%${search}%`) },
         ];
       }
-      
+
       // Filter by visi_id if provided
       if (visi_id) {
         whereCondition = {
           ...whereCondition,
-          visi_id
+          visi_id,
         };
       }
 
@@ -101,9 +101,9 @@ export class MisiService {
 
   async findOne(id: string): Promise<ApiResponse> {
     try {
-      const misi = await this.misiRepository.findOne({ 
+      const misi = await this.misiRepository.findOne({
         where: { id },
-        relations: ['visi']
+        relations: ['visi'],
       });
 
       if (!misi) {
@@ -145,9 +145,9 @@ export class MisiService {
       }
 
       await this.misiRepository.update(id, updateMisiDto);
-      const updatedMisi = await this.misiRepository.findOne({ 
+      const updatedMisi = await this.misiRepository.findOne({
         where: { id },
-        relations: ['visi']
+        relations: ['visi'],
       });
 
       return {

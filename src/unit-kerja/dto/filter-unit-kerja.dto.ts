@@ -1,7 +1,7 @@
-import { IsOptional, IsString, IsNumber, Min, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class FilterMisiDto {
+export class FilterUnitKerjaDto {
   @IsOptional()
   @IsString()
   search?: string;
@@ -17,8 +17,4 @@ export class FilterMisiDto {
   @IsNumber()
   @Min(1)
   perPage?: number = 10;
-
-  @IsOptional()
-  @IsUUID()
-  visi_id?: string;
 }
