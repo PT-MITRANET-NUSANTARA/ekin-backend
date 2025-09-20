@@ -252,6 +252,149 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Misi",
+      "item": [
+        {
+          "name": "Get All Misi",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/misi?page=1&perPage=10&search=&visi_id=",
+              "host": ["{{base_url}}"],
+              "path": ["misi"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Current page number"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Number of items per page"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search term for filtering by name or description"
+                },
+                {
+                  "key": "visi_id",
+                  "value": "",
+                  "description": "Filter misi by visi ID"
+                }
+              ]
+            },
+            "description": "Get all misi with pagination, search filter, and visi_id filter"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Misi By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/misi/1",
+              "host": ["{{base_url}}"],
+              "path": ["misi", "1"]
+            },
+            "description": "Get a specific misi by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Misi",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Misi Baru\",\n  \"desc\": \"Deskripsi misi baru\",\n  \"visi_id\": \"uuid-visi-id-here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/misi",
+              "host": ["{{base_url}}"],
+              "path": ["misi"]
+            },
+            "description": "Create a new misi"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Misi",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Misi Terupdate\",\n  \"desc\": \"Deskripsi misi yang sudah diupdate\",\n  \"visi_id\": \"uuid-visi-id-here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/misi/1",
+              "host": ["{{base_url}}"],
+              "path": ["misi", "1"]
+            },
+            "description": "Update an existing misi by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Misi",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/misi/1",
+              "host": ["{{base_url}}"],
+              "path": ["misi", "1"]
+            },
+            "description": "Delete a misi by ID"
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [

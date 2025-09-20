@@ -8,6 +8,7 @@ import { databaseConfig, appConfig, idAsnConfig } from './config';
 import { AuthModule } from './auth/auth.module';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { VisiModule } from './visi/visi.module';
+import { MisiModule } from './misi/misi.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { VisiModule } from './visi/visi.module';
     }),
     AuthModule,
     VisiModule,
+    MisiModule,
   ],
   controllers: [AppController],
   providers: [
