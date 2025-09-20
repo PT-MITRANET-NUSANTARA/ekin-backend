@@ -6,6 +6,7 @@ export interface IdAsnConfig {
   clientId: string;
   responseType: string;
   apiUrl: string;
+  fotoUrl: string;
   endpoints: {
     [key: string]: string;
   };
@@ -25,6 +26,9 @@ export default registerAs(
     apiUrl:
       process.env.IDASN_API_URL ||
       'https://api.idasn.pohuwatokab.go.id/int/ekin',
+    fotoUrl:
+      process.env.IDASN_FOTO_URL ||
+      'https://api.idasn.pohuwatokab.go.id/idasn/photos',
     endpoints: {
       userProfile: '/user/profile',
       userList: '/user/list',
