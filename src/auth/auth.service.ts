@@ -19,11 +19,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async getPhoto(
-    id: string,
-    token: string,
-    res: Response,
-  ): Promise<void> {
+  async getPhoto(id: string, token: string, res: Response): Promise<void> {
     const fotoUrl = this.configService.get<string>('idasn.fotoUrl');
 
     if (!fotoUrl) {
@@ -50,7 +46,7 @@ export class AuthService {
 
       // Set the content type from the response
       const contentType = response.headers['content-type'] || 'image/png';
-      
+
       // Set all necessary headers for proper image display
       res.set({
         'Content-Type': contentType,
