@@ -5,13 +5,16 @@ import {
   Headers,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UnitKerjaService } from './unit-kerja.service';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { FilterUnitKerjaDto } from './dto/filter-unit-kerja.dto';
 import { FilterUnitOrganisasiDto } from './dto/filter-unit-organisasi.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('unit-kerja')
+@UseGuards(JwtAuthGuard)
 export class UnitKerjaController {
   constructor(private readonly unitKerjaService: UnitKerjaService) {}
 

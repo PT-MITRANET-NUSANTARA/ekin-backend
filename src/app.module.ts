@@ -10,6 +10,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { VisiModule } from './visi/visi.module';
 import { MisiModule } from './misi/misi.module';
 import { UnitKerjaModule } from './unit-kerja/unit-kerja.module';
+import { RenstraModule } from './renstra/renstra.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UnitKerjaModule } from './unit-kerja/unit-kerja.module';
     VisiModule,
     MisiModule,
     UnitKerjaModule,
+    RenstraModule,
   ],
   controllers: [AppController],
   providers: [
