@@ -30,9 +30,7 @@ export class AuthController {
       code: HttpStatus.OK,
       status: true,
       message: 'Profile berhasil diambil',
-      data: {
-        user: user.mapData,
-      },
+      data: user.mapData,
     };
   }
 
@@ -46,7 +44,8 @@ export class AuthController {
       message: 'Token valid',
       data: {
         valid: true,
-        user: user.mapData,
+        id: user.mapData.nipBaru,
+        ...user.mapData,
       },
     };
   }

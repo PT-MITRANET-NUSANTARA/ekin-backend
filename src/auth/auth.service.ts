@@ -46,7 +46,7 @@ export class AuthService {
           code: HttpStatus.UNAUTHORIZED,
           status: false,
           message: data.message || 'Authentication failed',
-          data: { token: null },
+          data: null,
         };
       }
 
@@ -58,16 +58,14 @@ export class AuthService {
         code: HttpStatus.OK,
         status: true,
         message: 'Login berhasil',
-        data: {
-          token: token || null,
-        },
+        data: token || null,
       };
     } catch (error) {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
         message: `Failed to authenticate: ${error.message}`,
-        data: { token: null },
+        data: null,
       };
     }
   }

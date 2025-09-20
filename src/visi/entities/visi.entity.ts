@@ -6,22 +6,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('users')
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ unique: true })
-  email: string;
+@Entity('visi')
+export class Visi {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
 
-  @Column({ nullable: true })
-  phone: string;
-
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ nullable: true, default: '' })
+  desc: string;
 
   @CreateDateColumn()
   createdAt: Date;

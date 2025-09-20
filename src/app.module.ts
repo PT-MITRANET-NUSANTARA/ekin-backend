@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { databaseConfig, appConfig, idAsnConfig } from './config';
 import { AuthModule } from './auth/auth.module';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { VisiModule } from './visi/visi.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
       inject: [ConfigService],
     }),
     AuthModule,
+    VisiModule,
   ],
   controllers: [AppController],
   providers: [
