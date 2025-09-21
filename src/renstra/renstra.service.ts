@@ -7,7 +7,10 @@ import { FilterRenstraDto } from './dto/filter-renstra.dto';
 import { Renstra } from './entities/renstra.entity';
 import { Misi } from '../misi/entities/misi.entity';
 import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
-import { ApiResponse } from '../common/interfaces/api-response.interface';
+import {
+  ApiResponse,
+  PaginationMeta,
+} from '../common/interfaces/api-response.interface';
 
 @Injectable()
 export class RenstraService {
@@ -151,17 +154,19 @@ export class RenstraService {
         }),
       );
 
+      const pagination: PaginationMeta = {
+        current_page: page,
+        per_page: perPage,
+        total,
+        last_page: lastPage,
+      };
+
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Berhasil mengambil data renstra',
         data: transformedRenstraList,
-        pagination: {
-          current_page: page,
-          per_page: perPage,
-          total,
-          last_page: lastPage,
-        },
+        pagination,
       };
     } catch (error) {
       return {

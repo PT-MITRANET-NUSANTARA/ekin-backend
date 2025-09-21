@@ -29,6 +29,175 @@
   ],
   "item": [
     {
+      "name": "Tujuan",
+      "item": [
+        {
+          "name": "Get All Tujuan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tujuan?search=&unit_id=&renstra_id=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["tujuan"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search term for filtering by name"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "",
+                  "description": "Filter tujuan by unit ID"
+                },
+                {
+                  "key": "renstra_id",
+                  "value": "",
+                  "description": "Filter tujuan by renstra ID"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Current page number"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Number of items per page"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data tujuan dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tujuan By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tujuan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["tujuan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Tujuan"
+                }
+              ]
+            },
+            "description": "Mendapatkan tujuan berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Tujuan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tujuan Baru\",\n  \"renstra_id\": \"uuid-renstra\",\n  \"unit_id\": \"id-unit\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja 1\",\n      \"target\": \"100\",\n      \"satuan\": \"%\"\n    },\n    {\n      \"name\": \"Indikator Kinerja 2\",\n      \"target\": \"50\",\n      \"satuan\": \"Dokumen\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tujuan",
+              "host": ["{{base_url}}"],
+              "path": ["tujuan"]
+            },
+            "description": "Membuat tujuan baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Tujuan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tujuan Diperbarui\",\n  \"renstra_id\": \"uuid-renstra\",\n  \"unit_id\": \"id-unit\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Diperbarui\",\n      \"target\": \"80\",\n      \"satuan\": \"%\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tujuan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["tujuan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Tujuan"
+                }
+              ]
+            },
+            "description": "Memperbarui tujuan berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Tujuan",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tujuan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["tujuan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Tujuan"
+                }
+              ]
+            },
+            "description": "Menghapus tujuan berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Auth",
       "item": [
         {

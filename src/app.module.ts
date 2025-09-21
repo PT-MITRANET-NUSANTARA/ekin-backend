@@ -11,6 +11,8 @@ import { VisiModule } from './visi/visi.module';
 import { MisiModule } from './misi/misi.module';
 import { UnitKerjaModule } from './unit-kerja/unit-kerja.module';
 import { RenstraModule } from './renstra/renstra.module';
+import { TujuanModule } from './tujuan/tujuan.module';
+import { IndikatorKinerjaModule } from './indikator-kinerja/indikator-kinerja.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { RenstraModule } from './renstra/renstra.module';
     MisiModule,
     UnitKerjaModule,
     RenstraModule,
+    TujuanModule,
+    IndikatorKinerjaModule,
   ],
   controllers: [AppController],
   providers: [
