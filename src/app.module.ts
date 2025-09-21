@@ -13,6 +13,7 @@ import { UnitKerjaModule } from './unit-kerja/unit-kerja.module';
 import { RenstraModule } from './renstra/renstra.module';
 import { TujuanModule } from './tujuan/tujuan.module';
 import { IndikatorKinerjaModule } from './indikator-kinerja/indikator-kinerja.module';
+import { ProgramModule } from './program/program.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { IndikatorKinerjaModule } from './indikator-kinerja/indikator-kinerja.mo
     RenstraModule,
     TujuanModule,
     IndikatorKinerjaModule,
+    ProgramModule,
   ],
   controllers: [AppController],
   providers: [

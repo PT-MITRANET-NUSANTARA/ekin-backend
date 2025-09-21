@@ -29,6 +29,175 @@
   ],
   "item": [
     {
+      "name": "Program",
+      "item": [
+        {
+          "name": "Get All Program",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/program?search=&unit_id=&tujuan_id=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["program"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search term for filtering by name"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "",
+                  "description": "Filter program by unit ID"
+                },
+                {
+                  "key": "tujuan_id",
+                  "value": "",
+                  "description": "Filter program by tujuan ID"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Current page number (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Number of items per page (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data program dengan filter dan pagination sesuai dengan FilterProgramDto"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Program By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/program/:id",
+              "host": ["{{base_url}}"],
+              "path": ["program", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Program"
+                }
+              ]
+            },
+            "description": "Mendapatkan program berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Program",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Program Baru\",\n  \"unit_id\": \"id-unit\",\n  \"total_anggaran\": 1000000,\n  \"tujuan_id\": \"uuid-tujuan\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Program 1\",\n      \"target\": \"100\",\n      \"satuan\": \"%\"\n    },\n    {\n      \"name\": \"Indikator Kinerja Program 2\",\n      \"target\": \"50\",\n      \"satuan\": \"Dokumen\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/program",
+              "host": ["{{base_url}}"],
+              "path": ["program"]
+            },
+            "description": "Membuat program baru dengan indikator kinerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Program",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Program Diperbarui\",\n  \"unit_id\": \"id-unit\",\n  \"total_anggaran\": 2000000,\n  \"tujuan_id\": \"uuid-tujuan\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Program Diperbarui\",\n      \"target\": \"80\",\n      \"satuan\": \"%\"\n    },\n    {\n      \"name\": \"Indikator Kinerja Program Baru\",\n      \"target\": \"25\",\n      \"satuan\": \"Dokumen\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/program/:id",
+              "host": ["{{base_url}}"],
+              "path": ["program", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Program"
+                }
+              ]
+            },
+            "description": "Memperbarui program dan indikator kinerja berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Program",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/program/:id",
+              "host": ["{{base_url}}"],
+              "path": ["program", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Program"
+                }
+              ]
+            },
+            "description": "Menghapus program berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Tujuan",
       "item": [
         {

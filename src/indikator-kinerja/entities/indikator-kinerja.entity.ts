@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Tujuan } from '../../tujuan/entities/tujuan.entity';
+import { Program } from '../../program/entities/program.entity';
 
 @Entity('indikator_kinerja')
 export class IndikatorKinerja {
@@ -23,9 +24,17 @@ export class IndikatorKinerja {
   @Column()
   satuan: string;
 
-  @ManyToOne(() => Tujuan, (tujuan) => tujuan.indikator_kinerja_id)
+  @ManyToOne(() => Tujuan, (tujuan) => tujuan.indikator_kinerja_id, {
+    nullable: true,
+  })
   @JoinColumn({ name: 'tujuan_id' })
   tujuan: Tujuan;
+
+  @ManyToOne(() => Program, (program) => program.indikator_kinerja_id, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'program_id' })
+  program: Program;
 
   @CreateDateColumn()
   createdAt: Date;
