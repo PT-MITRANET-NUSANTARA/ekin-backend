@@ -29,6 +29,175 @@
   ],
   "item": [
     {
+      "name": "Sub-Kegiatan",
+      "item": [
+        {
+          "name": "Get All Sub-Kegiatan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sub-kegiatan?name=&unit_id=&kegiatan_id=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["sub-kegiatan"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "",
+                  "description": "Filter berdasarkan nama sub-kegiatan"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "",
+                  "description": "Filter berdasarkan unit ID"
+                },
+                {
+                  "key": "kegiatan_id",
+                  "value": "",
+                  "description": "Filter berdasarkan kegiatan ID"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data sub-kegiatan dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sub-Kegiatan By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sub-kegiatan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["sub-kegiatan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Sub-Kegiatan"
+                }
+              ]
+            },
+            "description": "Mendapatkan sub-kegiatan berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Sub-Kegiatan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama Sub-Kegiatan\",\n  \"unit_id\": \"id-unit\",\n  \"total_anggaran\": 1000000,\n  \"kegiatan_id\": \"uuid-kegiatan\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Sub-Kegiatan 1\",\n      \"target\": \"90\",\n      \"satuan\": \"%\"\n    },\n    {\n      \"name\": \"Indikator Kinerja Sub-Kegiatan 2\",\n      \"target\": \"10\",\n      \"satuan\": \"Dokumen\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sub-kegiatan",
+              "host": ["{{base_url}}"],
+              "path": ["sub-kegiatan"]
+            },
+            "description": "Membuat sub-kegiatan baru dengan indikator kinerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Sub-Kegiatan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sub-Kegiatan Diperbarui\",\n  \"unit_id\": \"id-unit\",\n  \"total_anggaran\": 2000000,\n  \"kegiatan_id\": \"uuid-kegiatan\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Sub-Kegiatan Diperbarui\",\n      \"target\": \"80\",\n      \"satuan\": \"%\"\n    },\n    {\n      \"name\": \"Indikator Kinerja Sub-Kegiatan Baru\",\n      \"target\": \"25\",\n      \"satuan\": \"Dokumen\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sub-kegiatan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["sub-kegiatan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Sub-Kegiatan"
+                }
+              ]
+            },
+            "description": "Memperbarui sub-kegiatan berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Sub-Kegiatan",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sub-kegiatan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["sub-kegiatan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Sub-Kegiatan"
+                }
+              ]
+            },
+            "description": "Menghapus sub-kegiatan berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Kegiatan",
       "item": [
         {
