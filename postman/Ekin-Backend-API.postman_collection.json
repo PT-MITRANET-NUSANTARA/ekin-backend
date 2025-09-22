@@ -29,6 +29,175 @@
   ],
   "item": [
     {
+      "name": "Kegiatan",
+      "item": [
+        {
+          "name": "Get All Kegiatan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kegiatan?name=&unit_id=&program_id=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["kegiatan"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "",
+                  "description": "Filter berdasarkan nama kegiatan"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "",
+                  "description": "Filter berdasarkan unit ID"
+                },
+                {
+                  "key": "program_id",
+                  "value": "",
+                  "description": "Filter berdasarkan program ID"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data kegiatan dengan filter dan pagination sesuai dengan FilterKegiatanDto"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Kegiatan By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kegiatan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["kegiatan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Kegiatan"
+                }
+              ]
+            },
+            "description": "Mendapatkan kegiatan berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Kegiatan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama Kegiatan\",\n  \"unit_id\": \"id-unit\",\n  \"total_anggaran\": 1000000,\n  \"program_id\": \"uuid-program\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Kegiatan 1\",\n      \"target\": \"90\",\n      \"satuan\": \"%\"\n    },\n    {\n      \"name\": \"Indikator Kinerja Kegiatan 2\",\n      \"target\": \"10\",\n      \"satuan\": \"Dokumen\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/kegiatan",
+              "host": ["{{base_url}}"],
+              "path": ["kegiatan"]
+            },
+            "description": "Membuat kegiatan baru dengan indikator kinerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Kegiatan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kegiatan Diperbarui\",\n  \"unit_id\": \"id-unit\",\n  \"total_anggaran\": 2000000,\n  \"program_id\": \"uuid-program\",\n  \"indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Kegiatan Diperbarui\",\n      \"target\": \"80\",\n      \"satuan\": \"%\"\n    },\n    {\n      \"name\": \"Indikator Kinerja Kegiatan Baru\",\n      \"target\": \"25\",\n      \"satuan\": \"Dokumen\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/kegiatan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["kegiatan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Kegiatan"
+                }
+              ]
+            },
+            "description": "Memperbarui kegiatan dan indikator kinerja berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Kegiatan",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kegiatan/:id",
+              "host": ["{{base_url}}"],
+              "path": ["kegiatan", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID Kegiatan"
+                }
+              ]
+            },
+            "description": "Menghapus kegiatan berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Program",
       "item": [
         {

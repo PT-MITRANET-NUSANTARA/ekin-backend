@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Tujuan } from '../../tujuan/entities/tujuan.entity';
 import { Program } from '../../program/entities/program.entity';
+import { Kegiatan } from '../../kegiatan/entities/kegiatan.entity';
 
 @Entity('indikator_kinerja')
 export class IndikatorKinerja {
@@ -35,6 +36,12 @@ export class IndikatorKinerja {
   })
   @JoinColumn({ name: 'program_id' })
   program: Program;
+
+  @ManyToOne(() => Kegiatan, (kegiatan) => kegiatan.indikator_kinerja_id, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'kegiatan_id' })
+  kegiatan: Kegiatan;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -100,12 +100,11 @@ export class ProgramService {
         queryBuilder.andWhere('program.tujuan_id = :tujuan_id', { tujuan_id });
       }
 
-
       // Apply pagination
       const total = await queryBuilder.getCount();
 
       // Get paginated results
-      const lastPage = Math.ceil(total/perPage);
+      const lastPage = Math.ceil(total / perPage);
 
       const programList = await queryBuilder
         .skip((page - 1) * perPage)
@@ -122,7 +121,7 @@ export class ProgramService {
           );
           return {
             ...item,
-            unit: unitResponse.data,
+            unit_id: unitResponse.data,
           };
         }),
       );
@@ -175,7 +174,7 @@ export class ProgramService {
 
       const transformedProgram = {
         ...program,
-        unit: unitResponse.data,
+        unit_id: unitResponse.data,
       };
 
       return {
