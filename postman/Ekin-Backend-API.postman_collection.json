@@ -29,6 +29,189 @@
   ],
   "item": [
     {
+      "name": "SKP",
+      "item": [
+        {
+          "name": "Get All SKP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/skp?page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["skp"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data SKP dengan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get SKP By User ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/skp/user/:userId",
+              "host": ["{{base_url}}"],
+              "path": ["skp", "user", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "",
+                  "description": "ID pengguna"
+                }
+              ]
+            },
+            "description": "Mendapatkan SKP berdasarkan ID pengguna"
+          },
+          "response": []
+        },
+        {
+          "name": "Get SKP By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/skp/:id",
+              "host": ["{{base_url}}"],
+              "path": ["skp", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID SKP"
+                }
+              ]
+            },
+            "description": "Mendapatkan detail SKP berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create SKP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"periode_start\": \"2023-01-01\",\n    \"periode_end\": \"2023-12-31\",\n    \"user_id\": \"1\",\n    \"unit_id\": \"1\",\n    \"pendekatan\": \"KUANTITATIF\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/skp",
+              "host": ["{{base_url}}"],
+              "path": ["skp"]
+            },
+            "description": "Membuat SKP baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Update SKP",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"periode_start\": \"2023-01-01\",\n    \"periode_end\": \"2023-12-31\",\n    \"status\": \"SUBMITTED\",\n    \"pendekatan\": \"KUANTITATIF\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/skp/:id",
+              "host": ["{{base_url}}"],
+              "path": ["skp", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID SKP"
+                }
+              ]
+            },
+            "description": "Memperbarui SKP berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete SKP",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/skp/:id",
+              "host": ["{{base_url}}"],
+              "path": ["skp", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID SKP"
+                }
+              ]
+            },
+            "description": "Menghapus SKP berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Periode Penilaian",
       "item": [
         {

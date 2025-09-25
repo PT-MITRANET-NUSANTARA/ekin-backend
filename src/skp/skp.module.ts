@@ -1,0 +1,17 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SkpService } from './skp.service';
+import { SkpController } from './skp.controller';
+import { Skp } from './entities/skp.entity';
+import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([Skp]),
+    UnitKerjaModule,
+  ],
+  controllers: [SkpController],
+  providers: [SkpService],
+  exports: [SkpService],
+})
+export class SkpModule {}
