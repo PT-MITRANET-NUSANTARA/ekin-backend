@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Kegiatan } from '../../kegiatan/entities/kegiatan.entity';
 import { IndikatorKinerja } from '../../indikator-kinerja/entities/indikator-kinerja.entity';
+import { Rkt } from '../../rkt/entities/rkt.entity';
 
 @Entity('sub_kegiatan')
 export class SubKegiatan {
@@ -28,6 +29,10 @@ export class SubKegiatan {
   @ManyToOne(() => Kegiatan)
   @JoinColumn({ name: 'kegiatan_id' })
   kegiatan_id: Kegiatan;
+
+  @ManyToOne(() => Rkt, (rkt) => rkt.sub_kegiatan_id)
+  @JoinColumn({ name: 'rkt_id' })
+  rkt: Rkt;
 
   @OneToMany(
     () => IndikatorKinerja,

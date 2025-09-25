@@ -10,6 +10,7 @@ import {
 import { Tujuan } from '../../tujuan/entities/tujuan.entity';
 import { Program } from '../../program/entities/program.entity';
 import { Kegiatan } from '../../kegiatan/entities/kegiatan.entity';
+import { Rkt } from '../../rkt/entities/rkt.entity';
 
 @Entity('indikator_kinerja')
 export class IndikatorKinerja {
@@ -42,6 +43,27 @@ export class IndikatorKinerja {
   })
   @JoinColumn({ name: 'kegiatan_id' })
   kegiatan: Kegiatan;
+
+  @ManyToOne(() => Rkt, (rkt) => rkt.input_indikator_kinerja, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'rkt_input_id' })
+  rkt_input: Rkt;
+
+  @ManyToOne(() => Rkt, (rkt) => rkt.output_indikator_kinerja, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'rkt_output_id' })
+  rkt_output: Rkt;
+
+  @ManyToOne(() => Rkt, (rkt) => rkt.outcome_indikator_kinerja, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'rkt_outcome_id' })
+  rkt_outcome: Rkt;
 
   @CreateDateColumn()
   createdAt: Date;

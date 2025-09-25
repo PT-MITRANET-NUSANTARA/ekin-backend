@@ -16,6 +16,7 @@ import { IndikatorKinerjaModule } from './indikator-kinerja/indikator-kinerja.mo
 import { ProgramModule } from './program/program.module';
 import { KegiatanModule } from './kegiatan/kegiatan.module';
 import { SubKegiatanModule } from './sub-kegiatan/sub-kegiatan.module';
+import { RktModule } from './rkt/rkt.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { SubKegiatanModule } from './sub-kegiatan/sub-kegiatan.module';
     ProgramModule,
     KegiatanModule,
     SubKegiatanModule,
+    RktModule,
   ],
   controllers: [AppController],
   providers: [
