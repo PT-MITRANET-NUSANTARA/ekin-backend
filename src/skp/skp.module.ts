@@ -4,12 +4,10 @@ import { SkpService } from './skp.service';
 import { SkpController } from './skp.controller';
 import { Skp } from './entities/skp.entity';
 import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Skp]),
-    UnitKerjaModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Skp]), UnitKerjaModule, AuthModule],
   controllers: [SkpController],
   providers: [SkpService],
   exports: [SkpService],

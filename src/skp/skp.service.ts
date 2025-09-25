@@ -82,57 +82,61 @@ export class SkpService {
     token: string,
   ): Promise<ApiResponse> {
     try {
-      const { page = 1, perPage = 10, user_id, unit_id, status, pendekatan } = filterSkpDto;
-      
+      const {
+        page = 1,
+        perPage = 10,
+        user_id,
+        unit_id,
+        status,
+        pendekatan,
+      } = filterSkpDto;
+
       // Buat query builder
       const queryBuilder = this.skpRepository.createQueryBuilder('skp');
-      
+
       // Tambahkan filter jika ada
       if (user_id) {
         queryBuilder.andWhere('skp.user_id = :user_id', { user_id });
       }
-      
+
       if (unit_id) {
         queryBuilder.andWhere('skp.unit_id = :unit_id', { unit_id });
       }
-      
+
       if (status) {
         queryBuilder.andWhere('skp.status = :status', { status });
       }
-      
+
       if (pendekatan) {
         queryBuilder.andWhere('skp.pendekatan = :pendekatan', { pendekatan });
       }
-      
+
       // Hitung total data
       const total = await queryBuilder.getCount();
       const totalPages = Math.ceil(total / perPage);
       const offset = (page - 1) * perPage;
-      
+
       // Tambahkan pagination
-      queryBuilder
-        .skip(offset)
-        .take(perPage)
-        .orderBy('skp.created_at', 'DESC');
-      
+      queryBuilder.skip(offset).take(perPage).orderBy('skp.created_at', 'DESC');
+
       // Ambil data
       const skpList = await queryBuilder.getMany();
-      
+
       // Tambahkan informasi unit kerja untuk setiap SKP
       const skpWithUnitPromises = skpList.map(async (skp) => {
         const unitResponse = await this.unitKerjaService.findById(
           Number(skp.unit_id),
           token,
         );
-        
+
         return {
           ...skp,
           unit: unitResponse.status ? unitResponse.data : null,
         };
       });
-      
+
       const skpWithUnit = await Promise.all(skpWithUnitPromises);
-      
+
       // Buat pagination meta
       const pagination = {
         current_page: Number(page),
@@ -140,7 +144,7 @@ export class SkpService {
         total: total,
         last_page: totalPages,
       };
-      
+
       return {
         code: HttpStatus.OK,
         status: true,
@@ -202,9 +206,9 @@ export class SkpService {
 
   async findByUserId(userId: string, token: string): Promise<ApiResponse> {
     try {
-      const skpList = await this.skpRepository.find({ 
+      const skpList = await this.skpRepository.find({
         where: { user_id: userId },
-        order: { created_at: 'DESC' }
+        order: { created_at: 'DESC' },
       });
 
       if (skpList.length === 0) {
@@ -222,7 +226,7 @@ export class SkpService {
           Number(skp.unit_id),
           token,
         );
-        
+
         return {
           ...skp,
           unit: unitResponse.status ? unitResponse.data : null,
@@ -363,4 +367,3 @@ export class SkpService {
     }
   }
 }
-

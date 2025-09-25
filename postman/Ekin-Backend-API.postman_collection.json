@@ -29,6 +29,212 @@
   ],
   "item": [
     {
+      "name": "Perjanjian Kinerja",
+      "item": [
+        {
+          "name": "Get All Perjanjian Kinerja",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/perjanjian-kinerja?page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["perjanjian-kinerja"],
+              "query": [
+                {
+                  "key": "unit_id",
+                  "value": "",
+                  "description": "Filter berdasarkan unit ID",
+                  "disabled": true
+                },
+                {
+                  "key": "unor_id",
+                  "value": "",
+                  "description": "Filter berdasarkan unor ID",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data perjanjian kinerja dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Perjanjian Kinerja By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/perjanjian-kinerja/:id",
+              "host": ["{{base_url}}"],
+              "path": ["perjanjian-kinerja", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID perjanjian kinerja"
+                }
+              ]
+            },
+            "description": "Mendapatkan detail perjanjian kinerja berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Perjanjian Kinerja",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "unit_id",
+                  "value": "1",
+                  "type": "text",
+                  "description": "ID unit kerja"
+                },
+                {
+                  "key": "unor_id",
+                  "value": "1",
+                  "type": "text",
+                  "description": "ID unit organisasi"
+                },
+                {
+                  "key": "skp_id",
+                  "value": "1",
+                  "type": "text",
+                  "description": "ID SKP"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "File perjanjian kinerja (PDF)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/perjanjian-kinerja",
+              "host": ["{{base_url}}"],
+              "path": ["perjanjian-kinerja"]
+            },
+            "description": "Membuat perjanjian kinerja baru dengan upload file"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Perjanjian Kinerja",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "unit_id",
+                  "value": "1",
+                  "type": "text",
+                  "description": "ID unit kerja (opsional)"
+                },
+                {
+                  "key": "unor_id",
+                  "value": "1",
+                  "type": "text",
+                  "description": "ID unit organisasi (opsional)"
+                },
+                {
+                  "key": "skp_id",
+                  "value": "1",
+                  "type": "text",
+                  "description": "ID SKP (opsional)"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "File perjanjian kinerja (PDF, opsional)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/perjanjian-kinerja/:id",
+              "host": ["{{base_url}}"],
+              "path": ["perjanjian-kinerja", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID perjanjian kinerja"
+                }
+              ]
+            },
+            "description": "Memperbarui perjanjian kinerja berdasarkan ID dengan upload file"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Perjanjian Kinerja",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/perjanjian-kinerja/:id",
+              "host": ["{{base_url}}"],
+              "path": ["perjanjian-kinerja", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID perjanjian kinerja"
+                }
+              ]
+            },
+            "description": "Menghapus perjanjian kinerja berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "SKP",
       "item": [
         {

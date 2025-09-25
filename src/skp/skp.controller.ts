@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Headers, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Headers,
+  UseGuards,
+} from '@nestjs/common';
 import { SkpService } from './skp.service';
 import { CreateSkpDto } from './dto/create-skp.dto';
 import { UpdateSkpDto } from './dto/update-skp.dto';
@@ -13,16 +24,16 @@ export class SkpController {
 
   @Post()
   create(
-    @Body() createSkpDto: CreateSkpDto, 
-    @Headers('authorization') token: string
+    @Body() createSkpDto: CreateSkpDto,
+    @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.create(createSkpDto, token);
   }
 
   @Get()
   findAll(
-    @Query() filterSkpDto: FilterSkpDto, 
-    @Headers('authorization') token: string
+    @Query() filterSkpDto: FilterSkpDto,
+    @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.findAll(filterSkpDto, token);
   }
@@ -30,24 +41,24 @@ export class SkpController {
   @Get('user/:userId')
   findByUserId(
     @Param('userId') userId: string,
-    @Headers('authorization') token: string
+    @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.findByUserId(userId, token);
   }
 
   @Get(':id')
   findOne(
-    @Param('id') id: string, 
-    @Headers('authorization') token: string
+    @Param('id') id: string,
+    @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.findOne(id, token);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string, 
-    @Body() updateSkpDto: UpdateSkpDto, 
-    @Headers('authorization') token: string
+    @Param('id') id: string,
+    @Body() updateSkpDto: UpdateSkpDto,
+    @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.update(id, updateSkpDto, token);
   }
@@ -55,7 +66,7 @@ export class SkpController {
   @Delete(':id')
   remove(
     @Param('id') id: string,
-    @Headers('authorization') token: string
+    @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.remove(id);
   }
