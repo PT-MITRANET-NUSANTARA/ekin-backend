@@ -17,6 +17,7 @@ import { ProgramModule } from './program/program.module';
 import { KegiatanModule } from './kegiatan/kegiatan.module';
 import { SubKegiatanModule } from './sub-kegiatan/sub-kegiatan.module';
 import { RktModule } from './rkt/rkt.module';
+import { PeriodePenilaianModule } from './periode-penilaian/periode-penilaian.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { RktModule } from './rkt/rkt.module';
     KegiatanModule,
     SubKegiatanModule,
     RktModule,
+    PeriodePenilaianModule,
   ],
   controllers: [AppController],
   providers: [

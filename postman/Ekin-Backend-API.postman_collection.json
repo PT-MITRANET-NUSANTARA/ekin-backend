@@ -29,6 +29,172 @@
   ],
   "item": [
     {
+      "name": "Periode Penilaian",
+      "item": [
+        {
+          "name": "Get All Periode Penilaian",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/periode-penilaian?name=&unit_id=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["periode-penilaian"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "",
+                  "description": "Filter berdasarkan nama periode"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "",
+                  "description": "Filter berdasarkan unit ID"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data periode penilaian dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Periode Penilaian By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/periode-penilaian/:id",
+              "host": ["{{base_url}}"],
+              "path": ["periode-penilaian", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID periode penilaian"
+                }
+              ]
+            },
+            "description": "Mendapatkan detail periode penilaian berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Periode Penilaian",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Periode Penilaian 2023\",\n    \"periode_start\": \"2023-01-01\",\n    \"periode_end\": \"2023-12-31\",\n    \"unit_id\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/periode-penilaian",
+              "host": ["{{base_url}}"],
+              "path": ["periode-penilaian"]
+            },
+            "description": "Membuat periode penilaian baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Periode Penilaian",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Periode Penilaian 2023 (Updated)\",\n    \"periode_start\": \"2023-01-01\",\n    \"periode_end\": \"2023-12-31\",\n    \"unit_id\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/periode-penilaian/:id",
+              "host": ["{{base_url}}"],
+              "path": ["periode-penilaian", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID periode penilaian"
+                }
+              ]
+            },
+            "description": "Memperbarui periode penilaian berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Periode Penilaian",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/periode-penilaian/:id",
+              "host": ["{{base_url}}"],
+              "path": ["periode-penilaian", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID periode penilaian"
+                }
+              ]
+            },
+            "description": "Menghapus periode penilaian berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "RKT",
       "item": [
         {
