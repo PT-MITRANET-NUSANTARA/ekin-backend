@@ -29,6 +29,180 @@
   ],
   "item": [
     {
+      "name": "RKT",
+      "item": [
+        {
+          "name": "Get All RKT",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rkt?name=&unit_id=&renstra_id=&label=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["rkt"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "",
+                  "description": "Filter berdasarkan nama RKT"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "",
+                  "description": "Filter berdasarkan unit ID"
+                },
+                {
+                  "key": "renstra_id",
+                  "value": "",
+                  "description": "Filter berdasarkan renstra ID"
+                },
+                {
+                  "key": "label",
+                  "value": "",
+                  "description": "Filter berdasarkan label (UTAMA/PENDUKUNG)"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data RKT dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get RKT By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rkt/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rkt", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID RKT"
+                }
+              ]
+            },
+            "description": "Mendapatkan RKT berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create RKT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama RKT\",\n  \"unit_id\": \"id-unit\",\n  \"label\": \"UTAMA\",\n  \"total_anggaran\": 1000000,\n  \"renstra_id\": \"uuid-renstra\",\n  \"sub_kegiatan_id\": [\"uuid-sub-kegiatan-1\", \"uuid-sub-kegiatan-2\"],\n  \"input_indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Input 1\",\n      \"target\": \"90\",\n      \"satuan\": \"%\"\n    }\n  ],\n  \"output_indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Output 1\",\n      \"target\": \"80\",\n      \"satuan\": \"Dokumen\"\n    }\n  ],\n  \"outcome_indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Outcome 1\",\n      \"target\": \"70\",\n      \"satuan\": \"Kegiatan\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rkt",
+              "host": ["{{base_url}}"],
+              "path": ["rkt"]
+            },
+            "description": "Membuat RKT baru dengan indikator kinerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Update RKT",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"RKT Diperbarui\",\n  \"unit_id\": \"id-unit\",\n  \"label\": \"PENDUKUNG\",\n  \"total_anggaran\": 2000000,\n  \"renstra_id\": \"uuid-renstra\",\n  \"sub_kegiatan_id\": [\"uuid-sub-kegiatan-1\", \"uuid-sub-kegiatan-3\"],\n  \"input_indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Input Diperbarui\",\n      \"target\": \"95\",\n      \"satuan\": \"%\"\n    }\n  ],\n  \"output_indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Output Diperbarui\",\n      \"target\": \"85\",\n      \"satuan\": \"Dokumen\"\n    }\n  ],\n  \"outcome_indikator_kinerja\": [\n    {\n      \"name\": \"Indikator Kinerja Outcome Diperbarui\",\n      \"target\": \"75\",\n      \"satuan\": \"Kegiatan\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rkt/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rkt", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID RKT"
+                }
+              ]
+            },
+            "description": "Memperbarui RKT berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete RKT",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rkt/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rkt", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID RKT"
+                }
+              ]
+            },
+            "description": "Menghapus RKT berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Sub-Kegiatan",
       "item": [
         {
