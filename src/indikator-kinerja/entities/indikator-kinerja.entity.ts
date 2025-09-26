@@ -28,18 +28,21 @@ export class IndikatorKinerja {
 
   @ManyToOne(() => Tujuan, (tujuan) => tujuan.indikator_kinerja_id, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'tujuan_id' })
   tujuan: Tujuan;
 
   @ManyToOne(() => Program, (program) => program.indikator_kinerja_id, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'program_id' })
   program: Program;
 
   @ManyToOne(() => Kegiatan, (kegiatan) => kegiatan.indikator_kinerja_id, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'kegiatan_id' })
   kegiatan: Kegiatan;
