@@ -20,6 +20,7 @@ import { RktModule } from './rkt/rkt.module';
 import { PeriodePenilaianModule } from './periode-penilaian/periode-penilaian.module';
 import { SkpModule } from './skp/skp.module';
 import { PerjanjianKinerjaModule } from './perjanjian-kinerja/perjanjian-kinerja.module';
+import { RhkModule } from './rhk/rhk.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { PerjanjianKinerjaModule } from './perjanjian-kinerja/perjanjian-kinerja
     PeriodePenilaianModule,
     SkpModule,
     PerjanjianKinerjaModule,
+    RhkModule,
   ],
   controllers: [AppController],
   providers: [

@@ -29,6 +29,213 @@
   ],
   "item": [
     {
+      "name": "RHK",
+      "item": [
+        {
+          "name": "Get All RHK",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk?page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["rhk"],
+              "query": [
+                {
+                  "key": "skp_id",
+                  "value": "",
+                  "description": "Filter berdasarkan SKP ID",
+                  "disabled": true
+                },
+                {
+                  "key": "jenis",
+                  "value": "",
+                  "description": "Filter berdasarkan jenis",
+                  "disabled": true
+                },
+                {
+                  "key": "rhk_atasan_id",
+                  "value": "",
+                  "description": "Filter berdasarkan RHK atasan ID",
+                  "disabled": true
+                },
+                {
+                  "key": "klasifikasi",
+                  "value": "",
+                  "description": "Filter berdasarkan klasifikasi",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (min: 1)"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman (min: 1)"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua data RHK dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get RHK By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rhk", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID RHK"
+                }
+              ]
+            },
+            "description": "Mendapatkan detail RHK berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get RHK By SKP ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk/skp/:skpId",
+              "host": ["{{base_url}}"],
+              "path": ["rhk", "skp", ":skpId"],
+              "variable": [
+                {
+                  "key": "skpId",
+                  "value": "",
+                  "description": "ID SKP"
+                }
+              ]
+            },
+            "description": "Mendapatkan daftar RHK berdasarkan SKP ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create RHK",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skp_id\": 1,\n  \"jenis\": \"utama\",\n  \"rhk_atasan_id\": null,\n  \"klasifikasi\": \"kinerja\",\n  \"keterangan\": \"Deskripsi RHK\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rhk",
+              "host": ["{{base_url}}"],
+              "path": ["rhk"]
+            },
+            "description": "Membuat RHK baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Update RHK",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skp_id\": 1,\n  \"jenis\": \"utama\",\n  \"rhk_atasan_id\": null,\n  \"klasifikasi\": \"kinerja\",\n  \"keterangan\": \"Deskripsi RHK yang diperbarui\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rhk/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rhk", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID RHK"
+                }
+              ]
+            },
+            "description": "Memperbarui RHK berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete RHK",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rhk", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID RHK"
+                }
+              ]
+            },
+            "description": "Menghapus RHK berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Perjanjian Kinerja",
       "item": [
         {

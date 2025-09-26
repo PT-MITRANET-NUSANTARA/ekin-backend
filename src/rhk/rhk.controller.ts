@@ -1,0 +1,70 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+  Headers,
+} from '@nestjs/common';
+import { RhkService } from './rhk.service';
+import { CreateRhkDto } from './dto/create-rhk.dto';
+import { UpdateRhkDto } from './dto/update-rhk.dto';
+import { FilterRhkDto } from './dto/filter-rhk.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiResponse } from '../common/interfaces/api-response.interface';
+
+@Controller('rhk')
+@UseGuards(JwtAuthGuard)
+export class RhkController {
+  constructor(private readonly rhkService: RhkService) {}
+
+  @Post()
+  create(
+    @Body() createRhkDto: CreateRhkDto,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.create(createRhkDto, token);
+  }
+
+  @Get()
+  findAll(
+    @Query() filterDto: FilterRhkDto,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.findAll(filterDto, token);
+  }
+
+  @Get('skp/:skpId')
+  findBySkpId(
+    @Param('skpId') skpId: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.findBySkpId(skpId, token);
+  }
+
+  @Get(':id')
+  findOne(
+    @Param('id') id: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.findOne(id, token);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateRhkDto: UpdateRhkDto,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.update(id, updateRhkDto, token);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<ApiResponse> {
+    return this.rhkService.remove(id);
+  }
+}
