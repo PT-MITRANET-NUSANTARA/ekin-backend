@@ -41,7 +41,8 @@ export class RhkPenilaianService {
 
   async findAll(skpId: string, token: string): Promise<ApiResponse> {
     try {
-      let query = this.rhkPenilaianRepository.createQueryBuilder('rhk_penilaian');
+      let query =
+        this.rhkPenilaianRepository.createQueryBuilder('rhk_penilaian');
 
       if (skpId) {
         query = query.where('rhk_penilaian.skp_id = :skpId', { skpId });
@@ -64,7 +65,7 @@ export class RhkPenilaianService {
       };
     }
   }
-  
+
   async findBySkpId(skpId: string, token: string): Promise<ApiResponse> {
     try {
       if (!skpId) {
@@ -75,7 +76,7 @@ export class RhkPenilaianService {
           data: null,
         };
       }
-      
+
       const rhkPenilaian = await this.rhkPenilaianRepository.find({
         where: { skp_id: skpId },
       });
@@ -90,7 +91,9 @@ export class RhkPenilaianService {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: error.message || 'Gagal mengambil daftar RHK Penilaian berdasarkan SKP ID',
+        message:
+          error.message ||
+          'Gagal mengambil daftar RHK Penilaian berdasarkan SKP ID',
         data: null,
       };
     }

@@ -5,9 +5,17 @@ import { SkpController } from './skp.controller';
 import { Skp } from './entities/skp.entity';
 import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
 import { AuthModule } from '../auth/auth.module';
+import { PerilakuModule } from '../perilaku/perilaku.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Skp]), UnitKerjaModule, AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Skp]),
+    UnitKerjaModule,
+    PerilakuModule,
+    AuthModule,
+    UserModule,
+  ],
   controllers: [SkpController],
   providers: [SkpService],
   exports: [SkpService],

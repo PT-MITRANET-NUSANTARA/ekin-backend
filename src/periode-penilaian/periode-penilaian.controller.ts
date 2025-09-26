@@ -19,14 +19,19 @@ import { ApiResponse } from '../common/interfaces/api-response.interface';
 @Controller('periode-penilaian')
 @UseGuards(JwtAuthGuard)
 export class PeriodePenilaianController {
-  constructor(private readonly periodePenilaianService: PeriodePenilaianService) {}
+  constructor(
+    private readonly periodePenilaianService: PeriodePenilaianService,
+  ) {}
 
   @Post()
   create(
     @Body() createPeriodePenilaianDto: CreatePeriodePenilaianDto,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.periodePenilaianService.create(createPeriodePenilaianDto, token);
+    return this.periodePenilaianService.create(
+      createPeriodePenilaianDto,
+      token,
+    );
   }
 
   @Get()
@@ -51,7 +56,11 @@ export class PeriodePenilaianController {
     @Body() updatePeriodePenilaianDto: UpdatePeriodePenilaianDto,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.periodePenilaianService.update(id, updatePeriodePenilaianDto, token);
+    return this.periodePenilaianService.update(
+      id,
+      updatePeriodePenilaianDto,
+      token,
+    );
   }
 
   @Delete(':id')

@@ -11,9 +11,9 @@ export class CreateRhkDto {
   @IsEnum(JenisRhk)
   jenis: JenisRhk;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  rhk_atasan_id?: number;
+  rhk_atasan_id?: string;
 
   @IsEnum(KlasifikasiRhk)
   klasifikasi: KlasifikasiRhk;

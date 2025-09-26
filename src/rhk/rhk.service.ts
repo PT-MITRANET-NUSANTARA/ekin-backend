@@ -29,7 +29,6 @@ export class RhkService {
 
       const rhk = this.rhkRepository.create({
         ...createRhkDto,
-        created_by: userId,
       });
 
       const savedRhk = await this.rhkRepository.save(rhk);
@@ -121,7 +120,7 @@ export class RhkService {
   async findOne(id: string, token: string): Promise<ApiResponse> {
     try {
       const rhk = await this.rhkRepository.findOne({
-        where: { id: Number(id) },
+        where: { id },
       });
 
       if (!rhk) {
@@ -179,7 +178,7 @@ export class RhkService {
   ): Promise<ApiResponse> {
     try {
       const rhk = await this.rhkRepository.findOne({
-        where: { id: Number(id) },
+        where: { id },
       });
 
       if (!rhk) {
@@ -197,7 +196,6 @@ export class RhkService {
       // Update properti
       Object.assign(rhk, {
         ...updateRhkDto,
-        updated_by: userId,
       });
 
       const updatedRhk = await this.rhkRepository.save(rhk);
@@ -221,7 +219,7 @@ export class RhkService {
   async remove(id: string): Promise<ApiResponse> {
     try {
       const rhk = await this.rhkRepository.findOne({
-        where: { id: Number(id) },
+        where: { id },
       });
 
       if (!rhk) {

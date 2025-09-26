@@ -11,7 +11,10 @@ import { UpdateSkpDto } from './dto/update-skp.dto';
 import { FilterSkpDto } from './dto/filter-skp.dto';
 import { Skp, SkpStatus } from './entities/skp.entity';
 import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
+import { PerilakuService } from '../perilaku/perilaku.service';
+import { UserService } from '../user/user.service';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
+import { perilakuTemplate } from '../common/data/perilaku-template';
 
 @Injectable()
 export class SkpService {
@@ -19,6 +22,8 @@ export class SkpService {
     @InjectRepository(Skp)
     private skpRepository: Repository<Skp>,
     private unitKerjaService: UnitKerjaService,
+    private perilakuService: PerilakuService,
+    private userService: UserService,
   ) {}
 
   async create(
@@ -46,13 +51,37 @@ export class SkpService {
         createSkpDto.status = SkpStatus.DRAFT;
       }
 
+      // Ambil data user dari NIP untuk mendapatkan posjab
+      const userResponse = await this.userService.findUserByNip(
+        createSkpDto.user_id,
+        token,
+      );
+
+      // Isi posjab dari respons findUserByNip jika berhasil
+      if (userResponse.status && userResponse.data) {
+        createSkpDto.posjab = [userResponse.data];
+      }
+
+      // Buat objek data untuk entity Skp
+      const skpData: any = {
+        ...createSkpDto,
+        // Konversi atasan_skp_id tunggal menjadi array jika ada
+        atasan_skp_id: createSkpDto.atasan_skp_id ? [createSkpDto.atasan_skp_id] : null
+      };
+
       // Simpan data SKP
-      const skp = this.skpRepository.create(createSkpDto);
+      const skp = this.skpRepository.create(skpData);
       const savedSkp = await this.skpRepository.save(skp);
+      
+      // Pastikan savedSkp adalah objek tunggal, bukan array
+      const skpEntity = Array.isArray(savedSkp) ? savedSkp[0] : savedSkp;
+
+      // Buat perilaku dari template untuk SKP yang baru dibuat
+      await this.createPerilakuFromTemplate(skpEntity.id, token);
 
       // Ambil data SKP yang baru disimpan beserta unit kerja
       const newSkp = await this.skpRepository.findOne({
-        where: { id: savedSkp.id },
+        where: { id: skpEntity.id },
       });
 
       // Tambahkan informasi unit kerja
@@ -74,6 +103,34 @@ export class SkpService {
         message: `Terjadi kesalahan: ${error.message}`,
         data: null,
       };
+    }
+  }
+
+  /**
+   * Membuat perilaku dari template untuk SKP yang baru dibuat
+   * @param skpId ID SKP yang baru dibuat
+   * @param token Token otorisasi
+   */
+  private async createPerilakuFromTemplate(
+    skpId: string,
+    token: string,
+  ): Promise<void> {
+    try {
+      // Iterasi setiap template perilaku dan buat entri perilaku baru
+      for (const template of perilakuTemplate) {
+        await this.perilakuService.create(
+          {
+            skp_id: skpId,
+            name: template.name,
+            content: template.isi,
+            ekspetasi: template.espektasi || '',
+          },
+          token,
+        );
+      }
+    } catch (error) {
+      console.error(`Gagal membuat perilaku dari template: ${error.message}`);
+      // Tidak throw error agar proses pembuatan SKP tetap berlanjut
     }
   }
 
@@ -288,8 +345,16 @@ export class SkpService {
         }
       }
 
+      // Persiapkan data untuk update
+      const updateData: any = { ...updateSkpDto };
+      
+      // Konversi atasan_skp_id tunggal menjadi array jika ada
+      if (updateData.atasan_skp_id) {
+        updateData.atasan_skp_id = [updateData.atasan_skp_id];
+      }
+      
       // Update SKP
-      await this.skpRepository.update(id, updateSkpDto);
+      await this.skpRepository.update(id, updateData);
 
       // Ambil data SKP yang sudah diupdate
       const updatedSkp = await this.skpRepository.findOne({

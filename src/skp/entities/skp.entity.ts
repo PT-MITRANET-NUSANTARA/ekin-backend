@@ -53,8 +53,8 @@ export class Skp {
   @Column()
   user_id: string;
 
-  @Column({ nullable: true })
-  atasan_skp_id: string;
+  @Column({ type: 'json', nullable: true })
+  atasan_skp_id: string[];
 
   @Column({ type: 'json', nullable: true })
   posjab: object[];

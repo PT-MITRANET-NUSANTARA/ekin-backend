@@ -21,7 +21,8 @@ export class PeriodePenilaianService {
       const newPeriodePenilaian = this.periodePenilaianRepository.create(
         createPeriodePenilaianDto,
       );
-      const result = await this.periodePenilaianRepository.save(newPeriodePenilaian);
+      const result =
+        await this.periodePenilaianRepository.save(newPeriodePenilaian);
 
       return {
         code: HttpStatus.CREATED,
@@ -41,7 +42,8 @@ export class PeriodePenilaianService {
 
   async findAll(unitId: string, token: string): Promise<ApiResponse> {
     try {
-      let query = this.periodePenilaianRepository.createQueryBuilder('periode_penilaian');
+      let query =
+        this.periodePenilaianRepository.createQueryBuilder('periode_penilaian');
 
       if (unitId) {
         query = query.where('periode_penilaian.unit_id = :unitId', { unitId });
@@ -115,11 +117,15 @@ export class PeriodePenilaianService {
         };
       }
 
-      await this.periodePenilaianRepository.update(id, updatePeriodePenilaianDto);
-      
-      const updatedPeriodePenilaian = await this.periodePenilaianRepository.findOne({
-        where: { id },
-      });
+      await this.periodePenilaianRepository.update(
+        id,
+        updatePeriodePenilaianDto,
+      );
+
+      const updatedPeriodePenilaian =
+        await this.periodePenilaianRepository.findOne({
+          where: { id },
+        });
 
       return {
         code: HttpStatus.OK,

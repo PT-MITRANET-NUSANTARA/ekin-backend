@@ -18,8 +18,8 @@ export enum KlasifikasiRhk {
 
 @Entity()
 export class Rhk {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   skp_id: number;
@@ -35,7 +35,7 @@ export class Rhk {
   jenis: JenisRhk;
 
   @Column({ nullable: true })
-  rhk_atasan_id: number;
+  rhk_atasan_id: string;
 
   @Column({
     type: 'enum',
@@ -50,11 +50,7 @@ export class Rhk {
   @Column({ nullable: true })
   rkts_id: number;
 
-  @Column({ nullable: true })
-  created_by: string;
 
-  @Column({ nullable: true })
-  updated_by: string;
 
   @CreateDateColumn()
   created_at: Date;

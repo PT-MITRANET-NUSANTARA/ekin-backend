@@ -321,18 +321,18 @@ export class UserService {
         };
       }
 
-      const userData = response.data.mapData.data as UserDto[];
+      const userData = response.data.mapData.data[0];
 
       // Filter untuk memastikan NIP user unik (tidak ada duplikat)
-      const uniqueUserData = Array.from(
-        new Map(userData.map((user) => [user.nip_asn, user])).values(),
-      );
+      // const uniqueUserData = Array.from(
+      //   new Map(userData.map((user) => [user.nip_asn, user])).values(),
+      // );
 
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Berhasil mengambil data user',
-        data: uniqueUserData,
+        data: userData,
       };
     } catch (error) {
       if (error.response?.status === 404) {

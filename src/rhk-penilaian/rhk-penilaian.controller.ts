@@ -36,7 +36,7 @@ export class RhkPenilaianController {
   ): Promise<ApiResponse> {
     return this.rhkPenilaianService.findAll(skpId, token);
   }
-  
+
   @Get('by-skp/:skpId')
   findBySkpId(
     @Param('skpId') skpId: string,
