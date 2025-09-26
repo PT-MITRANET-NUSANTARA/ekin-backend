@@ -29,6 +29,163 @@
   ],
   "item": [
     {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get User By NIP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/:nip",
+              "host": ["{{base_url}}"],
+              "path": ["user", ":nip"],
+              "variable": [
+                {
+                  "key": "nip",
+                  "value": "",
+                  "description": "NIP ASN"
+                }
+              ]
+            },
+            "description": "Mendapatkan data user berdasarkan NIP"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Users By Unit ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/unit/:unitId?search=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["user", "unit", ":unitId"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Filter berdasarkan nama, NIP, atau jabatan"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "unitId",
+                  "value": "",
+                  "description": "ID unit kerja"
+                }
+              ]
+            },
+            "description": "Mendapatkan daftar user berdasarkan unit kerja dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Users By Unit ID and Unor ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/unit/:unitId/unor/:unorId?search=&page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["user", "unit", ":unitId", "unor", ":unorId"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Filter berdasarkan nama, NIP, atau jabatan"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "unitId",
+                  "value": "",
+                  "description": "ID unit kerja"
+                },
+                {
+                  "key": "unorId",
+                  "value": "",
+                  "description": "ID unit organisasi"
+                }
+              ]
+            },
+            "description": "Mendapatkan daftar user berdasarkan unit kerja dan unit organisasi dengan filter dan pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By Unit ID and User ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/unit/:unitId/user/:userId",
+              "host": ["{{base_url}}"],
+              "path": ["user", "unit", ":unitId", "user", ":userId"],
+              "variable": [
+                {
+                  "key": "unitId",
+                  "value": "",
+                  "description": "ID unit kerja"
+                },
+                {
+                  "key": "userId",
+                  "value": "",
+                  "description": "ID user (NIP)"
+                }
+              ]
+            },
+            "description": "Mendapatkan detail user berdasarkan unit kerja dan ID user"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "RHK",
       "item": [
         {
