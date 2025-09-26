@@ -22,6 +22,7 @@ import { SkpModule } from './skp/skp.module';
 import { PerjanjianKinerjaModule } from './perjanjian-kinerja/perjanjian-kinerja.module';
 import { RhkModule } from './rhk/rhk.module';
 import { UserModule } from './user/user.module';
+import { PerilakuModule } from './perilaku/perilaku.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { UserModule } from './user/user.module';
     PerjanjianKinerjaModule,
     RhkModule,
     UserModule,
+    PerilakuModule,
   ],
   controllers: [AppController],
   providers: [
