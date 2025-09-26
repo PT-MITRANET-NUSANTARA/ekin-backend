@@ -29,8 +29,8 @@ export class AspekService {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: 'Gagal membuat aspek',
-        error: error.message,
+        message: `Gagal membuat aspek: ${error.message}`,
+        data: null,
       };
     }
   }
@@ -98,8 +98,8 @@ export class AspekService {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: 'Gagal mengambil daftar aspek',
-        error: error.message,
+        message: `Gagal mengambil daftar aspek: ${error.message}`,
+        data: null,
       };
     }
   }
@@ -116,6 +116,7 @@ export class AspekService {
           code: HttpStatus.NOT_FOUND,
           status: false,
           message: 'Aspek tidak ditemukan',
+          data: null,
         };
       }
 
@@ -129,8 +130,8 @@ export class AspekService {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: 'Gagal mengambil aspek',
-        error: error.message,
+        message: `Gagal mengambil aspek: ${error.message}`,
+        data: null,
       };
     }
   }
@@ -149,6 +150,7 @@ export class AspekService {
           code: HttpStatus.NOT_FOUND,
           status: false,
           message: 'Aspek tidak ditemukan',
+          data: null,
         };
       }
 
@@ -167,8 +169,8 @@ export class AspekService {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: 'Gagal memperbarui aspek',
-        error: error.message,
+        message: `Gagal memperbarui aspek: ${error.message}`,
+        data: null,
       };
     }
   }
@@ -184,6 +186,7 @@ export class AspekService {
           code: HttpStatus.NOT_FOUND,
           status: false,
           message: 'Aspek tidak ditemukan',
+          data: null,
         };
       }
 
@@ -193,13 +196,14 @@ export class AspekService {
         code: HttpStatus.OK,
         status: true,
         message: 'Aspek berhasil dihapus',
+        data: null,
       };
     } catch (error) {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: 'Gagal menghapus aspek',
-        error: error.message,
+        message: `Gagal menghapus aspek: ${error.message}`,
+        data: null,
       };
     }
   }
@@ -221,8 +225,8 @@ export class AspekService {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: 'Gagal mengambil daftar aspek',
-        error: error.message,
+        message: `Gagal mengambil daftar aspek: ${error.message}`,
+        data: null,
       };
     }
   }

@@ -29,6 +29,199 @@
   ],
   "item": [
     {
+      "name": "Rencana Aksi",
+      "item": [
+        {
+          "name": "Create Rencana Aksi",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"skp_id\": \"uuid-skp-id\",\n    \"rhk_id\": \"uuid-rhk-id\",\n    \"periode_penilaian_id\": \"uuid-periode-penilaian-id\",\n    \"periode_start\": \"2023-01-01\",\n    \"periode_end\": \"2023-12-31\",\n    \"desc\": \"Deskripsi rencana aksi\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rencana-aksi",
+              "host": ["{{base_url}}"],
+              "path": ["rencana-aksi"]
+            },
+            "description": "Membuat Rencana Aksi baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Rencana Aksi",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rencana-aksi?page=1&perPage=10&skp_id=&rhk_id=&periode_penilaian_id=&desc=",
+              "host": ["{{base_url}}"],
+              "path": ["rencana-aksi"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                },
+                {
+                  "key": "skp_id",
+                  "value": ""
+                },
+                {
+                  "key": "rhk_id",
+                  "value": ""
+                },
+                {
+                  "key": "periode_penilaian_id",
+                  "value": ""
+                },
+                {
+                  "key": "desc",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Mendapatkan semua Rencana Aksi dengan filter"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Rencana Aksi By SKP ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rencana-aksi/skp/:skpId",
+              "host": ["{{base_url}}"],
+              "path": ["rencana-aksi", "skp", ":skpId"],
+              "variable": [
+                {
+                  "key": "skpId",
+                  "value": "uuid-skp-id"
+                }
+              ]
+            },
+            "description": "Mendapatkan Rencana Aksi berdasarkan SKP ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Rencana Aksi By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rencana-aksi/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rencana-aksi", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-rencana-aksi-id"
+                }
+              ]
+            },
+            "description": "Mendapatkan Rencana Aksi berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Rencana Aksi",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"periode_start\": \"2023-02-01\",\n    \"periode_end\": \"2023-11-30\",\n    \"desc\": \"Deskripsi rencana aksi yang diperbarui\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rencana-aksi/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rencana-aksi", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-rencana-aksi-id"
+                }
+              ]
+            },
+            "description": "Memperbarui Rencana Aksi berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Rencana Aksi",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rencana-aksi/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rencana-aksi", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-rencana-aksi-id"
+                }
+              ]
+            },
+            "description": "Menghapus Rencana Aksi berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "RHK Penilaian",
       "item": [
         {
