@@ -66,13 +66,15 @@ export class SkpService {
       const skpData: any = {
         ...createSkpDto,
         // Konversi atasan_skp_id tunggal menjadi array jika ada
-        atasan_skp_id: createSkpDto.atasan_skp_id ? [createSkpDto.atasan_skp_id] : null
+        atasan_skp_id: createSkpDto.atasan_skp_id
+          ? [createSkpDto.atasan_skp_id]
+          : null,
       };
 
       // Simpan data SKP
       const skp = this.skpRepository.create(skpData);
       const savedSkp = await this.skpRepository.save(skp);
-      
+
       // Pastikan savedSkp adalah objek tunggal, bukan array
       const skpEntity = Array.isArray(savedSkp) ? savedSkp[0] : savedSkp;
 
@@ -347,12 +349,12 @@ export class SkpService {
 
       // Persiapkan data untuk update
       const updateData: any = { ...updateSkpDto };
-      
+
       // Konversi atasan_skp_id tunggal menjadi array jika ada
       if (updateData.atasan_skp_id) {
         updateData.atasan_skp_id = [updateData.atasan_skp_id];
       }
-      
+
       // Update SKP
       await this.skpRepository.update(id, updateData);
 

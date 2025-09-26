@@ -50,8 +50,6 @@ export class Rhk {
   @Column({ nullable: true })
   rkts_id: number;
 
-
-
   @CreateDateColumn()
   created_at: Date;
 

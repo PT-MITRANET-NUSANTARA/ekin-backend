@@ -24,6 +24,7 @@ import { RhkModule } from './rhk/rhk.module';
 import { UserModule } from './user/user.module';
 import { PerilakuModule } from './perilaku/perilaku.module';
 import { RhkPenilaianModule } from './rhk-penilaian/rhk-penilaian.module';
+import { AspekModule } from './aspek/aspek.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { RhkPenilaianModule } from './rhk-penilaian/rhk-penilaian.module';
     UserModule,
     PerilakuModule,
     RhkPenilaianModule,
+    AspekModule,
   ],
   controllers: [AppController],
   providers: [

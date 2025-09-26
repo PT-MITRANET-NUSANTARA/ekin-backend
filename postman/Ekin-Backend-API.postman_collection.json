@@ -29,6 +29,379 @@
   ],
   "item": [
     {
+      "name": "RHK Penilaian",
+      "item": [
+        {
+          "name": "Create RHK Penilaian",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"skp_id\": \"uuid-skp-id\",\n    \"rhk_id\": \"uuid-rhk-id\",\n    \"nilai\": 90,\n    \"keterangan\": \"Keterangan penilaian RHK\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rhk-penilaian",
+              "host": ["{{base_url}}"],
+              "path": ["rhk-penilaian"]
+            },
+            "description": "Membuat RHK Penilaian baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All RHK Penilaian",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk-penilaian?skp_id=uuid-skp-id",
+              "host": ["{{base_url}}"],
+              "path": ["rhk-penilaian"],
+              "query": [
+                {
+                  "key": "skp_id",
+                  "value": "uuid-skp-id",
+                  "description": "Filter berdasarkan SKP ID"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua RHK Penilaian dengan filter SKP ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get RHK Penilaian by SKP ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk-penilaian/by-skp/:skpId",
+              "host": ["{{base_url}}"],
+              "path": ["rhk-penilaian", "by-skp", ":skpId"],
+              "variable": [
+                {
+                  "key": "skpId",
+                  "value": "uuid-skp-id"
+                }
+              ]
+            },
+            "description": "Mendapatkan RHK Penilaian berdasarkan SKP ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get RHK Penilaian by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk-penilaian/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rhk-penilaian", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-rhk-penilaian-id"
+                }
+              ]
+            },
+            "description": "Mendapatkan RHK Penilaian berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update RHK Penilaian",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nilai\": 95,\n    \"keterangan\": \"Keterangan penilaian RHK yang diperbarui\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/rhk-penilaian/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rhk-penilaian", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-rhk-penilaian-id"
+                }
+              ]
+            },
+            "description": "Memperbarui RHK Penilaian berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete RHK Penilaian",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rhk-penilaian/:id",
+              "host": ["{{base_url}}"],
+              "path": ["rhk-penilaian", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-rhk-penilaian-id"
+                }
+              ]
+            },
+            "description": "Menghapus RHK Penilaian berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Aspek",
+      "item": [
+        {
+          "name": "Create Aspek",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"rhk_id\": \"uuid-rhk-id\",\n    \"jenis\": \"KUALITAS\",\n    \"desc\": \"Deskripsi aspek kualitas\",\n    \"indikator_kinerja_id\": \"uuid-indikator-kinerja-id\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/aspek",
+              "host": ["{{base_url}}"],
+              "path": ["aspek"]
+            },
+            "description": "Membuat aspek baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Aspek",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/aspek?page=1&perPage=10&rhk_id=uuid-rhk-id&jenis=KUALITAS&desc=deskripsi&indikator_kinerja_id=uuid-indikator-kinerja-id",
+              "host": ["{{base_url}}"],
+              "path": ["aspek"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10",
+                  "description": "Jumlah item per halaman"
+                },
+                {
+                  "key": "rhk_id",
+                  "value": "uuid-rhk-id",
+                  "description": "Filter berdasarkan RHK ID"
+                },
+                {
+                  "key": "jenis",
+                  "value": "KUALITAS",
+                  "description": "Filter berdasarkan jenis aspek (KUALITAS, KUANTITAS, WAKTU, DESKRIPSI)"
+                },
+                {
+                  "key": "desc",
+                  "value": "deskripsi",
+                  "description": "Filter berdasarkan deskripsi (pencarian partial)"
+                },
+                {
+                  "key": "indikator_kinerja_id",
+                  "value": "uuid-indikator-kinerja-id",
+                  "description": "Filter berdasarkan ID indikator kinerja"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua aspek dengan filter pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Aspek by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/aspek/:id",
+              "host": ["{{base_url}}"],
+              "path": ["aspek", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-aspek-id"
+                }
+              ]
+            },
+            "description": "Mendapatkan aspek berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Aspek by RHK ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/aspek/rhk/:rhkId",
+              "host": ["{{base_url}}"],
+              "path": ["aspek", "rhk", ":rhkId"],
+              "variable": [
+                {
+                  "key": "rhkId",
+                  "value": "uuid-rhk-id"
+                }
+              ]
+            },
+            "description": "Mendapatkan aspek berdasarkan RHK ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Aspek",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"jenis\": \"KUANTITAS\",\n    \"desc\": \"Deskripsi aspek kuantitas yang diperbarui\",\n    \"indikator_kinerja_id\": \"uuid-indikator-kinerja-id\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/aspek/:id",
+              "host": ["{{base_url}}"],
+              "path": ["aspek", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-aspek-id"
+                }
+              ]
+            },
+            "description": "Memperbarui aspek berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Aspek",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/aspek/:id",
+              "host": ["{{base_url}}"],
+              "path": ["aspek", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-aspek-id"
+                }
+              ]
+            },
+            "description": "Menghapus aspek berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Periode Penilaian",
       "item": [
         {
