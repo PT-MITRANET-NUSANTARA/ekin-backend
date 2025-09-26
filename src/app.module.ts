@@ -23,6 +23,7 @@ import { PerjanjianKinerjaModule } from './perjanjian-kinerja/perjanjian-kinerja
 import { RhkModule } from './rhk/rhk.module';
 import { UserModule } from './user/user.module';
 import { PerilakuModule } from './perilaku/perilaku.module';
+import { RhkPenilaianModule } from './rhk-penilaian/rhk-penilaian.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { PerilakuModule } from './perilaku/perilaku.module';
     RhkModule,
     UserModule,
     PerilakuModule,
+    RhkPenilaianModule,
   ],
   controllers: [AppController],
   providers: [

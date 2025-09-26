@@ -1,0 +1,172 @@
+{
+  "info": {
+    "name": "RHK Penilaian API",
+    "description": "API collection for RHK Penilaian endpoints",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create RHK Penilaian",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"rhk_id\": \"uuid-rhk\",\n    \"skp_id\": \"uuid-skp\",\n    \"periode_penilaian_id\": \"uuid-periode-penilaian\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/rhk-penilaian",
+          "host": ["{{base_url}}"],
+          "path": ["rhk-penilaian"]
+        },
+        "description": "Membuat RHK Penilaian baru"
+      }
+    },
+    {
+      "name": "Get All RHK Penilaian",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/rhk-penilaian?skp_id=uuid-skp",
+          "host": ["{{base_url}}"],
+          "path": ["rhk-penilaian"],
+          "query": [
+            {
+              "key": "skp_id",
+              "value": "uuid-skp"
+            }
+          ]
+        },
+        "description": "Mendapatkan semua RHK Penilaian dengan filter skp_id opsional"
+      }
+    },
+    {
+      "name": "Get RHK Penilaian By SKP ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/rhk-penilaian/by-skp/:skpId",
+          "host": ["{{base_url}}"],
+          "path": ["rhk-penilaian", "by-skp", ":skpId"],
+          "variable": [
+            {
+              "key": "skpId",
+              "value": "uuid-skp"
+            }
+          ]
+        },
+        "description": "Mendapatkan RHK Penilaian berdasarkan SKP ID"
+      }
+    },
+    {
+      "name": "Get RHK Penilaian By ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/rhk-penilaian/:id",
+          "host": ["{{base_url}}"],
+          "path": ["rhk-penilaian", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "uuid-rhk-penilaian"
+            }
+          ]
+        },
+        "description": "Mendapatkan RHK Penilaian berdasarkan ID"
+      }
+    },
+    {
+      "name": "Update RHK Penilaian",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"rhk_id\": \"uuid-rhk-updated\",\n    \"skp_id\": \"uuid-skp-updated\",\n    \"periode_penilaian_id\": \"uuid-periode-penilaian-updated\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/rhk-penilaian/:id",
+          "host": ["{{base_url}}"],
+          "path": ["rhk-penilaian", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "uuid-rhk-penilaian"
+            }
+          ]
+        },
+        "description": "Memperbarui RHK Penilaian berdasarkan ID"
+      }
+    },
+    {
+      "name": "Delete RHK Penilaian",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/rhk-penilaian/:id",
+          "host": ["{{base_url}}"],
+          "path": ["rhk-penilaian", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "uuid-rhk-penilaian"
+            }
+          ]
+        },
+        "description": "Menghapus RHK Penilaian berdasarkan ID"
+      }
+    }
+  ]
+}
