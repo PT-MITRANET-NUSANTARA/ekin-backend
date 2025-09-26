@@ -32,19 +32,6 @@ export class SkpService {
   ): Promise<ApiResponse> {
     try {
       // Verifikasi unit_id dengan memanggil UnitKerjaService
-      const unitResponse = await this.unitKerjaService.findById(
-        Number(createSkpDto.unit_id),
-        token,
-      );
-
-      if (!unitResponse.status) {
-        return {
-          code: HttpStatus.BAD_REQUEST,
-          status: false,
-          message: `Unit dengan ID ${createSkpDto.unit_id} tidak ditemukan`,
-          data: null,
-        };
-      }
 
       // Set default status jika tidak ada
       if (!createSkpDto.status) {
@@ -60,6 +47,21 @@ export class SkpService {
       // Isi posjab dari respons findUserByNip jika berhasil
       if (userResponse.status && userResponse.data) {
         createSkpDto.posjab = [userResponse.data];
+        createSkpDto.unit_id = userResponse.data.unor.induk.id_simpeg;
+      }
+
+      const unitResponse = await this.unitKerjaService.findById(
+        Number(createSkpDto.unit_id),
+        token,
+      );
+
+      if (!unitResponse.status) {
+        return {
+          code: HttpStatus.BAD_REQUEST,
+          status: false,
+          message: `Unit dengan ID ${createSkpDto.unit_id} tidak ditemukan`,
+          data: null,
+        };
       }
 
       // Buat objek data untuk entity Skp

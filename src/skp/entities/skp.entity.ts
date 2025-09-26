@@ -7,15 +7,15 @@ import {
 } from 'typeorm';
 
 export enum SkpStatus {
-  DRAFT = 'draft',
-  SUBMITTED = 'submitted',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
+  DRAFT = 'DRAFT',
+  SUBMITTED = 'SUBMITTED',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }
 
 export enum SkpPendekatan {
-  KUALITATIF = 'kualitatif',
-  KUANTITATIF = 'kuantitatif',
+  KUALITATIF = 'KUALITATIF',
+  KUANTITATIF = 'KUANTITATIF',
 }
 
 @Entity('skp')

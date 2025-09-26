@@ -57,6 +57,6 @@ export class CreateSkpDto {
   posjab?: object[];
 
   @IsNotEmpty({ message: 'Unit ID tidak boleh kosong' })
-  @IsString()
-  unit_id: string;
+  @IsOptional()
+  unit_id?: string;
 }

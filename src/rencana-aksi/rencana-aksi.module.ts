@@ -6,10 +6,7 @@ import { RencanaAksi } from './entities/rencana-aksi.entity';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([RencanaAksi]),
-    AuthModule,
-  ],
+  imports: [TypeOrmModule.forFeature([RencanaAksi]), AuthModule],
   controllers: [RencanaAksiController],
   providers: [RencanaAksiService],
   exports: [RencanaAksiService],
