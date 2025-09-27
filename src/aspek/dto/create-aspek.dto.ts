@@ -17,8 +17,8 @@ export class CreateAspekDto {
   jenis: JenisAspek;
 
   @IsString()
-  @IsNotEmpty()
-  desc: string;
+  @IsOptional()
+  desc?: string;
 
   @IsUUID()
   @IsOptional()

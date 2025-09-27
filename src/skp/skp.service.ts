@@ -13,6 +13,7 @@ import { Skp, SkpStatus } from './entities/skp.entity';
 import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
 import { PerilakuService } from '../perilaku/perilaku.service';
 import { UserService } from '../user/user.service';
+import { RhkService } from '../rhk/rhk.service';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { perilakuTemplate } from '../common/data/perilaku-template';
 
@@ -24,6 +25,7 @@ export class SkpService {
     private unitKerjaService: UnitKerjaService,
     private perilakuService: PerilakuService,
     private userService: UserService,
+    private rhkService: RhkService,
   ) {}
 
   async create(
@@ -309,11 +311,16 @@ export class SkpService {
       const perilakuResponse = await this.perilakuService.findBySkpId(id, token);
       const perilakuData = perilakuResponse.status ? perilakuResponse.data : [];
 
+      // Ambil data RHK berdasarkan skp_id
+      const rhkResponse = await this.rhkService.findBySkpId(id, token);
+      const rhkData = rhkResponse.status ? rhkResponse.data : [];
+
       const skpWithUnit = {
         ...skp,
         unit: unitResponse.status ? unitResponse.data : null,
         atasan_skp: atasanSkp,
         perilaku_id: perilakuData,
+        rhk: rhkData, // Menambahkan data RHK ke respons
       };
 
       return {

@@ -31,7 +31,7 @@ export class Aspek {
   })
   jenis: JenisAspek;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   desc: string;
 
   @ManyToOne(() => IndikatorKinerja, { nullable: true })

@@ -12,13 +12,48 @@ import { FilterRhkDto } from './dto/filter-rhk.dto';
 import { Rhk } from './entities/rhk.entity';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { Rkt } from '../rkt/entities/rkt.entity';
+import { AspekService } from '../aspek/aspek.service';
+import { aspekTemplateUtama, aspekTemplateTurunan } from '../common/data/aspek-template';
 
 @Injectable()
 export class RhkService {
   constructor(
     @InjectRepository(Rhk)
     private readonly rhkRepository: Repository<Rhk>,
+    private readonly aspekService: AspekService,
   ) {}
+
+  /**
+   * Membuat aspek dari template berdasarkan tipe RHK
+   * @param rhkId ID RHK yang baru dibuat
+   * @param rhkAtasanId ID RHK atasan (null jika RHK utama)
+   * @param token Token otorisasi
+   */
+  private async createAspekFromTemplate(
+    rhkId: string,
+    rhkAtasanId: string | null,
+    token: string,
+  ): Promise<void> {
+    try {
+      // Pilih template berdasarkan tipe RHK
+      const templateToUse = rhkAtasanId === null 
+        ? aspekTemplateUtama 
+        : aspekTemplateTurunan;
+      
+      // Iterasi setiap template aspek dan buat entri aspek baru
+      for (const template of templateToUse) {
+        await this.aspekService.create({
+          rhk_id: rhkId,
+          jenis: template.jenis,
+          desc: template.desc,
+          indikator_kinerja_id: undefined, // Indikator kinerja awalnya kosong
+        });
+      }
+    } catch (error) {
+      console.error(`Gagal membuat aspek dari template: ${error.message}`);
+      // Tidak throw error agar proses pembuatan RHK tetap berlanjut
+    }
+  }
 
   async create(
     createRhkDto: CreateRhkDto,
@@ -39,9 +74,15 @@ export class RhkService {
       // Jika ada rkts_id, tambahkan relasi
       if (rkts_id && rkts_id.length > 0) {
         // Konversi string[] menjadi Rkt[]
-        savedRhk.rkts_id = rkts_id.map(id => ({ id } as Rkt));
+        const rktEntities = rkts_id.map(id => ({ id } as Rkt));
+        savedRhk.rkts_id = rktEntities;
         // Update dengan relasi
         await this.rhkRepository.save(savedRhk);
+      }
+      
+      // Buat aspek dari template berdasarkan tipe RHK (utama atau turunan)
+      if (savedRhk && savedRhk.id) {
+        await this.createAspekFromTemplate(savedRhk.id, savedRhk.rhk_atasan_id || null, token);
       }
 
       return {
@@ -197,7 +238,7 @@ export class RhkService {
   async findBySkpId(skpId: string, token: string): Promise<ApiResponse> {
     try {
       const rhks = await this.rhkRepository.find({
-        where: { skp_id: Number(skpId) },
+        where: { skp_id: skpId },
         order: { id: 'DESC' },
         relations: ['rkts_id'],
       });

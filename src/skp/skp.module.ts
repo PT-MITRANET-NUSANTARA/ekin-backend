@@ -7,6 +7,7 @@ import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
 import { AuthModule } from '../auth/auth.module';
 import { PerilakuModule } from '../perilaku/perilaku.module';
 import { UserModule } from '../user/user.module';
+import { RhkModule } from '../rhk/rhk.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from '../user/user.module';
     PerilakuModule,
     AuthModule,
     UserModule,
+    RhkModule,
   ],
   controllers: [SkpController],
   providers: [SkpService],

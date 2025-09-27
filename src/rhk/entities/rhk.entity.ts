@@ -17,7 +17,7 @@ export class Rhk {
   id: string;
 
   @Column()
-  skp_id: number;
+  skp_id: string;
 
   @Column('text')
   desc: string;
