@@ -11,6 +11,7 @@ import { UpdateRhkDto } from './dto/update-rhk.dto';
 import { FilterRhkDto } from './dto/filter-rhk.dto';
 import { Rhk } from './entities/rhk.entity';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
+import { Rkt } from '../rkt/entities/rkt.entity';
 
 @Injectable()
 export class RhkService {
@@ -27,11 +28,21 @@ export class RhkService {
       // Ekstrak userId dari token jika diperlukan
       const userId = this.extractUserIdFromToken(token);
 
-      const rhk = this.rhkRepository.create({
-        ...createRhkDto,
-      });
-
+      // Buat entity RHK tanpa rkts_id dulu
+      const { rkts_id, ...rhkData } = createRhkDto;
+      
+      const rhk = this.rhkRepository.create(rhkData);
+      
+      // Simpan RHK terlebih dahulu
       const savedRhk = await this.rhkRepository.save(rhk);
+      
+      // Jika ada rkts_id, tambahkan relasi
+      if (rkts_id && rkts_id.length > 0) {
+        // Konversi string[] menjadi Rkt[]
+        savedRhk.rkts_id = rkts_id.map(id => ({ id } as Rkt));
+        // Update dengan relasi
+        await this.rhkRepository.save(savedRhk);
+      }
 
       return {
         code: HttpStatus.CREATED,
@@ -62,7 +73,8 @@ export class RhkService {
 
       const skip = (page - 1) * perPage;
 
-      const queryBuilder = this.rhkRepository.createQueryBuilder('rhk');
+      const queryBuilder = this.rhkRepository.createQueryBuilder('rhk')
+        .leftJoinAndSelect('rhk.rkts_id', 'rkts');
 
       if (skp_id) {
         queryBuilder.andWhere('rhk.skp_id = :skp_id', { skp_id });
@@ -92,6 +104,24 @@ export class RhkService {
       queryBuilder.take(perPage);
 
       const rhks = await queryBuilder.getMany();
+      
+      // Ambil aspek untuk setiap RHK
+      const rhksWithAspek = await Promise.all(
+        rhks.map(async (rhk) => {
+          const aspekQuery = `
+            SELECT * FROM aspek 
+            WHERE rhk_id = '${rhk.id}'
+            ORDER BY created_at DESC
+          `;
+          
+          const aspek = await this.rhkRepository.query(aspekQuery);
+          
+          return {
+            ...rhk,
+            aspek: aspek || [],
+          };
+        })
+      );
 
       const pagination = {
         current_page: Number(page),
@@ -104,7 +134,7 @@ export class RhkService {
         code: HttpStatus.OK,
         status: true,
         message: 'Daftar RHK berhasil diambil',
-        data: rhks,
+        data: rhksWithAspek,
         pagination,
       };
     } catch (error) {
@@ -121,6 +151,7 @@ export class RhkService {
     try {
       const rhk = await this.rhkRepository.findOne({
         where: { id },
+        relations: ['rkts_id'],
       });
 
       if (!rhk) {
@@ -132,11 +163,26 @@ export class RhkService {
         };
       }
 
+      // Ambil aspek yang terkait dengan RHK ini
+      const aspekQuery = `
+        SELECT * FROM aspek 
+        WHERE rhk_id = '${id}'
+        ORDER BY created_at DESC
+      `;
+      
+      const aspek = await this.rhkRepository.query(aspekQuery);
+      
+      // Tambahkan aspek ke data RHK
+      const rhkWithAspek = {
+        ...rhk,
+        aspek: aspek || [],
+      };
+
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'RHK berhasil diambil',
-        data: rhk,
+        data: rhkWithAspek,
       };
     } catch (error) {
       return {
@@ -153,13 +199,32 @@ export class RhkService {
       const rhks = await this.rhkRepository.find({
         where: { skp_id: Number(skpId) },
         order: { id: 'DESC' },
+        relations: ['rkts_id'],
       });
+
+      // Ambil aspek untuk setiap RHK
+      const rhksWithAspek = await Promise.all(
+        rhks.map(async (rhk) => {
+          const aspekQuery = `
+            SELECT * FROM aspek 
+            WHERE rhk_id = '${rhk.id}'
+            ORDER BY created_at DESC
+          `;
+          
+          const aspek = await this.rhkRepository.query(aspekQuery);
+          
+          return {
+            ...rhk,
+            aspek: aspek || [],
+          };
+        })
+      );
 
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Daftar RHK berdasarkan SKP ID berhasil diambil',
-        data: rhks,
+        data: rhksWithAspek,
       };
     } catch (error) {
       return {
@@ -189,16 +254,26 @@ export class RhkService {
           data: null,
         };
       }
+      
+      // Pisahkan rkts_id dari data lainnya
+      const { rkts_id, ...rhkData } = updateRhkDto;
 
       // Ekstrak userId dari token jika diperlukan
       const userId = this.extractUserIdFromToken(token);
 
-      // Update properti
-      Object.assign(rhk, {
-        ...updateRhkDto,
-      });
-
-      const updatedRhk = await this.rhkRepository.save(rhk);
+      // Update properti (tanpa rkts_id)
+      Object.assign(rhk, rhkData);
+      
+      // Simpan perubahan dasar
+      let updatedRhk = await this.rhkRepository.save(rhk);
+      
+      // Jika ada rkts_id, update relasi
+      if (rkts_id && rkts_id.length > 0) {
+        // Konversi string[] menjadi Rkt[]
+        updatedRhk.rkts_id = rkts_id.map(id => ({ id } as Rkt));
+        // Update dengan relasi
+        updatedRhk = await this.rhkRepository.save(updatedRhk);
+      }
 
       return {
         code: HttpStatus.OK,

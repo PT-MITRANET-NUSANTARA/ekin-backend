@@ -18,6 +18,11 @@ export enum SkpPendekatan {
   KUANTITATIF = 'KUANTITATIF',
 }
 
+export enum SkpCascading {
+  NON_DIRECT_CASCADING = 'NON_DIRECT_CASCADING',
+  DIRECT_CASCADING = 'DIRECT_CASCADING',
+}
+
 @Entity('skp')
 export class Skp {
   @PrimaryGeneratedColumn('uuid')
@@ -43,7 +48,18 @@ export class Skp {
   })
   pendekatan: SkpPendekatan;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({
+    type: 'enum',
+    enum: SkpCascading,
+    nullable: true,
+  })
+  cascading: SkpCascading;
+
+  @Column({
+    type: 'json',
+    nullable: true,
+    default: () => '\'{"sumber_daya": [], "skema": [], "konsekuensi": []}\'',
+  })
   lampiran: {
     sumber_daya: string[];
     skema: string[];

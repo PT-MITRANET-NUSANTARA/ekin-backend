@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, IsArray } from 'class-validator';
 import { JenisRhk, KlasifikasiRhk } from '../entities/rhk.entity';
 
 export class CreateRhkDto {
@@ -22,7 +22,7 @@ export class CreateRhkDto {
   @IsOptional()
   penugasan?: string;
 
-  @IsNumber()
+  @IsArray()
   @IsOptional()
-  rkts_id?: number;
+  rkts_id?: string[];
 }

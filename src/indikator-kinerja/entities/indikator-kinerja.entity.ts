@@ -11,6 +11,7 @@ import { Tujuan } from '../../tujuan/entities/tujuan.entity';
 import { Program } from '../../program/entities/program.entity';
 import { Kegiatan } from '../../kegiatan/entities/kegiatan.entity';
 import { Rkt } from '../../rkt/entities/rkt.entity';
+import { SubKegiatan } from '../../sub-kegiatan/entities/sub-kegiatan.entity';
 
 @Entity('indikator_kinerja')
 export class IndikatorKinerja {
@@ -67,6 +68,13 @@ export class IndikatorKinerja {
   })
   @JoinColumn({ name: 'rkt_outcome_id' })
   rkt_outcome: Rkt;
+
+  @ManyToOne(() => SubKegiatan, (subKegiatan) => subKegiatan.indikator_kinerja_id, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'sub_kegiatan_id' })
+  sub_kegiatan: SubKegiatan;
 
   @CreateDateColumn()
   createdAt: Date;

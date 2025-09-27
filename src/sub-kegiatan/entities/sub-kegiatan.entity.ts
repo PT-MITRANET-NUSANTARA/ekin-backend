@@ -36,9 +36,10 @@ export class SubKegiatan {
 
   @OneToMany(
     () => IndikatorKinerja,
-    (indikatorKinerja) => indikatorKinerja.kegiatan,
+    (indikatorKinerja) => indikatorKinerja.sub_kegiatan,
     {
       cascade: true,
+      eager: true,
     },
   )
   indikator_kinerja_id: IndikatorKinerja[];

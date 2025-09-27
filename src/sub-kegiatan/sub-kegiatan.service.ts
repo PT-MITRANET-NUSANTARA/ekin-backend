@@ -63,14 +63,17 @@ export class SubKegiatanService {
         createSubKegiatanDto.indikator_kinerja,
       );
 
+      console.log(indikatorKinerjas);
+
       // Buat sub kegiatan dengan referensi ke indikator kinerja
-      const subKegiatan = this.subKegiatanRepository.create({
-        name: createSubKegiatanDto.name,
-        unit_id: createSubKegiatanDto.unit_id,
-        total_anggaran: createSubKegiatanDto.total_anggaran,
-        kegiatan_id: { id: createSubKegiatanDto.kegiatan_id } as Kegiatan,
-        indikator_kinerja_id: indikatorKinerjas,
-      });
+      const subKegiatan = new SubKegiatan();
+      subKegiatan.name = createSubKegiatanDto.name;
+      subKegiatan.unit_id = createSubKegiatanDto.unit_id;
+      subKegiatan.total_anggaran = createSubKegiatanDto.total_anggaran;
+      subKegiatan.kegiatan_id = {
+        id: createSubKegiatanDto.kegiatan_id,
+      } as Kegiatan;
+      subKegiatan.indikator_kinerja_id = indikatorKinerjas;
 
       const savedSubKegiatan =
         await this.subKegiatanRepository.save(subKegiatan);

@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Rkt } from '../../rkt/entities/rkt.entity';
 
 export enum JenisRhk {
   UTAMA = 'UTAMA',
@@ -47,8 +42,13 @@ export class Rhk {
   @Column({ nullable: true })
   penugasan: string;
 
-  @Column({ nullable: true })
-  rkts_id: number;
+  @ManyToMany(() => Rkt)
+  @JoinTable({
+    name: 'rhk_rkt',
+    joinColumn: { name: 'rhk_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'rkt_id', referencedColumnName: 'id' },
+  })
+  rkts_id: Rkt[];
 
   @CreateDateColumn()
   created_at: Date;

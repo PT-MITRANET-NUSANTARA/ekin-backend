@@ -1203,7 +1203,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"skp_id\": 1,\n  \"jenis\": \"utama\",\n  \"rhk_atasan_id\": null,\n  \"klasifikasi\": \"kinerja\",\n  \"keterangan\": \"Deskripsi RHK\"\n}"
+              "raw": "{\n  \"skp_id\": 1,\n  \"desc\": \"Deskripsi RHK\",\n  \"jenis\": \"UTAMA\",\n  \"rhk_atasan_id\": \"uuid-rhk-atasan-id\",\n  \"klasifikasi\": \"ORGANISASI\",\n  \"penugasan\": \"Penugasan RHK\",\n  \"rkts_id\": 1\n}"
             },
             "url": {
               "raw": "{{base_url}}/rhk",
@@ -1232,7 +1232,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"skp_id\": 1,\n  \"jenis\": \"utama\",\n  \"rhk_atasan_id\": null,\n  \"klasifikasi\": \"kinerja\",\n  \"keterangan\": \"Deskripsi RHK yang diperbarui\"\n}"
+              "raw": "{\n  \"skp_id\": 1,\n  \"desc\": \"Deskripsi RHK yang diperbarui\",\n  \"jenis\": \"UTAMA\",\n  \"rhk_atasan_id\": \"uuid-rhk-atasan-id\",\n  \"klasifikasi\": \"ORGANISASI\",\n  \"penugasan\": \"Penugasan RHK yang diperbarui\",\n  \"rkts_id\": 1\n}"
             },
             "url": {
               "raw": "{{base_url}}/rhk/:id",

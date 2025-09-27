@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { SkpPendekatan, SkpStatus } from '../entities/skp.entity';
+import { SkpCascading, SkpPendekatan, SkpStatus } from '../entities/skp.entity';
 
 class LampiranDto {
   @IsOptional()
@@ -39,6 +39,10 @@ export class CreateSkpDto {
   @IsOptional()
   @IsEnum(SkpPendekatan, { message: 'Pendekatan tidak valid' })
   pendekatan?: SkpPendekatan;
+
+  @IsOptional()
+  @IsEnum(SkpCascading, { message: 'Cascading tidak valid' })
+  cascading?: SkpCascading;
 
   @IsOptional()
   @ValidateNested()

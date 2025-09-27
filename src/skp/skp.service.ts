@@ -183,16 +183,49 @@ export class SkpService {
       // Ambil data
       const skpList = await queryBuilder.getMany();
 
-      // Tambahkan informasi unit kerja untuk setiap SKP
+      // Tambahkan informasi unit kerja untuk setiap SKP dan populate SKP atasan jika ada
       const skpWithUnitPromises = skpList.map(async (skp) => {
         const unitResponse = await this.unitKerjaService.findById(
           Number(skp.unit_id),
           token,
         );
 
+        // Populate SKP atasan jika atasan_skp_id tidak null
+        let atasanSkp: any = null;
+        if (skp.atasan_skp_id && skp.atasan_skp_id.length > 0) {
+          // Populate semua SKP atasan dalam array
+          const atasanSkpPromises = skp.atasan_skp_id.map(
+            async (atasanSkpId) => {
+              const atasanSkpData = await this.skpRepository.findOne({
+                where: { id: atasanSkpId },
+              });
+
+              if (atasanSkpData) {
+                const atasanUnitResponse = await this.unitKerjaService.findById(
+                  Number(atasanSkpData.unit_id),
+                  token,
+                );
+
+                return {
+                  ...atasanSkpData,
+                  unit: atasanUnitResponse.status
+                    ? atasanUnitResponse.data
+                    : null,
+                };
+              }
+              return null;
+            },
+          );
+
+          // Filter out null values
+          const atasanSkpResults = await Promise.all(atasanSkpPromises);
+          atasanSkp = atasanSkpResults.filter((item) => item !== null);
+        }
+
         return {
           ...skp,
-          unit: unitResponse.status ? unitResponse.data : null,
+          unit_id: unitResponse.status ? unitResponse.data : null,
+          atasan_skp_id: atasanSkp,
         };
       });
 
@@ -244,9 +277,43 @@ export class SkpService {
         token,
       );
 
+      // Populate SKP atasan jika atasan_skp_id tidak null
+      let atasanSkp: any = null;
+      if (skp.atasan_skp_id && skp.atasan_skp_id.length > 0) {
+        // Populate semua SKP atasan dalam array
+        const atasanSkpPromises = skp.atasan_skp_id.map(async (atasanSkpId) => {
+          const atasanSkpData = await this.skpRepository.findOne({
+            where: { id: atasanSkpId },
+          });
+
+          if (atasanSkpData) {
+            const atasanUnitResponse = await this.unitKerjaService.findById(
+              Number(atasanSkpData.unit_id),
+              token,
+            );
+
+            return {
+              ...atasanSkpData,
+              unit: atasanUnitResponse.status ? atasanUnitResponse.data : null,
+            };
+          }
+          return null;
+        });
+
+        // Filter out null values
+        const atasanSkpResults = await Promise.all(atasanSkpPromises);
+        atasanSkp = atasanSkpResults.filter((item) => item !== null);
+      }
+
+      // Ambil data perilaku berdasarkan skp_id
+      const perilakuResponse = await this.perilakuService.findBySkpId(id, token);
+      const perilakuData = perilakuResponse.status ? perilakuResponse.data : [];
+
       const skpWithUnit = {
         ...skp,
         unit: unitResponse.status ? unitResponse.data : null,
+        atasan_skp: atasanSkp,
+        perilaku_id: perilakuData,
       };
 
       return {
@@ -281,16 +348,49 @@ export class SkpService {
         };
       }
 
-      // Ambil data unit untuk setiap SKP
+      // Ambil data unit untuk setiap SKP dan populate SKP atasan
       const skpWithUnitPromises = skpList.map(async (skp) => {
         const unitResponse = await this.unitKerjaService.findById(
           Number(skp.unit_id),
           token,
         );
 
+        // Populate SKP atasan jika atasan_skp_id tidak null
+        let atasanSkp: any = null;
+        if (skp.atasan_skp_id && skp.atasan_skp_id.length > 0) {
+          // Populate semua SKP atasan dalam array
+          const atasanSkpPromises = skp.atasan_skp_id.map(
+            async (atasanSkpId) => {
+              const atasanSkpData = await this.skpRepository.findOne({
+                where: { id: atasanSkpId },
+              });
+
+              if (atasanSkpData) {
+                const atasanUnitResponse = await this.unitKerjaService.findById(
+                  Number(atasanSkpData.unit_id),
+                  token,
+                );
+
+                return {
+                  ...atasanSkpData,
+                  unit: atasanUnitResponse.status
+                    ? atasanUnitResponse.data
+                    : null,
+                };
+              }
+              return null;
+            },
+          );
+
+          // Filter out null values
+          const atasanSkpResults = await Promise.all(atasanSkpPromises);
+          atasanSkp = atasanSkpResults.filter((item) => item !== null);
+        }
+
         return {
           ...skp,
-          unit: unitResponse.status ? unitResponse.data : null,
+          unit_id: unitResponse.status ? unitResponse.data : null,
+          atasan_skp_id: atasanSkp,
         };
       });
 
@@ -307,6 +407,96 @@ export class SkpService {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
         message: `Terjadi kesalahan saat mencari SKP berdasarkan user ID: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
+  async findByAtasanSkpId(
+    atasanSkpId: string,
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      // Cari SKP yang memiliki atasan_skp_id yang mengandung atasanSkpId
+      const queryBuilder = this.skpRepository.createQueryBuilder('skp');
+
+      // Gunakan operator LIKE untuk mencari dalam array JSON
+      queryBuilder.where(`skp.atasan_skp_id::text LIKE :atasanSkpId`, {
+        atasanSkpId: `%${atasanSkpId}%`,
+      });
+
+      queryBuilder.orderBy('skp.created_at', 'DESC');
+
+      const skpList = await queryBuilder.getMany();
+
+      if (skpList.length === 0) {
+        return {
+          code: HttpStatus.OK,
+          status: true,
+          message: `Tidak ada SKP yang ditemukan untuk atasan SKP ID ${atasanSkpId}`,
+          data: [],
+        };
+      }
+
+      // Ambil data unit untuk setiap SKP dan populate SKP atasan
+      const skpWithUnitPromises = skpList.map(async (skp) => {
+        const unitResponse = await this.unitKerjaService.findById(
+          Number(skp.unit_id),
+          token,
+        );
+
+        // Populate SKP atasan jika atasan_skp_id tidak null
+        let atasanSkp: any = null;
+        if (skp.atasan_skp_id && skp.atasan_skp_id.length > 0) {
+          // Populate semua SKP atasan dalam array
+          const atasanSkpPromises = skp.atasan_skp_id.map(
+            async (atasanSkpId) => {
+              const atasanSkpData = await this.skpRepository.findOne({
+                where: { id: atasanSkpId },
+              });
+
+              if (atasanSkpData) {
+                const atasanUnitResponse = await this.unitKerjaService.findById(
+                  Number(atasanSkpData.unit_id),
+                  token,
+                );
+
+                return {
+                  ...atasanSkpData,
+                  unit: atasanUnitResponse.status
+                    ? atasanUnitResponse.data
+                    : null,
+                };
+              }
+              return null;
+            },
+          );
+
+          // Filter out null values
+          const atasanSkpResults = await Promise.all(atasanSkpPromises);
+          atasanSkp = atasanSkpResults.filter((item) => item !== null);
+        }
+
+        return {
+          ...skp,
+          unit_id: unitResponse.status ? unitResponse.data : null,
+          atasan_skp_id: atasanSkp,
+        };
+      });
+
+      const skpWithUnit = await Promise.all(skpWithUnitPromises);
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Daftar SKP berhasil ditemukan',
+        data: skpWithUnit,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan saat mencari SKP berdasarkan atasan SKP ID: ${error.message}`,
         data: null,
       };
     }
@@ -382,7 +572,7 @@ export class SkpService {
 
       const skpWithUnit = {
         ...updatedSkp,
-        unit: unitResponse.status ? unitResponse.data : null,
+        unit_id: unitResponse.status ? unitResponse.data.id : null,
       };
 
       return {
