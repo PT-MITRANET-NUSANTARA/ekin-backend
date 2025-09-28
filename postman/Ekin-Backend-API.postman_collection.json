@@ -19,12 +19,152 @@
     {
       "key": "base_url",
       "value": "http://localhost:3000",
-      "type": "string"
+      "type": "string",
+      "description": "Base URL for the API"
     },
     {
       "key": "jwt_token",
       "value": "",
-      "type": "string"
+      "type": "string",
+      "description": "JWT token for authentication"
+    },
+    {
+      "key": "api_version",
+      "value": "v1",
+      "type": "string",
+      "description": "API version"
+    },
+    {
+      "key": "default_page",
+      "value": "1",
+      "type": "string",
+      "description": "Default page number for pagination"
+    },
+    {
+      "key": "default_per_page",
+      "value": "10",
+      "type": "string",
+      "description": "Default items per page for pagination"
+    },
+    {
+      "key": "content_type_json",
+      "value": "application/json",
+      "type": "string",
+      "description": "Content type for JSON requests"
+    },
+    {
+      "key": "auth_header",
+      "value": "Bearer {{jwt_token}}",
+      "type": "string",
+      "description": "Authorization header with token"
+    },
+    {
+      "key": "skp_id",
+      "value": "skp-123",
+      "type": "string",
+      "description": "ID SKP untuk pengujian"
+    },
+    {
+      "key": "kegiatan_id",
+      "value": "kegiatan-123",
+      "type": "string",
+      "description": "ID Kegiatan untuk pengujian"
+    },
+    {
+      "key": "harian_id",
+      "value": "harian-123",
+      "type": "string",
+      "description": "ID Harian untuk pengujian"
+    },
+    {
+      "key": "penilaian_id",
+      "value": "penilaian-123",
+      "type": "string",
+      "description": "ID Penilaian untuk pengujian"
+    },
+    {
+      "key": "tujuan_id",
+      "value": "tujuan-123",
+      "type": "string",
+      "description": "ID Tujuan untuk pengujian"
+    },
+    {
+      "key": "unit_id",
+      "value": "1",
+      "type": "string",
+      "description": "ID Unit Kerja untuk pengujian"
+    },
+    {
+      "key": "perilaku_id",
+      "value": "perilaku-123",
+      "type": "string",
+      "description": "ID Perilaku untuk pengujian"
+    },
+    {
+      "key": "feedback_id",
+      "value": "feedback-123",
+      "type": "string",
+      "description": "ID Feedback untuk pengujian"
+    },
+    {
+      "key": "periode_id",
+      "value": "periode-123",
+      "type": "string",
+      "description": "ID Periode Penilaian untuk pengujian"
+    },
+    {
+      "key": "aspek_id",
+      "value": "aspek-123",
+      "type": "string",
+      "description": "ID Aspek untuk pengujian"
+    },
+    {
+      "key": "setting_id",
+      "value": "setting-123",
+      "type": "string",
+      "description": "ID Setting untuk pengujian"
+    },
+    {
+      "key": "renstra_id",
+      "value": "renstra-123",
+      "type": "string",
+      "description": "ID Renstra untuk pengujian"
+    },
+    {
+      "key": "misi_id",
+      "value": "misi-123",
+      "type": "string",
+      "description": "ID Misi untuk pengujian"
+    },
+    {
+      "key": "visi_id",
+      "value": "visi-123",
+      "type": "string",
+      "description": "ID Visi untuk pengujian"
+    },
+    {
+      "key": "program_id",
+      "value": "program-123",
+      "type": "string",
+      "description": "ID Program untuk pengujian"
+    },
+    {
+      "key": "rkt_id",
+      "value": "rkt-123",
+      "type": "string",
+      "description": "ID RKT untuk pengujian"
+    },
+    {
+      "key": "rhk_id",
+      "value": "rhk-123",
+      "type": "string",
+      "description": "ID RHK untuk pengujian"
+    },
+    {
+      "key": "indikator_kinerja_id",
+      "value": "indikator-123",
+      "type": "string",
+      "description": "ID Indikator Kinerja untuk pengujian"
     }
   ],
   "item": [
@@ -38,12 +178,17 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "{{auth_header}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "{{content_type_json}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{base_url}}/logs/user/{{user_id}}?page=1&perPage=10",
+              "raw": "{{base_url}}/logs/user/{{user_id}}?page={{page}}&perPage={{per_page}}",
               "host": ["{{base_url}}"],
               "path": ["logs", "user", "{{user_id}}"],
               "query": [
@@ -68,12 +213,17 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "{{auth_header}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "{{content_type_json}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{base_url}}/logs/model/{{model_id}}?page=1&perPage=10",
+              "raw": "{{base_url}}/logs/model/{{model_id}}?page={{page}}&perPage={{per_page}}",
               "host": ["{{base_url}}"],
               "path": ["logs", "model", "{{model_id}}"],
               "query": [
@@ -103,12 +253,12 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "{{auth_header}}",
                 "type": "text"
               },
               {
                 "key": "Content-Type",
-                "value": "application/json",
+                "value": "{{content_type_json}}",
                 "type": "text"
               }
             ],
@@ -198,7 +348,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/harian?page=1&perPage=10&user_id=user-123&date=2023-10-15&skp_id=1&is_skp=true&search=kegiatan&rencana_aksi_id=uuid-1",
+              "raw": "{{base_url}}/harian?page={{page}}&perPage={{per_page}}&user_id={{user_id}}&date=2023-10-15&skp_id=1&is_skp=true&search=kegiatan&rencana_aksi_id=uuid-1",
               "host": ["{{base_url}}"],
               "path": ["harian"],
               "query": [

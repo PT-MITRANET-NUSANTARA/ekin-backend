@@ -6,18 +6,28 @@ import { Repository, Like } from 'typeorm';
 import { Visi } from './entities/visi.entity';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { FilterVisiDto } from './dto/filter-visi.dto';
+import { LogsService } from '../logs/logs.service';
 
 @Injectable()
 export class VisiService {
   constructor(
     @InjectRepository(Visi)
     private visiRepository: Repository<Visi>,
+    private logsService: LogsService,
   ) {}
 
-  async create(createVisiDto: CreateVisiDto): Promise<ApiResponse> {
+  async create(createVisiDto: CreateVisiDto, user: any): Promise<ApiResponse> {
     try {
       const visi = this.visiRepository.create(createVisiDto);
       const result = await this.visiRepository.save(visi);
+
+      // Mencatat log untuk operasi create
+      await this.logsService.logCreate(
+        user?.mapData?.nipBaru || 'system',
+        'visi',
+        result.id,
+        `Membuat visi baru: ${result.name}`,
+      );
 
       return {
         code: HttpStatus.CREATED,
@@ -114,7 +124,7 @@ export class VisiService {
     }
   }
 
-  async update(id: string, updateVisiDto: UpdateVisiDto): Promise<ApiResponse> {
+  async update(id: string, updateVisiDto: UpdateVisiDto, user: any): Promise<ApiResponse> {
     try {
       const visi = await this.visiRepository.findOne({ where: { id } });
 
@@ -129,6 +139,14 @@ export class VisiService {
 
       await this.visiRepository.update(id, updateVisiDto);
       const updated = await this.visiRepository.findOne({ where: { id } });
+
+      // Mencatat log untuk operasi update
+      await this.logsService.logUpdate(
+        user?.mapData?.nipBaru || 'system',
+        'visi',
+        id,
+        `Mengubah visi: ${updated?.name}`,
+      );
 
       return {
         code: HttpStatus.OK,
@@ -146,7 +164,7 @@ export class VisiService {
     }
   }
 
-  async remove(id: string): Promise<ApiResponse> {
+  async remove(id: string, user: any): Promise<ApiResponse> {
     try {
       const visi = await this.visiRepository.findOne({ where: { id } });
 
@@ -158,6 +176,14 @@ export class VisiService {
           data: null,
         };
       }
+
+      // Mencatat log untuk operasi delete sebelum menghapus data
+      await this.logsService.logDelete(
+        user?.mapData?.nipBaru || 'system',
+        'visi',
+        id,
+        `Menghapus visi: ${visi.name}`,
+      );
 
       await this.visiRepository.delete(id);
 
