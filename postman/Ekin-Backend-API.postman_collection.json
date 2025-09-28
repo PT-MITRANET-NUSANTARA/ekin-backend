@@ -29,6 +29,71 @@
   ],
   "item": [
     {
+      "name": "Logs",
+      "item": [
+        {
+          "name": "Get Logs by User ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs/user/{{user_id}}?page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["logs", "user", "{{user_id}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Mendapatkan log berdasarkan user ID dengan paginasi"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Logs by Model ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs/model/{{model_id}}?page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["logs", "model", "{{model_id}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Mendapatkan log berdasarkan model ID dengan paginasi"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Harian",
       "item": [
         {
