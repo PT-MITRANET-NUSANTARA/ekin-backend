@@ -33,6 +33,7 @@ import { FeedbackPerilakuModule } from './feedback-perilaku/feedback-perilaku.mo
 import { FeedbackAspekModule } from './feedback-aspek/feedback-aspek.module';
 import { PenilaianModule } from './penilaian/penilaian.module';
 import { AbsenceModule } from './absence/absence.module';
+import { HarianModule } from './harian/harian.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { AbsenceModule } from './absence/absence.module';
     FeedbackAspekModule,
     PenilaianModule,
     AbsenceModule,
+    HarianModule,
   ],
   controllers: [AppController],
   providers: [
