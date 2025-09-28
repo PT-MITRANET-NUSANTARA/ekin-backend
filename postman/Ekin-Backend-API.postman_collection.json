@@ -29,6 +29,238 @@
   ],
   "item": [
     {
+      "name": "Penilaian",
+      "item": [
+        {
+          "name": "Create Penilaian",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skp_dinilai_id\": \"uuid-skp-dinilai-id\",\n  \"skp_penilai_id\": \"uuid-skp-penilai-id\",\n  \"periode_penilaian_id\": \"uuid-periode-penilaian-id\",\n  \"rating_kinerja\": 80,\n  \"rating_perilaku\": 85,\n  \"rating_predikat\": 90\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/penilaian",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian"]
+            },
+            "description": "Create a new penilaian"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Penilaian",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/penilaian?page=1&perPage=10&skp_dinilai_id=uuid-skp-dinilai-id&skp_penilai_id=uuid-skp-penilai-id&periode_penilaian_id=uuid-periode-penilaian-id",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                },
+                {
+                  "key": "skp_dinilai_id",
+                  "value": "uuid-skp-dinilai-id"
+                },
+                {
+                  "key": "skp_penilai_id",
+                  "value": "uuid-skp-penilai-id"
+                },
+                {
+                  "key": "periode_penilaian_id",
+                  "value": "uuid-periode-penilaian-id"
+                }
+              ]
+            },
+            "description": "Get all penilaian with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Penilaian by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/penilaian/uuid-penilaian-id",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian", "uuid-penilaian-id"]
+            },
+            "description": "Get a specific penilaian by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Penilaian",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating_kinerja\": 85,\n  \"rating_perilaku\": 90,\n  \"rating_predikat\": 95\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/penilaian/uuid-penilaian-id",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian", "uuid-penilaian-id"]
+            },
+            "description": "Update an existing penilaian"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Penilaian",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/penilaian/uuid-penilaian-id",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian", "uuid-penilaian-id"]
+            },
+            "description": "Delete a penilaian"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Penilaian Kinerja",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skp_dinilai_id\": \"uuid-skp-dinilai-id\",\n  \"skp_penilai_id\": \"uuid-skp-penilai-id\",\n  \"periode_penilaian_id\": \"uuid-periode-penilaian-id\",\n  \"rating_kinerja\": 85\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/penilaian/kinerja",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian", "kinerja"]
+            },
+            "description": "Update penilaian kinerja"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Penilaian Perilaku",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skp_dinilai_id\": \"uuid-skp-dinilai-id\",\n  \"skp_penilai_id\": \"uuid-skp-penilai-id\",\n  \"periode_penilaian_id\": \"uuid-periode-penilaian-id\",\n  \"rating_perilaku\": 90\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/penilaian/perilaku",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian", "perilaku"]
+            },
+            "description": "Update penilaian perilaku"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Penilaian Predikat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skp_dinilai_id\": \"uuid-skp-dinilai-id\",\n  \"skp_penilai_id\": \"uuid-skp-penilai-id\",\n  \"periode_penilaian_id\": \"uuid-periode-penilaian-id\",\n  \"rating_predikat\": 95\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/penilaian/predikat",
+              "host": ["{{base_url}}"],
+              "path": ["penilaian", "predikat"]
+            },
+            "description": "Update penilaian predikat"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Feedback Aspek",
       "item": [
         {
