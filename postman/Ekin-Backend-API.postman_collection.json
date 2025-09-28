@@ -29,6 +29,147 @@
   ],
   "item": [
     {
+      "name": "Feedback Aspek",
+      "item": [
+        {
+          "name": "Create Feedback Aspek",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"aspek_id\": \"uuid-aspek-id\",\n  \"periode_penilaian_id\": \"uuid-periode-penilaian-id\",\n  \"desc\": \"Deskripsi feedback aspek\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedback-aspek",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-aspek"]
+            },
+            "description": "Create a new feedback aspek"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Feedback Aspek",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/feedback-aspek?page=1&perPage=10&aspek_id=uuid-aspek-id&periode_penilaian_id=uuid-periode-penilaian-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-aspek"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                },
+                {
+                  "key": "aspek_id",
+                  "value": "uuid-aspek-id"
+                },
+                {
+                  "key": "periode_penilaian_id",
+                  "value": "uuid-periode-penilaian-id"
+                }
+              ]
+            },
+            "description": "Get all feedback aspek with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Feedback Aspek by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/feedback-aspek/uuid-feedback-aspek-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-aspek", "uuid-feedback-aspek-id"]
+            },
+            "description": "Get a specific feedback aspek by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Feedback Aspek",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"aspek_id\": \"uuid-aspek-id-updated\",\n  \"periode_penilaian_id\": \"uuid-periode-penilaian-id-updated\",\n  \"desc\": \"Deskripsi feedback aspek yang diperbarui\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedback-aspek/uuid-feedback-aspek-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-aspek", "uuid-feedback-aspek-id"]
+            },
+            "description": "Update an existing feedback aspek"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Feedback Aspek",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/feedback-aspek/uuid-feedback-aspek-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-aspek", "uuid-feedback-aspek-id"]
+            },
+            "description": "Delete a feedback aspek"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Feedback Perilaku",
       "item": [
         {

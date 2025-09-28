@@ -30,6 +30,7 @@ import { SettingsModule } from './settings/settings.module';
 import { UmpegModule } from './umpeg/umpeg.module';
 import { VerificatorModule } from './verificator/verificator.module';
 import { FeedbackPerilakuModule } from './feedback-perilaku/feedback-perilaku.module';
+import { FeedbackAspekModule } from './feedback-aspek/feedback-aspek.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { FeedbackPerilakuModule } from './feedback-perilaku/feedback-perilaku.mo
     UmpegModule,
     VerificatorModule,
     FeedbackPerilakuModule,
+    FeedbackAspekModule,
   ],
   controllers: [AppController],
   providers: [
