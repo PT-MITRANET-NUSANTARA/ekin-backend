@@ -29,6 +29,7 @@ import { RencanaAksiModule } from './rencana-aksi/rencana-aksi.module';
 import { SettingsModule } from './settings/settings.module';
 import { UmpegModule } from './umpeg/umpeg.module';
 import { VerificatorModule } from './verificator/verificator.module';
+import { FeedbackPerilakuModule } from './feedback-perilaku/feedback-perilaku.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { VerificatorModule } from './verificator/verificator.module';
     SettingsModule,
     UmpegModule,
     VerificatorModule,
+    FeedbackPerilakuModule,
   ],
   controllers: [AppController],
   providers: [

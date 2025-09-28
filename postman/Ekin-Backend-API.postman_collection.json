@@ -29,6 +29,147 @@
   ],
   "item": [
     {
+      "name": "Feedback Perilaku",
+      "item": [
+        {
+          "name": "Create Feedback Perilaku",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"perilaku_id\": \"uuid-perilaku-id\",\n  \"periode_penilaian_id\": \"uuid-periode-penilaian-id\",\n  \"desc\": \"Deskripsi feedback perilaku\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedback-perilaku",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-perilaku"]
+            },
+            "description": "Create a new feedback perilaku"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Feedback Perilaku",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/feedback-perilaku?page=1&perPage=10&perilaku_id=uuid-perilaku-id&periode_penilaian_id=uuid-periode-penilaian-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-perilaku"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                },
+                {
+                  "key": "perilaku_id",
+                  "value": "uuid-perilaku-id"
+                },
+                {
+                  "key": "periode_penilaian_id",
+                  "value": "uuid-periode-penilaian-id"
+                }
+              ]
+            },
+            "description": "Get all feedback perilaku with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Feedback Perilaku by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/feedback-perilaku/uuid-feedback-perilaku-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-perilaku", "uuid-feedback-perilaku-id"]
+            },
+            "description": "Get a feedback perilaku by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Feedback Perilaku",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"desc\": \"Deskripsi feedback perilaku yang diperbarui\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedback-perilaku/uuid-feedback-perilaku-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-perilaku", "uuid-feedback-perilaku-id"]
+            },
+            "description": "Update a feedback perilaku by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Feedback Perilaku",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/feedback-perilaku/uuid-feedback-perilaku-id",
+              "host": ["{{base_url}}"],
+              "path": ["feedback-perilaku", "uuid-feedback-perilaku-id"]
+            },
+            "description": "Delete a feedback perilaku by ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Umpeg",
       "item": [
         {
