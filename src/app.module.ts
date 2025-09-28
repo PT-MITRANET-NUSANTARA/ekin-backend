@@ -32,6 +32,7 @@ import { VerificatorModule } from './verificator/verificator.module';
 import { FeedbackPerilakuModule } from './feedback-perilaku/feedback-perilaku.module';
 import { FeedbackAspekModule } from './feedback-aspek/feedback-aspek.module';
 import { PenilaianModule } from './penilaian/penilaian.module';
+import { AbsenceModule } from './absence/absence.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { PenilaianModule } from './penilaian/penilaian.module';
     FeedbackPerilakuModule,
     FeedbackAspekModule,
     PenilaianModule,
+    AbsenceModule,
   ],
   controllers: [AppController],
   providers: [

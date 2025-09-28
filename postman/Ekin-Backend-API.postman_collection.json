@@ -29,6 +29,155 @@
   ],
   "item": [
     {
+      "name": "Absence",
+      "item": [
+        {
+          "name": "Create Absence",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"user-123\",\n  \"date\": \"2023-08-15\",\n  \"status\": \"HADIR\",\n  \"unit_id\": \"uuid-unit-id\",\n  \"desc\": \"Keterangan absensi\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/absence",
+              "host": ["{{base_url}}"],
+              "path": ["absence"]
+            },
+            "description": "Create a new absence record"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Absence",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/absence?page=1&perPage=10&user_id=user-123&date=2023-08-15&status=HADIR&unit_id=uuid-unit-id",
+              "host": ["{{base_url}}"],
+              "path": ["absence"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                },
+                {
+                  "key": "user_id",
+                  "value": "user-123"
+                },
+                {
+                  "key": "date",
+                  "value": "2023-08-15"
+                },
+                {
+                  "key": "status",
+                  "value": "HADIR"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "uuid-unit-id"
+                }
+              ]
+            },
+            "description": "Get all absence records with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Absence by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/absence/uuid-absence-id",
+              "host": ["{{base_url}}"],
+              "path": ["absence", "uuid-absence-id"]
+            },
+            "description": "Get a specific absence record by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Absence",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IZIN\",\n  \"desc\": \"Izin karena ada keperluan keluarga\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/absence/uuid-absence-id",
+              "host": ["{{base_url}}"],
+              "path": ["absence", "uuid-absence-id"]
+            },
+            "description": "Update an existing absence record"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Absence",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/absence/uuid-absence-id",
+              "host": ["{{base_url}}"],
+              "path": ["absence", "uuid-absence-id"]
+            },
+            "description": "Delete an absence record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Penilaian",
       "item": [
         {
