@@ -13,7 +13,10 @@ import { Rhk } from './entities/rhk.entity';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { Rkt } from '../rkt/entities/rkt.entity';
 import { AspekService } from '../aspek/aspek.service';
-import { aspekTemplateUtama, aspekTemplateTurunan } from '../common/data/aspek-template';
+import {
+  aspekTemplateUtama,
+  aspekTemplateTurunan,
+} from '../common/data/aspek-template';
 
 @Injectable()
 export class RhkService {
@@ -36,10 +39,9 @@ export class RhkService {
   ): Promise<void> {
     try {
       // Pilih template berdasarkan tipe RHK
-      const templateToUse = rhkAtasanId === null 
-        ? aspekTemplateUtama 
-        : aspekTemplateTurunan;
-      
+      const templateToUse =
+        rhkAtasanId === null ? aspekTemplateUtama : aspekTemplateTurunan;
+
       // Iterasi setiap template aspek dan buat entri aspek baru
       for (const template of templateToUse) {
         await this.aspekService.create({
@@ -65,24 +67,28 @@ export class RhkService {
 
       // Buat entity RHK tanpa rkts_id dulu
       const { rkts_id, ...rhkData } = createRhkDto;
-      
+
       const rhk = this.rhkRepository.create(rhkData);
-      
+
       // Simpan RHK terlebih dahulu
       const savedRhk = await this.rhkRepository.save(rhk);
-      
+
       // Jika ada rkts_id, tambahkan relasi
       if (rkts_id && rkts_id.length > 0) {
         // Konversi string[] menjadi Rkt[]
-        const rktEntities = rkts_id.map(id => ({ id } as Rkt));
+        const rktEntities = rkts_id.map((id) => ({ id }) as Rkt);
         savedRhk.rkts_id = rktEntities;
         // Update dengan relasi
         await this.rhkRepository.save(savedRhk);
       }
-      
+
       // Buat aspek dari template berdasarkan tipe RHK (utama atau turunan)
       if (savedRhk && savedRhk.id) {
-        await this.createAspekFromTemplate(savedRhk.id, savedRhk.rhk_atasan_id || null, token);
+        await this.createAspekFromTemplate(
+          savedRhk.id,
+          savedRhk.rhk_atasan_id || null,
+          token,
+        );
       }
 
       return {
@@ -114,7 +120,8 @@ export class RhkService {
 
       const skip = (page - 1) * perPage;
 
-      const queryBuilder = this.rhkRepository.createQueryBuilder('rhk')
+      const queryBuilder = this.rhkRepository
+        .createQueryBuilder('rhk')
         .leftJoinAndSelect('rhk.rkts_id', 'rkts');
 
       if (skp_id) {
@@ -145,7 +152,7 @@ export class RhkService {
       queryBuilder.take(perPage);
 
       const rhks = await queryBuilder.getMany();
-      
+
       // Ambil aspek untuk setiap RHK
       const rhksWithAspek = await Promise.all(
         rhks.map(async (rhk) => {
@@ -154,14 +161,14 @@ export class RhkService {
             WHERE rhk_id = '${rhk.id}'
             ORDER BY created_at DESC
           `;
-          
+
           const aspek = await this.rhkRepository.query(aspekQuery);
-          
+
           return {
             ...rhk,
             aspek: aspek || [],
           };
-        })
+        }),
       );
 
       const pagination = {
@@ -210,9 +217,9 @@ export class RhkService {
         WHERE rhk_id = '${id}'
         ORDER BY created_at DESC
       `;
-      
+
       const aspek = await this.rhkRepository.query(aspekQuery);
-      
+
       // Tambahkan aspek ke data RHK
       const rhkWithAspek = {
         ...rhk,
@@ -251,14 +258,14 @@ export class RhkService {
             WHERE rhk_id = '${rhk.id}'
             ORDER BY created_at DESC
           `;
-          
+
           const aspek = await this.rhkRepository.query(aspekQuery);
-          
+
           return {
             ...rhk,
             aspek: aspek || [],
           };
-        })
+        }),
       );
 
       return {
@@ -295,7 +302,7 @@ export class RhkService {
           data: null,
         };
       }
-      
+
       // Pisahkan rkts_id dari data lainnya
       const { rkts_id, ...rhkData } = updateRhkDto;
 
@@ -304,14 +311,14 @@ export class RhkService {
 
       // Update properti (tanpa rkts_id)
       Object.assign(rhk, rhkData);
-      
+
       // Simpan perubahan dasar
       let updatedRhk = await this.rhkRepository.save(rhk);
-      
+
       // Jika ada rkts_id, update relasi
       if (rkts_id && rkts_id.length > 0) {
         // Konversi string[] menjadi Rkt[]
-        updatedRhk.rkts_id = rkts_id.map(id => ({ id } as Rkt));
+        updatedRhk.rkts_id = rkts_id.map((id) => ({ id }) as Rkt);
         // Update dengan relasi
         updatedRhk = await this.rhkRepository.save(updatedRhk);
       }

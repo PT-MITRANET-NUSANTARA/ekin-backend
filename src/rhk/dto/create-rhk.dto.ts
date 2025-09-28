@@ -1,4 +1,12 @@
-import { IsEnum, IsNumber, IsOptional, IsString, IsArray, IsUUID, IsNotEmpty } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsArray,
+  IsUUID,
+  IsNotEmpty,
+} from 'class-validator';
 import { JenisRhk, KlasifikasiRhk } from '../entities/rhk.entity';
 
 export class CreateRhkDto {

@@ -308,7 +308,10 @@ export class SkpService {
       }
 
       // Ambil data perilaku berdasarkan skp_id
-      const perilakuResponse = await this.perilakuService.findBySkpId(id, token);
+      const perilakuResponse = await this.perilakuService.findBySkpId(
+        id,
+        token,
+      );
       const perilakuData = perilakuResponse.status ? perilakuResponse.data : [];
 
       // Ambil data RHK berdasarkan skp_id

@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Rkt } from '../../rkt/entities/rkt.entity';
 
 export enum JenisRhk {

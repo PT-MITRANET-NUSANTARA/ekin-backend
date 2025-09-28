@@ -69,10 +69,14 @@ export class IndikatorKinerja {
   @JoinColumn({ name: 'rkt_outcome_id' })
   rkt_outcome: Rkt;
 
-  @ManyToOne(() => SubKegiatan, (subKegiatan) => subKegiatan.indikator_kinerja_id, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
+  @ManyToOne(
+    () => SubKegiatan,
+    (subKegiatan) => subKegiatan.indikator_kinerja_id,
+    {
+      nullable: true,
+      onDelete: 'SET NULL',
+    },
+  )
   @JoinColumn({ name: 'sub_kegiatan_id' })
   sub_kegiatan: SubKegiatan;
 

@@ -29,6 +29,202 @@
   ],
   "item": [
     {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "Initialize Settings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings/initialize",
+              "host": ["{{base_url}}"],
+              "path": ["settings", "initialize"]
+            },
+            "description": "Inisialisasi pengaturan dengan nilai default"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Setting",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings/latest",
+              "host": ["{{base_url}}"],
+              "path": ["settings", "latest"]
+            },
+            "description": "Mendapatkan pengaturan terbaru"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Setting",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"site_name\": \"E-Kinerja Kabupaten\",\n    \"site_description\": \"Aplikasi E-Kinerja Kabupaten\",\n    \"maintenance_mode\": false,\n    \"contact_email\": \"admin@example.com\",\n    \"admin_id\": \"197904012005011015\",\n    \"bupati_id\": \"197904012005011015\",\n    \"daily_start_time\": \"07:00\",\n    \"daily_end_time\": \"17:00\",\n    \"break_start_time\": \"11:00\",\n    \"break_end_time\": \"12:00\",\n    \"total_minutes\": 480\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/settings",
+              "host": ["{{base_url}}"],
+              "path": ["settings"]
+            },
+            "description": "Membuat pengaturan baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings?page=1&perPage=10",
+              "host": ["{{base_url}}"],
+              "path": ["settings"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Mendapatkan semua pengaturan dengan paginasi"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Setting by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings/:id",
+              "host": ["{{base_url}}"],
+              "path": ["settings", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-setting-id"
+                }
+              ]
+            },
+            "description": "Mendapatkan pengaturan berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Setting",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"site_name\": \"E-Kinerja Kabupaten Updated\",\n    \"site_description\": \"Aplikasi E-Kinerja Kabupaten Updated\",\n    \"maintenance_mode\": true,\n    \"contact_email\": \"admin@example.com\",\n    \"admin_id\": \"197904012005011015\",\n    \"bupati_id\": \"197904012005011015\",\n    \"daily_start_time\": \"08:00\",\n    \"daily_end_time\": \"16:00\",\n    \"break_start_time\": \"12:00\",\n    \"break_end_time\": \"13:00\",\n    \"total_minutes\": 420\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/settings/:id",
+              "host": ["{{base_url}}"],
+              "path": ["settings", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-setting-id"
+                }
+              ]
+            },
+            "description": "Memperbarui pengaturan berdasarkan ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Setting",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings/:id",
+              "host": ["{{base_url}}"],
+              "path": ["settings", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-setting-id"
+                }
+              ]
+            },
+            "description": "Menghapus pengaturan berdasarkan ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Rencana Aksi",
       "item": [
         {
