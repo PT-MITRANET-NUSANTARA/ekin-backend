@@ -3831,6 +3831,143 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Verificator",
+      "item": [
+        {
+          "name": "Create Verificator",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unit_id\": \"1\",\n  \"jabatan\": {\n    \"1\": [\"Kepala Dinas\", \"Sekretaris\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/verificator",
+              "host": ["{{base_url}}"],
+              "path": ["verificator"]
+            },
+            "description": "Create a new verificator"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Verificators",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/verificator?page=1&perPage=10&unit_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["verificator"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                },
+                {
+                  "key": "unit_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get all verificators with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Verificator by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/verificator/1",
+              "host": ["{{base_url}}"],
+              "path": ["verificator", "1"]
+            },
+            "description": "Get a verificator by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Verificator",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unit_id\": \"1\",\n  \"jabatan\": {\n    \"1\": [\"Kepala Dinas\", \"Sekretaris\", \"Kepala Bidang\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/verificator/1",
+              "host": ["{{base_url}}"],
+              "path": ["verificator", "1"]
+            },
+            "description": "Update an existing verificator by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Verificator",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/verificator/1",
+              "host": ["{{base_url}}"],
+              "path": ["verificator", "1"]
+            },
+            "description": "Delete a verificator by ID"
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [

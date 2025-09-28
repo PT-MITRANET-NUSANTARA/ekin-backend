@@ -28,6 +28,7 @@ import { AspekModule } from './aspek/aspek.module';
 import { RencanaAksiModule } from './rencana-aksi/rencana-aksi.module';
 import { SettingsModule } from './settings/settings.module';
 import { UmpegModule } from './umpeg/umpeg.module';
+import { VerificatorModule } from './verificator/verificator.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { UmpegModule } from './umpeg/umpeg.module';
     RencanaAksiModule,
     SettingsModule,
     UmpegModule,
+    VerificatorModule,
   ],
   controllers: [AppController],
   providers: [
