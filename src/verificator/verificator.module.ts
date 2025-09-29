@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VerificatorService } from './verificator.service';
 import { VerificatorController } from './verificator.controller';
@@ -9,8 +9,8 @@ import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Verificator]),
-    UnitKerjaModule,
-    AuthModule,
+    forwardRef(() => UnitKerjaModule),
+    forwardRef(() => AuthModule),
   ],
   controllers: [VerificatorController],
   providers: [VerificatorService],

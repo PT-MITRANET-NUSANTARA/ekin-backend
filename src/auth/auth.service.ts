@@ -16,6 +16,8 @@ import { Repository } from 'typeorm';
 import { Setting } from '../settings/entities/setting.entity';
 import { UserService } from '../user/user.service';
 import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
+import { UmpegService } from '../umpeg/umpeg.service';
+import { VerificatorService } from '../verificator/verificator.service';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +28,8 @@ export class AuthService {
     private readonly settingRepository: Repository<Setting>,
     private readonly userService: UserService,
     private readonly unitKerjaService: UnitKerjaService,
+    private readonly umpegService: UmpegService,
+    private readonly verificatorService: VerificatorService,
   ) {}
 
   async getPhoto(id: string, token: string, res: Response): Promise<void> {
@@ -185,6 +189,62 @@ export class AuthService {
           } catch (jptError) {
             console.error('Error checking JPT status:', jptError.message);
             // Jika gagal memeriksa status JPT, tetap lanjutkan dengan isJpt = false
+          }
+
+          // Ambil data umpeg berdasarkan unit dan jabatan
+          try {
+            if (
+              profileData.posjab &&
+              profileData.posjab.unor &&
+              profileData.posjab.unor.induk &&
+              profileData.posjab.unor.induk.id_simpeg &&
+              profileData.posjab.nama_jabatan
+            ) {
+              // Ambil data verificator berdasarkan unit dan jabatan
+              try {
+                const unitId = profileData.posjab.unor.induk.id_simpeg;
+                const jabatan = profileData.posjab.nama_jabatan;
+
+                // Buat objek untuk parameter verifyUnitAndJabatan
+                const verifyDto = {
+                  unit_id: Number(unitId),
+                  jabatan: [{ [unitId]: [jabatan] }],
+                };
+
+                const verificatorResponse =
+                  await this.verificatorService.verifyUnitAndJabatan(
+                    verifyDto,
+                    token,
+                  );
+
+                if (verificatorResponse.status && verificatorResponse.data) {
+                  profileData.verificators = verificatorResponse.data;
+                }
+              } catch (verificatorError) {
+                console.error(
+                  'Error fetching verificator data:',
+                  verificatorError.message,
+                );
+                // Jika gagal mengambil data verificator, tetap lanjutkan tanpa data verificator
+              }
+
+              const unitId = profileData.posjab.unor.induk.id_simpeg;
+              const jabatan = profileData.posjab.nama_jabatan;
+
+              const umpegResponse =
+                await this.umpegService.findByUnitAndJabatan(
+                  unitId.toString(),
+                  jabatan,
+                  token,
+                );
+
+              if (umpegResponse.status && umpegResponse.data) {
+                profileData.umpegs = umpegResponse.data;
+              }
+            }
+          } catch (umpegError) {
+            console.error('Error fetching umpeg data:', umpegError.message);
+            // Jika gagal mendapatkan data umpeg, tetap lanjutkan tanpa data umpeg
           }
         }
       } catch (error) {

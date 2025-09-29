@@ -52,6 +52,7 @@ export class RhkService {
       }
 
       const pendekatan = skpResult[0].pendekatan;
+      console.log("Pendekatan", pendekatan);
 
       // Pilih template berdasarkan pendekatan SKP
       // Jika KUALITATIF gunakan template utama, jika KUANTITATIF gunakan template turunan

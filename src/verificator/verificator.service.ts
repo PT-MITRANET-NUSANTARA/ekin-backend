@@ -370,7 +370,7 @@ export class VerificatorService {
           id: string;
           unit_id: string;
         };
-        valid_jabatan: string[];
+        valid_unit_ids: string[];
       }
 
       const verificationResults: VerificationResult[] = [];
@@ -378,7 +378,7 @@ export class VerificatorService {
       // Untuk setiap verificator, periksa apakah unit_id dan jabatan cocok
       for (const verificator of verificators) {
         let isUnitMatch = false;
-        let validJabatan: string[] = [];
+        let validUnitIds: string[] = [];
 
         // Cek apakah unit_id input sama dengan salah satu key dalam array jabatan input
         for (const jabatanItem of verifyDto.jabatan) {
@@ -392,24 +392,22 @@ export class VerificatorService {
             for (const verJabatanItem of verificator.jabatan) {
               const verUnitIds = Object.keys(verJabatanItem);
 
-              // Jika verificator memiliki unit yang sama
-              if (verUnitIds.includes(verifyDto.unit_id.toString())) {
-                // Dapatkan daftar jabatan dari input dan verificator
-                const inputJabatanList =
-                  jabatanItem[verifyDto.unit_id.toString()];
-                const verJabatanList =
-                  verJabatanItem[verifyDto.unit_id.toString()];
+              // Untuk setiap unit ID dalam verificator
+              for (const verUnitId of verUnitIds) {
+                // Dapatkan daftar jabatan dari input dan verificator untuk unit ID ini
+                const inputJabatanList = jabatanItem[verifyDto.unit_id.toString()];
+                const verJabatanList = verJabatanItem[verUnitId];
 
                 // Cari jabatan yang cocok
-                const matchingJabatan = inputJabatanList.filter((inputJab) =>
+                const hasMatchingJabatan = inputJabatanList.some((inputJab) =>
                   verJabatanList.some(
                     (verJab) => verJab.toLowerCase() === inputJab.toLowerCase(),
                   ),
                 );
 
-                if (matchingJabatan.length > 0) {
-                  validJabatan = matchingJabatan;
-                  break;
+                // Jika ada jabatan yang cocok, tambahkan unit ID ke daftar valid
+                if (hasMatchingJabatan && !validUnitIds.includes(verUnitId)) {
+                  validUnitIds.push(verUnitId);
                 }
               }
             }
@@ -418,14 +416,14 @@ export class VerificatorService {
           }
         }
 
-        // Jika unit cocok dan ada jabatan yang valid, tambahkan ke hasil
-        if (isUnitMatch && validJabatan.length > 0) {
+        // Jika unit cocok dan ada unit ID yang valid, tambahkan ke hasil
+        if (isUnitMatch && validUnitIds.length > 0) {
           verificationResults.push({
             verificator: {
               id: verificator.id,
               unit_id: verificator.unit_id,
             },
-            valid_jabatan: validJabatan,
+            valid_unit_ids: validUnitIds,
           });
         }
       }

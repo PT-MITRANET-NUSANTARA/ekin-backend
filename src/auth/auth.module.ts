@@ -9,6 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Setting } from '../settings/entities/setting.entity';
 import { UserModule } from '../user/user.module';
 import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
+import { UmpegModule } from '../umpeg/umpeg.module';
+import { VerificatorModule } from '../verificator/verificator.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
     TypeOrmModule.forFeature([Setting]),
     forwardRef(() => UserModule),
     forwardRef(() => UnitKerjaModule),
+    forwardRef(() => UmpegModule),
+    forwardRef(() => VerificatorModule),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwksService, JwtAuthGuard],
