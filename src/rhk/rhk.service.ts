@@ -263,7 +263,7 @@ export class RhkService {
         relations: ['rkts_id'],
       });
 
-      // Ambil aspek untuk setiap RHK
+      // Ambil aspek dan indikator kinerja untuk setiap RHK
       const rhksWithAspek = await Promise.all(
         rhks.map(async (rhk) => {
           const aspekQuery = `
@@ -274,9 +274,40 @@ export class RhkService {
 
           const aspek = await this.rhkRepository.query(aspekQuery);
 
+          // Ambil indikator kinerja untuk setiap aspek
+          const aspekWithIndikator = await Promise.all(
+            aspek.map(async (asp) => {
+              if (asp.indikator_kinerja_id) {
+                const indikatorQuery = `
+                  SELECT * FROM indikator_kinerja 
+                  WHERE id = '${asp.indikator_kinerja_id}'
+                `;
+
+                const indikatorResult =
+                  await this.rhkRepository.query(indikatorQuery);
+                const indikator =
+                  indikatorResult.length > 0 ? indikatorResult[0] : null;
+
+                return {
+                  ...asp,
+                  indikator_kinerja: {
+                    name: indikator.name,
+                    target: indikator.target,
+                    satuan: indikator.satuan,
+                  },
+                };
+              }
+
+              return {
+                ...asp,
+                indikator_kinerja: null,
+              };
+            }),
+          );
+
           return {
             ...rhk,
-            aspek: aspek || [],
+            aspek: aspekWithIndikator || [],
           };
         }),
       );
@@ -297,7 +328,10 @@ export class RhkService {
     }
   }
 
-  async findByRhkAtasanId(rhkAtasanId: string, token: string): Promise<ApiResponse> {
+  async findByRhkAtasanId(
+    rhkAtasanId: string,
+    token: string,
+  ): Promise<ApiResponse> {
     try {
       const rhks = await this.rhkRepository.find({
         where: { rhk_atasan_id: rhkAtasanId },
@@ -305,7 +339,7 @@ export class RhkService {
         relations: ['rkts_id'],
       });
 
-      // Ambil aspek untuk setiap RHK
+      // Ambil aspek dan indikator kinerja untuk setiap RHK
       const rhksWithAspek = await Promise.all(
         rhks.map(async (rhk) => {
           const aspekQuery = `
@@ -316,9 +350,40 @@ export class RhkService {
 
           const aspek = await this.rhkRepository.query(aspekQuery);
 
+          // Ambil indikator kinerja untuk setiap aspek
+          const aspekWithIndikator = await Promise.all(
+            aspek.map(async (asp) => {
+              if (asp.indikator_kinerja_id) {
+                const indikatorQuery = `
+                  SELECT * FROM indikator_kinerja 
+                  WHERE id = '${asp.indikator_kinerja_id}'
+                `;
+
+                const indikatorResult =
+                  await this.rhkRepository.query(indikatorQuery);
+                const indikator =
+                  indikatorResult.length > 0 ? indikatorResult[0] : null;
+
+                return {
+                  ...asp,
+                  indikator_kinerja: {
+                    name: indikator.name,
+                    target: indikator.target,
+                    satuan: indikator.satuan,
+                  },
+                };
+              }
+
+              return {
+                ...asp,
+                indikator_kinerja: null,
+              };
+            }),
+          );
+
           return {
             ...rhk,
-            aspek: aspek || [],
+            aspek: aspekWithIndikator || [],
           };
         }),
       );
