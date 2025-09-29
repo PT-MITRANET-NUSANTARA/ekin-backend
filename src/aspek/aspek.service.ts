@@ -6,17 +6,34 @@ import { UpdateAspekDto } from './dto/update-aspek.dto';
 import { FilterAspekDto } from './dto/filter-aspek.dto';
 import { Aspek } from './entities/aspek.entity';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
+import { IndikatorKinerjaService } from '../indikator-kinerja/indikator-kinerja.service';
 
 @Injectable()
 export class AspekService {
   constructor(
     @InjectRepository(Aspek)
     private readonly aspekRepository: Repository<Aspek>,
+    private readonly indikatorKinerjaService: IndikatorKinerjaService,
   ) {}
 
   async create(createAspekDto: CreateAspekDto): Promise<ApiResponse> {
     try {
-      const aspek = this.aspekRepository.create(createAspekDto);
+      // Buat objek aspek tanpa indikator kinerja terlebih dahulu
+      const aspekData = { ...createAspekDto };
+      delete aspekData.indikator_kinerja;
+      
+      // Buat aspek
+      const aspek = this.aspekRepository.create(aspekData);
+      
+      // Jika ada indikator kinerja DTO, buat indikator kinerja
+      if (createAspekDto.indikator_kinerja) {
+        const indikatorKinerja = await this.indikatorKinerjaService.create(
+          createAspekDto.indikator_kinerja
+        );
+        aspek.indikator_kinerja_id = indikatorKinerja.id;
+        aspek.indikator_kinerja = indikatorKinerja;
+      }
+      
       const savedAspek = await this.aspekRepository.save(aspek);
 
       return {
@@ -141,8 +158,9 @@ export class AspekService {
     updateAspekDto: UpdateAspekDto,
   ): Promise<ApiResponse> {
     try {
-      const aspek = await this.aspekRepository.findOne({
+      const aspek = await this.aspekRepository.findOne({ 
         where: { id },
+        relations: ['indikator_kinerja']
       });
 
       if (!aspek) {
@@ -154,10 +172,36 @@ export class AspekService {
         };
       }
 
-      // Update properti
-      Object.assign(aspek, updateAspekDto);
+      // Tangani indikator kinerja DTO
+      if (updateAspekDto.indikator_kinerja) {
+        // Jika aspek sudah memiliki indikator kinerja, update
+        if (aspek.indikator_kinerja_id) {
+          await this.indikatorKinerjaService.update(
+            aspek.indikator_kinerja_id,
+            updateAspekDto.indikator_kinerja
+          );
+        } else {
+          // Jika belum ada, buat baru
+          const indikatorKinerja = await this.indikatorKinerjaService.create(
+            updateAspekDto.indikator_kinerja
+          );
+          aspek.indikator_kinerja_id = indikatorKinerja.id;
+          await this.aspekRepository.update(id, { 
+            indikator_kinerja_id: indikatorKinerja.id 
+          });
+        }
+      }
 
-      const updatedAspek = await this.aspekRepository.save(aspek);
+      // Update aspek tanpa indikator kinerja DTO
+      const aspekData = { ...updateAspekDto };
+      delete aspekData.indikator_kinerja;
+      
+      await this.aspekRepository.update(id, aspekData);
+      
+      const updatedAspek = await this.aspekRepository.findOne({
+        where: { id },
+        relations: ['indikator_kinerja'],
+      });
 
       return {
         code: HttpStatus.OK,

@@ -4,8 +4,11 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { JenisAspek } from '../entities/aspek.entity';
+import { CreateIndikatorKinerjaDto } from '../../indikator-kinerja/dto/create-indikator-kinerja.dto';
 
 export class CreateAspekDto {
   @IsUUID()
@@ -20,7 +23,8 @@ export class CreateAspekDto {
   @IsOptional()
   desc?: string;
 
-  @IsUUID()
   @IsOptional()
-  indikator_kinerja_id?: string;
+  @ValidateNested()
+  @Type(() => CreateIndikatorKinerjaDto)
+  indikator_kinerja?: CreateIndikatorKinerjaDto;
 }

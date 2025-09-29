@@ -4,9 +4,14 @@ import { AspekService } from './aspek.service';
 import { AspekController } from './aspek.controller';
 import { Aspek } from './entities/aspek.entity';
 import { AuthModule } from '../auth/auth.module';
+import { IndikatorKinerjaModule } from '../indikator-kinerja/indikator-kinerja.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Aspek]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Aspek]), 
+    AuthModule,
+    IndikatorKinerjaModule
+  ],
   controllers: [AspekController],
   providers: [AspekService],
   exports: [AspekService],

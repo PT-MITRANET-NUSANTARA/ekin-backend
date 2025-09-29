@@ -48,7 +48,7 @@ export class RhkService {
           rhk_id: rhkId,
           jenis: template.jenis,
           desc: template.desc,
-          indikator_kinerja_id: undefined, // Indikator kinerja awalnya kosong
+          // Indikator kinerja awalnya kosong, tidak perlu diisi karena optional
         });
       }
     } catch (error) {

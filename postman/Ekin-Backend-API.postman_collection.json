@@ -1907,7 +1907,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"rhk_id\": \"uuid-rhk-id\",\n    \"jenis\": \"KUALITAS\",\n    \"desc\": \"Deskripsi aspek kualitas\",\n    \"indikator_kinerja_id\": \"uuid-indikator-kinerja-id\"\n}"
+              "raw": "{\n    \"rhk_id\": \"uuid-rhk-id\",\n    \"jenis\": \"KUALITAS\",\n    \"desc\": \"Deskripsi aspek kualitas\",\n    \"indikator_kinerja\": {\n        \"name\": \"Nama Indikator Kinerja\",\n        \"target\": \"Target Indikator\",\n        \"satuan\": \"Satuan Indikator\"\n    }\n}"
             },
             "url": {
               "raw": "{{base_url}}/aspek",
@@ -1930,7 +1930,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/aspek?page=1&perPage=10&rhk_id=uuid-rhk-id&jenis=KUALITAS&desc=deskripsi&indikator_kinerja_id=uuid-indikator-kinerja-id",
+              "raw": "{{base_url}}/aspek?page=1&perPage=10&rhk_id=uuid-rhk-id&jenis=KUALITAS&desc=deskripsi",
               "host": ["{{base_url}}"],
               "path": ["aspek"],
               "query": [
@@ -1958,11 +1958,6 @@
                   "key": "desc",
                   "value": "deskripsi",
                   "description": "Filter berdasarkan deskripsi (pencarian partial)"
-                },
-                {
-                  "key": "indikator_kinerja_id",
-                  "value": "uuid-indikator-kinerja-id",
-                  "description": "Filter berdasarkan ID indikator kinerja"
                 }
               ]
             },
@@ -2040,7 +2035,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"jenis\": \"KUANTITAS\",\n    \"desc\": \"Deskripsi aspek kuantitas yang diperbarui\",\n    \"indikator_kinerja_id\": \"uuid-indikator-kinerja-id\"\n}"
+              "raw": "{\n    \"jenis\": \"KUANTITAS\",\n    \"desc\": \"Deskripsi aspek kuantitas yang diperbarui\",\n    \"indikator_kinerja\": {\n        \"name\": \"Nama Indikator Kinerja\",\n        \"target\": \"Target Indikator\",\n        \"satuan\": \"Satuan Indikator\"\n    }\n}"
             },
             "url": {
               "raw": "{{base_url}}/aspek/:id",
