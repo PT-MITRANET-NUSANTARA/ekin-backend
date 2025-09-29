@@ -1,6 +1,6 @@
 import { Injectable, HttpStatus, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { CreateUmpegDto } from './dto/create-umpeg.dto';
 import { UpdateUmpegDto } from './dto/update-umpeg.dto';
 import { FilterUmpegDto } from './dto/filter-umpeg.dto';
@@ -243,6 +243,79 @@ export class UmpegService {
         status: true,
         message: 'Umpeg berhasil dihapus',
         data: null,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
+  async findByUnitAndJabatan(
+    unitId: string,
+    jabatan: string,
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      // Verifikasi unit_id dengan memanggil UnitKerjaService
+      const unitResponse = await this.unitKerjaService.findById(
+        Number(unitId),
+        token,
+      );
+
+      if (!unitResponse.status) {
+        return {
+          code: HttpStatus.BAD_REQUEST,
+          status: false,
+          message: `Unit dengan ID ${unitId} tidak ditemukan`,
+          data: null,
+        };
+      }
+
+      // Cari umpeg berdasarkan unit_id
+      const umpegs = await this.umpegRepository.find({
+        where: { unit_id: unitId },
+      });
+
+      if (!umpegs || umpegs.length === 0) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message: `Umpeg dengan unit ID ${unitId} tidak ditemukan`,
+          data: null,
+        };
+      }
+
+      // Filter umpeg yang memiliki jabatan yang dicari
+      const filteredUmpegs = umpegs.filter((umpeg) => {
+        return umpeg.jabatan.some((job) =>
+          job.toLowerCase().includes(jabatan.toLowerCase()),
+        );
+      });
+
+      if (filteredUmpegs.length === 0) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message: `Jabatan ${jabatan} tidak ditemukan di unit ID ${unitId}`,
+          data: null,
+        };
+      }
+
+      // Tambahkan informasi unit ke hasil
+      const umpegsWithUnit = filteredUmpegs.map((umpeg) => ({
+        ...umpeg,
+        unit: unitResponse.data,
+      }));
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Umpeg berhasil ditemukan',
+        data: umpegsWithUnit,
       };
     } catch (error) {
       return {

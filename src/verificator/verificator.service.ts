@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { CreateVerificatorDto } from './dto/create-verificator.dto';
 import { UpdateVerificatorDto } from './dto/update-verificator.dto';
 import { FilterVerificatorDto } from './dto/filter-verificator.dto';
+import { VerifyUnitJabatanDto } from './dto/verify-unit-jabatan.dto';
 import { Verificator } from './entities/verificator.entity';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
@@ -32,6 +33,9 @@ export class VerificatorService {
         token,
       );
 
+      console.log('unit', unitKerja);
+      console.log('unit-id', createVerificatorDto.unit_id);
+
       if (!unitKerja.status) {
         return {
           code: HttpStatus.BAD_REQUEST,
@@ -42,19 +46,20 @@ export class VerificatorService {
       }
 
       // Validasi unor_id dalam jabatan
-      for (const unorId of Object.keys(createVerificatorDto.jabatan)) {
-        const unor = await this.unitKerjaService.findUnorById(
-          Number(createVerificatorDto.unit_id),
-          unorId,
-          token,
-        );
-        if (!unor.status) {
-          return {
-            code: HttpStatus.BAD_REQUEST,
-            status: false,
-            message: `Unor dengan ID ${unorId} tidak ditemukan`,
-            data: null,
-          };
+      for (const jabatanItem of createVerificatorDto.jabatan) {
+        for (const unorId of Object.keys(jabatanItem)) {
+          const unor = await this.unitKerjaService.findById(
+            Number(unorId),
+            token,
+          );
+          if (!unor.status) {
+            return {
+              code: HttpStatus.BAD_REQUEST,
+              status: false,
+              message: `Unor dengan ID ${unorId} tidak ditemukan`,
+              data: null,
+            };
+          }
         }
       }
 
@@ -113,16 +118,30 @@ export class VerificatorService {
           );
 
           // Fetch unor details for each jabatan
-          const populatedJabatan = await this.populateUnorDetails(
-            verificator.unit_id,
-            verificator.jabatan,
-            token,
-          );
+          const populatedJabatanDetails: Array<{
+            unor_id: string;
+            unor_detail: any;
+            jabatan_list: string[];
+          }> = [];
+
+          if (verificator.jabatan && verificator.jabatan.length > 0) {
+            for (const jabatanItem of verificator.jabatan) {
+              const unorId = Object.keys(jabatanItem)[0];
+              if (unorId) {
+                const unorDetails = await this.getUnitDetails(unorId, token);
+                populatedJabatanDetails.push({
+                  unor_id: unorId,
+                  unor_detail: unorDetails,
+                  jabatan_list: jabatanItem[unorId],
+                });
+              }
+            }
+          }
 
           return {
             ...verificator,
             unit_detail: unitData,
-            jabatan_detail: populatedJabatan,
+            jabatan_detail: populatedJabatanDetails,
           };
         }),
       );
@@ -168,16 +187,32 @@ export class VerificatorService {
 
       // Populate unit dan unor data
       const unitData = await this.getUnitDetails(verificator.unit_id, token);
-      const populatedJabatan = await this.populateUnorDetails(
-        verificator.unit_id,
-        verificator.jabatan,
-        token,
-      );
+
+      // Fetch unor details for each jabatan
+      const populatedJabatanDetails: Array<{
+        unor_id: string;
+        unor_detail: any;
+        jabatan_list: string[];
+      }> = [];
+
+      if (verificator.jabatan && verificator.jabatan.length > 0) {
+        for (const jabatanItem of verificator.jabatan) {
+          const unorId = Object.keys(jabatanItem)[0];
+          if (unorId) {
+            const unorDetails = await this.getUnitDetails(unorId, token);
+            populatedJabatanDetails.push({
+              unor_id: unorId,
+              unor_detail: unorDetails,
+              jabatan_list: jabatanItem[unorId],
+            });
+          }
+        }
+      }
 
       const populatedVerificator = {
         ...verificator,
         unit_detail: unitData,
-        jabatan_detail: populatedJabatan,
+        jabatan_detail: populatedJabatanDetails,
       };
 
       return {
@@ -234,19 +269,20 @@ export class VerificatorService {
 
       // Validasi unor_id dalam jabatan jika ada
       if (updateVerificatorDto.jabatan) {
-        for (const unorId of Object.keys(updateVerificatorDto.jabatan)) {
-          const unor = await this.unitKerjaService.findUnorById(
-            Number(updateVerificatorDto.unit_id),
-            unorId,
-            token,
-          );
-          if (!unor.status) {
-            return {
-              code: HttpStatus.BAD_REQUEST,
-              status: false,
-              message: `Unor dengan ID ${unorId} tidak ditemukan`,
-              data: null,
-            };
+        for (const jabatanItem of updateVerificatorDto.jabatan) {
+          for (const unorId of Object.keys(jabatanItem)) {
+            const unor = await this.unitKerjaService.findById(
+              Number(unorId),
+              token,
+            );
+            if (!unor.status) {
+              return {
+                code: HttpStatus.BAD_REQUEST,
+                status: false,
+                message: `Unor dengan ID ${unorId} tidak ditemukan`,
+                data: null,
+              };
+            }
           }
         }
       }
@@ -305,6 +341,121 @@ export class VerificatorService {
     }
   }
 
+  async verifyUnitAndJabatan(
+    verifyDto: VerifyUnitJabatanDto,
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      // Validasi unit_id
+      const unitKerja = await this.unitKerjaService.findById(
+        verifyDto.unit_id,
+        token,
+      );
+
+      if (!unitKerja.status) {
+        return {
+          code: HttpStatus.BAD_REQUEST,
+          status: false,
+          message: `Unit kerja dengan ID ${verifyDto.unit_id} tidak ditemukan`,
+          data: null,
+        };
+      }
+
+      // Cari verificator berdasarkan unit_id
+      const verificators = await this.verificatorRepository.find();
+
+      // Hasil verifikasi
+      interface VerificationResult {
+        verificator: {
+          id: string;
+          unit_id: string;
+        };
+        valid_jabatan: string[];
+      }
+
+      const verificationResults: VerificationResult[] = [];
+
+      // Untuk setiap verificator, periksa apakah unit_id dan jabatan cocok
+      for (const verificator of verificators) {
+        let isUnitMatch = false;
+        let validJabatan: string[] = [];
+
+        // Cek apakah unit_id input sama dengan salah satu key dalam array jabatan input
+        for (const jabatanItem of verifyDto.jabatan) {
+          const unitIds = Object.keys(jabatanItem);
+
+          // Jika unit_id cocok dengan salah satu key dalam jabatan
+          if (unitIds.includes(verifyDto.unit_id.toString())) {
+            isUnitMatch = true;
+
+            // Cek apakah verificator memiliki jabatan yang cocok
+            for (const verJabatanItem of verificator.jabatan) {
+              const verUnitIds = Object.keys(verJabatanItem);
+
+              // Jika verificator memiliki unit yang sama
+              if (verUnitIds.includes(verifyDto.unit_id.toString())) {
+                // Dapatkan daftar jabatan dari input dan verificator
+                const inputJabatanList =
+                  jabatanItem[verifyDto.unit_id.toString()];
+                const verJabatanList =
+                  verJabatanItem[verifyDto.unit_id.toString()];
+
+                // Cari jabatan yang cocok
+                const matchingJabatan = inputJabatanList.filter((inputJab) =>
+                  verJabatanList.some(
+                    (verJab) => verJab.toLowerCase() === inputJab.toLowerCase(),
+                  ),
+                );
+
+                if (matchingJabatan.length > 0) {
+                  validJabatan = matchingJabatan;
+                  break;
+                }
+              }
+            }
+
+            break;
+          }
+        }
+
+        // Jika unit cocok dan ada jabatan yang valid, tambahkan ke hasil
+        if (isUnitMatch && validJabatan.length > 0) {
+          verificationResults.push({
+            verificator: {
+              id: verificator.id,
+              unit_id: verificator.unit_id,
+            },
+            valid_jabatan: validJabatan,
+          });
+        }
+      }
+
+      if (verificationResults.length === 0) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message:
+            'Tidak ditemukan verificator yang sesuai dengan unit dan jabatan yang diberikan',
+          data: null,
+        };
+      }
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Verificator berhasil ditemukan',
+        data: verificationResults,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
   // Helper method untuk ekstrak userId dari token
   private extractUserIdFromToken(token: string): string {
     // Implementasi sederhana, bisa disesuaikan dengan kebutuhan
@@ -330,36 +481,30 @@ export class VerificatorService {
 
   // Helper method untuk mendapatkan detail unor
   private async populateUnorDetails(
-    unitId: string,
-    jabatan: Record<string, string[]>,
+    jabatan: Array<Record<string, string[]>>,
     token: string,
   ): Promise<any> {
-    try {
-      const populatedJabatan = {};
+    const populatedJabatanDetails: Array<{
+      unor_id: string;
+      unor_detail: any;
+      jabatan_list: string[];
+    }> = [];
 
-      for (const unorId of Object.keys(jabatan)) {
-        const unorResponse = await this.unitKerjaService.findUnorById(
-          Number(unitId),
-          unorId,
-          token,
-        );
-        if (unorResponse.status && unorResponse.data) {
-          populatedJabatan[unorId] = {
-            unor_detail: unorResponse.data,
-            jabatan_list: jabatan[unorId],
-          };
-        } else {
-          populatedJabatan[unorId] = {
-            unor_detail: null,
-            jabatan_list: jabatan[unorId],
-          };
+    if (jabatan && jabatan.length > 0) {
+      for (const jabatanItem of jabatan) {
+        for (const unorId of Object.keys(jabatanItem)) {
+          if (unorId) {
+            const unorDetails = await this.getUnitDetails(unorId, token);
+            populatedJabatanDetails.push({
+              unor_id: unorId,
+              unor_detail: unorDetails,
+              jabatan_list: jabatanItem[unorId],
+            });
+          }
         }
       }
-
-      return populatedJabatan;
-    } catch (error) {
-      console.error(`Error populating unor details: ${error.message}`);
-      return jabatan;
     }
+
+    return populatedJabatanDetails;
   }
 }

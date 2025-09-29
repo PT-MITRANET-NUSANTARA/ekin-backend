@@ -14,6 +14,7 @@ import { VerificatorService } from './verificator.service';
 import { CreateVerificatorDto } from './dto/create-verificator.dto';
 import { UpdateVerificatorDto } from './dto/update-verificator.dto';
 import { FilterVerificatorDto } from './dto/filter-verificator.dto';
+import { VerifyUnitJabatanDto } from './dto/verify-unit-jabatan.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 
@@ -56,7 +57,17 @@ export class VerificatorController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string): Promise<ApiResponse> {
     return this.verificatorService.remove(id);
+  }
+
+  @Post('verify')
+  @UseGuards(JwtAuthGuard)
+  verifyUnitAndJabatan(
+    @Body() verifyDto: VerifyUnitJabatanDto,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.verificatorService.verifyUnitAndJabatan(verifyDto, token);
   }
 }

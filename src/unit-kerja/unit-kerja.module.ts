@@ -1,11 +1,16 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { UnitKerjaService } from './unit-kerja.service';
 import { UnitKerjaController } from './unit-kerja.controller';
 import { HttpModule } from '@nestjs/axios';
 import { AuthModule } from '../auth/auth.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [HttpModule, AuthModule],
+  imports: [
+    HttpModule,
+    forwardRef(() => AuthModule),
+    forwardRef(() => UserModule),
+  ],
   controllers: [UnitKerjaController],
   providers: [UnitKerjaService],
   exports: [UnitKerjaService],

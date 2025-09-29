@@ -1,17 +1,13 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsObject,
-  ValidateNested,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateVerificatorDto {
-  @IsString()
+export class VerifyUnitJabatanDto {
   @IsNotEmpty()
-  unit_id: string;
+  @IsNumber()
+  unit_id: number;
 
   @IsNotEmpty()
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => Object)
   jabatan: Array<Record<string, string[]>>;

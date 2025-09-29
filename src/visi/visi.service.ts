@@ -124,7 +124,11 @@ export class VisiService {
     }
   }
 
-  async update(id: string, updateVisiDto: UpdateVisiDto, user: any): Promise<ApiResponse> {
+  async update(
+    id: string,
+    updateVisiDto: UpdateVisiDto,
+    user: any,
+  ): Promise<ApiResponse> {
     try {
       const visi = await this.visiRepository.findOne({ where: { id } });
 

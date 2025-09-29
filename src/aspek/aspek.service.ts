@@ -21,19 +21,19 @@ export class AspekService {
       // Buat objek aspek tanpa indikator kinerja terlebih dahulu
       const aspekData = { ...createAspekDto };
       delete aspekData.indikator_kinerja;
-      
+
       // Buat aspek
       const aspek = this.aspekRepository.create(aspekData);
-      
+
       // Jika ada indikator kinerja DTO, buat indikator kinerja
       if (createAspekDto.indikator_kinerja) {
         const indikatorKinerja = await this.indikatorKinerjaService.create(
-          createAspekDto.indikator_kinerja
+          createAspekDto.indikator_kinerja,
         );
         aspek.indikator_kinerja_id = indikatorKinerja.id;
         aspek.indikator_kinerja = indikatorKinerja;
       }
-      
+
       const savedAspek = await this.aspekRepository.save(aspek);
 
       return {
@@ -158,9 +158,9 @@ export class AspekService {
     updateAspekDto: UpdateAspekDto,
   ): Promise<ApiResponse> {
     try {
-      const aspek = await this.aspekRepository.findOne({ 
+      const aspek = await this.aspekRepository.findOne({
         where: { id },
-        relations: ['indikator_kinerja']
+        relations: ['indikator_kinerja'],
       });
 
       if (!aspek) {
@@ -178,16 +178,16 @@ export class AspekService {
         if (aspek.indikator_kinerja_id) {
           await this.indikatorKinerjaService.update(
             aspek.indikator_kinerja_id,
-            updateAspekDto.indikator_kinerja
+            updateAspekDto.indikator_kinerja,
           );
         } else {
           // Jika belum ada, buat baru
           const indikatorKinerja = await this.indikatorKinerjaService.create(
-            updateAspekDto.indikator_kinerja
+            updateAspekDto.indikator_kinerja,
           );
           aspek.indikator_kinerja_id = indikatorKinerja.id;
-          await this.aspekRepository.update(id, { 
-            indikator_kinerja_id: indikatorKinerja.id 
+          await this.aspekRepository.update(id, {
+            indikator_kinerja_id: indikatorKinerja.id,
           });
         }
       }
@@ -195,9 +195,9 @@ export class AspekService {
       // Update aspek tanpa indikator kinerja DTO
       const aspekData = { ...updateAspekDto };
       delete aspekData.indikator_kinerja;
-      
+
       await this.aspekRepository.update(id, aspekData);
-      
+
       const updatedAspek = await this.aspekRepository.findOne({
         where: { id },
         relations: ['indikator_kinerja'],

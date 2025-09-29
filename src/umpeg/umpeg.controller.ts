@@ -59,4 +59,13 @@ export class UmpegController {
   remove(@Param('id') id: string): Promise<ApiResponse> {
     return this.umpegService.remove(id);
   }
+
+  @Get('unit/:unitId/jabatan/:jabatan')
+  findByUnitAndJabatan(
+    @Param('unitId') unitId: string,
+    @Param('jabatan') jabatan: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.umpegService.findByUnitAndJabatan(unitId, jabatan, token);
+  }
 }

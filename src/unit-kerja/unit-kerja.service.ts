@@ -7,20 +7,17 @@ import { UnitKerjaDto } from './dto/unit-kerja.dto';
 import { FilterUnitKerjaDto } from './dto/filter-unit-kerja.dto';
 import { UnitOrganisasiDto } from './dto/unit-organisasi.dto';
 import { FilterUnitOrganisasiDto } from './dto/filter-unit-organisasi.dto';
+import { UserService } from '../user/user.service';
+import { UnitKerjaModule } from './unit-kerja.module';
 
 // Interface untuk ResponseDto
-interface ResponseDto {
-  success: boolean;
-  message: string;
-  statusCode: number;
-  data: any;
-}
 
 @Injectable()
 export class UnitKerjaService {
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
+    private readonly userService: UserService,
   ) {}
 
   async findAll(
@@ -430,6 +427,38 @@ export class UnitKerjaService {
         message: error.message || 'Gagal mengambil data jabatan',
         data: null,
       };
+    }
+  }
+
+  async getIsJpt(userId: string, token: string): Promise<boolean> {
+    try {
+      // 1. Ambil data profile user berdasarkan ID yang diberikan
+      const userResponse = await this.userService.findUserByNip(userId, token);
+
+      if (!userResponse.status || !userResponse.data) {
+        throw new NotFoundException(`User dengan ID ${userId} tidak ditemukan`);
+      }
+
+      // 2. Dapatkan data posisi jabatan (posjab) dari profile
+      const userProfile = userResponse.data;
+
+      if (!userProfile.unor || !userProfile.unor.id) {
+        throw new NotFoundException(
+          'Data UNOR tidak ditemukan pada profil user',
+        );
+      }
+
+      // Ambil data unit kerja
+      const unorResponse = await this.findUnorHierarchy(
+        userProfile.unor.induk.id_simpeg,
+        token,
+      );
+
+      const unitKerjaData = unorResponse.data;
+      return userProfile.nama_jabatan === unitKerjaData.namaJabatan;
+    } catch (error) {
+      console.error('Error in getIsJpt:', error.message);
+      return false;
     }
   }
 }

@@ -38,13 +38,11 @@ export class AuthController {
   // Protected endpoint - requires valid JWT token
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@CurrentUser() user: any): ApiResponse {
-    return {
-      code: HttpStatus.OK,
-      status: true,
-      message: 'Profile berhasil diambil',
-      data: user.mapData,
-    };
+  getProfile(
+    @CurrentUser() user: any,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.authService.getProfile(user, token);
   }
 
   // Protected endpoint - verify token

@@ -25,7 +25,7 @@ export class VisiController {
   @Post()
   async create(
     @Body() createVisiDto: CreateVisiDto,
-    @CurrentUser() user: any
+    @CurrentUser() user: any,
   ): Promise<ApiResponse> {
     return await this.visiService.create(createVisiDto, user);
   }
@@ -52,7 +52,7 @@ export class VisiController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @CurrentUser() user: any
+    @CurrentUser() user: any,
   ): Promise<ApiResponse> {
     return await this.visiService.remove(id, user);
   }

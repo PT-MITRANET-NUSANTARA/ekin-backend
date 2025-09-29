@@ -15,7 +15,7 @@ export class Verificator {
   unit_id: string;
 
   @Column('json')
-  jabatan: Record<string, string[]>;
+  jabatan: Array<Record<string, string[]>>;
 
   @CreateDateColumn()
   created_at: Date;

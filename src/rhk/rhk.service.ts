@@ -27,20 +27,36 @@ export class RhkService {
   ) {}
 
   /**
-   * Membuat aspek dari template berdasarkan tipe RHK
+   * Membuat aspek dari template berdasarkan pendekatan SKP (kualitatif/kuantitatif)
    * @param rhkId ID RHK yang baru dibuat
-   * @param rhkAtasanId ID RHK atasan (null jika RHK utama)
+   * @param skpId ID SKP yang terkait dengan RHK
    * @param token Token otorisasi
    */
   private async createAspekFromTemplate(
     rhkId: string,
-    rhkAtasanId: string | null,
+    skpId: string,
     token: string,
   ): Promise<void> {
     try {
-      // Pilih template berdasarkan tipe RHK
+      // Ambil data SKP untuk mengetahui pendekatannya
+      const skpQuery = `
+        SELECT pendekatan FROM skp 
+        WHERE id = '${skpId}'
+      `;
+
+      const skpResult = await this.rhkRepository.query(skpQuery);
+
+      if (!skpResult || skpResult.length === 0) {
+        console.error(`SKP dengan ID ${skpId} tidak ditemukan`);
+        return;
+      }
+
+      const pendekatan = skpResult[0].pendekatan;
+
+      // Pilih template berdasarkan pendekatan SKP
+      // Jika KUALITATIF gunakan template utama, jika KUANTITATIF gunakan template turunan
       const templateToUse =
-        rhkAtasanId === null ? aspekTemplateUtama : aspekTemplateTurunan;
+        pendekatan === 'KUALITATIF' ? aspekTemplateUtama : aspekTemplateTurunan;
 
       // Iterasi setiap template aspek dan buat entri aspek baru
       for (const template of templateToUse) {
@@ -82,13 +98,9 @@ export class RhkService {
         await this.rhkRepository.save(savedRhk);
       }
 
-      // Buat aspek dari template berdasarkan tipe RHK (utama atau turunan)
-      if (savedRhk && savedRhk.id) {
-        await this.createAspekFromTemplate(
-          savedRhk.id,
-          savedRhk.rhk_atasan_id || null,
-          token,
-        );
+      // Buat aspek dari template berdasarkan pendekatan SKP (kualitatif atau kuantitatif)
+      if (savedRhk && savedRhk.id && savedRhk.skp_id) {
+        await this.createAspekFromTemplate(savedRhk.id, savedRhk.skp_id, token);
       }
 
       return {

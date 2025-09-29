@@ -11,12 +11,21 @@ import { firstValueFrom } from 'rxjs';
 import { IdasnResponseDto } from './interfaces/login-response.interface';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { Response } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Setting } from '../settings/entities/setting.entity';
+import { UserService } from '../user/user.service';
+import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    @InjectRepository(Setting)
+    private readonly settingRepository: Repository<Setting>,
+    private readonly userService: UserService,
+    private readonly unitKerjaService: UnitKerjaService,
   ) {}
 
   async getPhoto(id: string, token: string, res: Response): Promise<void> {
@@ -128,5 +137,74 @@ export class AuthService {
   extractAccessToken(redirectUri: string): string | null {
     const match = redirectUri.match(/access_token=([^&]*)/);
     return match ? match[1] : null;
+  }
+
+  async getProfile(user: any, token: string): Promise<ApiResponse> {
+    try {
+      // Ambil setting untuk mendapatkan admin_id dan bupati_id
+      const settings = await this.settingRepository.find();
+      const setting = settings.length > 0 ? settings[0] : null;
+
+      // Siapkan data profil dari user
+      const profileData = { ...user.mapData };
+      // Tambahkan flag isAdmin dan isBupati
+      profileData.isAdmin = false;
+      profileData.isBupati = false;
+      profileData.isJpt = false;
+
+      // Cek apakah user adalah admin atau bupati
+      if (setting) {
+        const userNip = profileData.nipBaru;
+        const userId = profileData.id;
+
+        if (userNip === setting.admin_id || userId === setting.admin_id) {
+          profileData.isAdmin = true;
+        }
+
+        if (userNip === setting.bupati_id || userId === setting.bupati_id) {
+          profileData.isBupati = true;
+        }
+      }
+
+      // Ambil data posjab dari user service
+      try {
+        const userResponse = await this.userService.findUserByNip(
+          profileData.nipBaru,
+          token,
+        );
+
+        if (userResponse.status && userResponse.data) {
+          profileData.posjab = userResponse.data;
+
+          // Cek apakah user adalah JPT
+          try {
+            profileData.isJpt = await this.unitKerjaService.getIsJpt(
+              profileData.nipBaru,
+              token,
+            );
+          } catch (jptError) {
+            console.error('Error checking JPT status:', jptError.message);
+            // Jika gagal memeriksa status JPT, tetap lanjutkan dengan isJpt = false
+          }
+        }
+      } catch (error) {
+        // Jika gagal mendapatkan posjab, tetap lanjutkan tanpa posjab
+        console.error('Error fetching posjab data:', error.message);
+      }
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Profile berhasil diambil',
+        data: profileData,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Gagal mengambil profile: ${error.message}`,
+        data: null,
+      };
+    }
   }
 }

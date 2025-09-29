@@ -8,9 +8,9 @@ import { IndikatorKinerjaModule } from '../indikator-kinerja/indikator-kinerja.m
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Aspek]), 
+    TypeOrmModule.forFeature([Aspek]),
     AuthModule,
-    IndikatorKinerjaModule
+    IndikatorKinerjaModule,
   ],
   controllers: [AspekController],
   providers: [AspekService],
