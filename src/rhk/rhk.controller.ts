@@ -46,6 +46,14 @@ export class RhkController {
     return this.rhkService.findBySkpId(skpId, token);
   }
 
+  @Get('atasan/:rhkAtasanId')
+  findByRhkAtasanId(
+    @Param('rhkAtasanId') rhkAtasanId: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.findByRhkAtasanId(rhkAtasanId, token);
+  }
+
   @Get(':id')
   findOne(
     @Param('id') id: string,

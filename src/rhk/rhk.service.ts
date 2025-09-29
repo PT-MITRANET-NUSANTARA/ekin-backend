@@ -52,7 +52,7 @@ export class RhkService {
       }
 
       const pendekatan = skpResult[0].pendekatan;
-      console.log("Pendekatan", pendekatan);
+      console.log('Pendekatan', pendekatan);
 
       // Pilih template berdasarkan pendekatan SKP
       // Jika KUALITATIF gunakan template utama, jika KUANTITATIF gunakan template turunan
@@ -285,6 +285,48 @@ export class RhkService {
         code: HttpStatus.OK,
         status: true,
         message: 'Daftar RHK berdasarkan SKP ID berhasil diambil',
+        data: rhksWithAspek,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
+  async findByRhkAtasanId(rhkAtasanId: string, token: string): Promise<ApiResponse> {
+    try {
+      const rhks = await this.rhkRepository.find({
+        where: { rhk_atasan_id: rhkAtasanId },
+        order: { id: 'DESC' },
+        relations: ['rkts_id'],
+      });
+
+      // Ambil aspek untuk setiap RHK
+      const rhksWithAspek = await Promise.all(
+        rhks.map(async (rhk) => {
+          const aspekQuery = `
+            SELECT * FROM aspek 
+            WHERE rhk_id = '${rhk.id}'
+            ORDER BY created_at DESC
+          `;
+
+          const aspek = await this.rhkRepository.query(aspekQuery);
+
+          return {
+            ...rhk,
+            aspek: aspek || [],
+          };
+        }),
+      );
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Daftar RHK berdasarkan RHK Atasan ID berhasil diambil',
         data: rhksWithAspek,
       };
     } catch (error) {

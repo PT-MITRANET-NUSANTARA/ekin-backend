@@ -3061,6 +3061,33 @@
           "response": []
         },
         {
+          "name": "Get SKP Matriks By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/skp/:id/matriks",
+              "host": ["{{base_url}}"],
+              "path": ["skp", ":id", "matriks"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID SKP"
+                }
+              ]
+            },
+            "description": "Mendapatkan detail SKP dengan struktur matriks RHK dan child RHK berdasarkan ID"
+          },
+          "response": []
+        },
+        {
           "name": "Create SKP",
           "request": {
             "method": "POST",

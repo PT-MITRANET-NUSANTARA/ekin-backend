@@ -395,7 +395,8 @@ export class VerificatorService {
               // Untuk setiap unit ID dalam verificator
               for (const verUnitId of verUnitIds) {
                 // Dapatkan daftar jabatan dari input dan verificator untuk unit ID ini
-                const inputJabatanList = jabatanItem[verifyDto.unit_id.toString()];
+                const inputJabatanList =
+                  jabatanItem[verifyDto.unit_id.toString()];
                 const verJabatanList = verJabatanItem[verUnitId];
 
                 // Cari jabatan yang cocok

@@ -342,6 +342,65 @@ export class SkpService {
     }
   }
 
+  async getMatriks(id: string, token: string): Promise<ApiResponse> {
+    try {
+      // Gunakan findOne untuk mendapatkan data SKP dasar
+      const skpResponse = await this.findOne(id, token);
+      
+      if (!skpResponse.status) {
+        return skpResponse; // Return error response jika SKP tidak ditemukan
+      }
+      
+      const skpData = skpResponse.data;
+      
+      // Ambil data RHK berdasarkan skp_id
+      const rhkResponse = await this.rhkService.findBySkpId(id, token);
+      
+      if (!rhkResponse.status || !rhkResponse.data) {
+        // Jika tidak ada RHK, kembalikan data SKP tanpa perubahan
+        return skpResponse;
+      }
+      
+      const rhkList = rhkResponse.data;
+      
+      // Proses setiap RHK untuk mendapatkan child RHK
+      const rhkWithChildrenPromises = rhkList.map(async (rhk) => {
+        // Ambil child RHK berdasarkan rhk_atasan_id
+        const childRhkResponse = await this.rhkService.findByRhkAtasanId(rhk.id, token);
+        const childRhkList = childRhkResponse.status ? childRhkResponse.data : [];
+        
+        // Tambahkan child RHK ke RHK induk
+        return {
+          ...rhk,
+          child_rhk: childRhkList
+        };
+      });
+      
+      // Tunggu semua promise selesai
+      const rhkWithChildren = await Promise.all(rhkWithChildrenPromises);
+      
+      // Buat objek hasil akhir dengan struktur yang sama seperti findOne
+      const result = {
+        ...skpData,
+        rhk: rhkWithChildren
+      };
+      
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Matriks SKP berhasil diambil',
+        data: result
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
   async findByUserId(userId: string, token: string): Promise<ApiResponse> {
     try {
       const skpList = await this.skpRepository.find({

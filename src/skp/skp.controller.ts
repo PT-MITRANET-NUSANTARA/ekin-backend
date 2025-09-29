@@ -62,6 +62,14 @@ export class SkpController {
     return this.skpService.findOne(id, token);
   }
 
+  @Get(':id/matriks')
+  getMatriks(
+    @Param('id') id: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.skpService.getMatriks(id, token);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,
