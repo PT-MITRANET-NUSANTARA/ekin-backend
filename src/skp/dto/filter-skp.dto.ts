@@ -12,6 +12,10 @@ export class FilterSkpDto {
   unit_id?: string;
 
   @IsOptional()
+  @IsString()
+  renstra_id?: string;
+
+  @IsOptional()
   @IsEnum(SkpStatus)
   status?: SkpStatus;
 

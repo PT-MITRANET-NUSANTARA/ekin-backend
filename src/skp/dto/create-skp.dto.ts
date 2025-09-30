@@ -63,4 +63,8 @@ export class CreateSkpDto {
   @IsNotEmpty({ message: 'Unit ID tidak boleh kosong' })
   @IsOptional()
   unit_id?: string;
+
+  @IsOptional()
+  @IsString()
+  renstra_id?: string;
 }

@@ -150,6 +150,7 @@ export class SkpService {
         perPage = 10,
         user_id,
         unit_id,
+        renstra_id,
         status,
         pendekatan,
       } = filterSkpDto;
@@ -164,6 +165,10 @@ export class SkpService {
 
       if (unit_id) {
         queryBuilder.andWhere('skp.unit_id = :unit_id', { unit_id });
+      }
+
+      if (renstra_id) {
+        queryBuilder.andWhere('skp.renstra_id = :renstra_id', { renstra_id });
       }
 
       if (status) {

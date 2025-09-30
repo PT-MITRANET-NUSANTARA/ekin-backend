@@ -78,6 +78,9 @@ export class Skp {
   @Column()
   unit_id: string;
 
+  @Column({ nullable: true })
+  renstra_id: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
