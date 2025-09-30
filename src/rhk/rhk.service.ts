@@ -255,10 +255,18 @@ export class RhkService {
     }
   }
 
-  async findBySkpId(skpId: string, token: string): Promise<ApiResponse> {
+  async findBySkpId(skpId: string, token: string, rhkId?: string): Promise<ApiResponse> {
     try {
+      // Buat kondisi where dasar
+      const whereCondition: any = { skp_id: skpId };
+      
+      // Tambahkan filter rhk_id jika ada
+      if (rhkId) {
+        whereCondition.id = rhkId;
+      }
+      
       const rhks = await this.rhkRepository.find({
-        where: { skp_id: skpId },
+        where: whereCondition,
         order: { id: 'DESC' },
         relations: ['rkts_id'],
       });
@@ -340,10 +348,19 @@ export class RhkService {
   async findByRhkAtasanId(
     rhkAtasanId: string,
     token: string,
+    skpId?: string,
   ): Promise<ApiResponse> {
     try {
+      // Buat kondisi where dasar
+      const whereCondition: any = { rhk_atasan_id: rhkAtasanId };
+      
+      // Tambahkan filter skp_id jika ada
+      if (skpId) {
+        whereCondition.skp_id = skpId;
+      }
+      
       const rhks = await this.rhkRepository.find({
-        where: { rhk_atasan_id: rhkAtasanId },
+        where: whereCondition,
         order: { id: 'DESC' },
         relations: ['rkts_id'],
       });

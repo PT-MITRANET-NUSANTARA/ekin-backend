@@ -57,9 +57,11 @@ export class SkpController {
   @Get(':id/matriks')
   getMatriks(
     @Param('id') id: string,
+    @Query('skp_id') skpId: string,
+    @Query('rhk_id') rhkId: string,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.skpService.getMatriks(id, token);
+    return this.skpService.getMatriks(id, token, skpId, rhkId);
   }
 
   @Get(':id')
