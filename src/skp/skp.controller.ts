@@ -54,20 +54,20 @@ export class SkpController {
     return this.skpService.findByAtasanSkpId(atasanSkpId, token);
   }
 
-  @Get(':id')
-  findOne(
-    @Param('id') id: string,
-    @Headers('authorization') token: string,
-  ): Promise<ApiResponse> {
-    return this.skpService.findOne(id, token);
-  }
-
   @Get(':id/matriks')
   getMatriks(
     @Param('id') id: string,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.getMatriks(id, token);
+  }
+
+  @Get(':id')
+  findOne(
+    @Param('id') id: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.skpService.findOne(id, token);
   }
 
   @Patch(':id')

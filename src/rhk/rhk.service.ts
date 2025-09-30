@@ -263,6 +263,14 @@ export class RhkService {
         relations: ['rkts_id'],
       });
 
+      // Ambil data SKP
+      const skpQuery = `
+        SELECT * FROM skp 
+        WHERE id = '${skpId}'
+      `;
+      const skpResult = await this.rhkRepository.query(skpQuery);
+      const skp = skpResult.length > 0 ? skpResult[0] : null;
+
       // Ambil aspek dan indikator kinerja untuk setiap RHK
       const rhksWithAspek = await Promise.all(
         rhks.map(async (rhk) => {
@@ -307,6 +315,7 @@ export class RhkService {
 
           return {
             ...rhk,
+            skp: skp,
             aspek: aspekWithIndikator || [],
           };
         }),
@@ -342,6 +351,14 @@ export class RhkService {
       // Ambil aspek dan indikator kinerja untuk setiap RHK
       const rhksWithAspek = await Promise.all(
         rhks.map(async (rhk) => {
+          // Ambil data SKP untuk setiap RHK
+          const skpQuery = `
+            SELECT * FROM skp 
+            WHERE id = '${rhk.skp_id}'
+          `;
+          const skpResult = await this.rhkRepository.query(skpQuery);
+          const skp = skpResult.length > 0 ? skpResult[0] : null;
+
           const aspekQuery = `
             SELECT * FROM aspek 
             WHERE rhk_id = '${rhk.id}'
@@ -383,6 +400,7 @@ export class RhkService {
 
           return {
             ...rhk,
+            skp: skp,
             aspek: aspekWithIndikator || [],
           };
         }),
