@@ -46,12 +46,12 @@ export class SkpController {
     return this.skpService.findByUserId(userId, token);
   }
 
-  @Get('atasan/:atasanSkpId')
+  @Get(':id/bawahan')
   findByAtasanSkpId(
-    @Param('atasanSkpId') atasanSkpId: string,
+    @Param('id') id: string,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.skpService.findByAtasanSkpId(atasanSkpId, token);
+    return this.skpService.findByAtasanSkpId(id, token);
   }
 
   @Get(':id/matriks')
