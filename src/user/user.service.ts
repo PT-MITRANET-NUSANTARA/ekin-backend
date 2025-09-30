@@ -192,7 +192,7 @@ export class UserService {
         let unorUsers = uniqueUserData.filter((user) => {
           return bawahanUnorJpt.some(
             (unor) =>
-              unor.id === user.unor.id &&
+              // unor.id === user.unor.id &&
               unor.namaJabatan.toLowerCase() ===
                 user.nama_jabatan.toLowerCase(),
           );
