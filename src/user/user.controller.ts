@@ -10,6 +10,7 @@ import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { FilterUserDto } from './dto/filter-user.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -38,6 +39,7 @@ export class UserController {
     @Param('unitId') unitId: string,
     @Param('unorId') unorId: string,
     @Headers('authorization') token: string,
+    @CurrentUser() user: any,
     @Query() filterDto: FilterUserDto,
   ): Promise<ApiResponse> {
     return this.userService.findUsersByUnitIdAndUnorId(
@@ -45,6 +47,7 @@ export class UserController {
       unorId,
       token,
       filterDto,
+      user,
     );
   }
 

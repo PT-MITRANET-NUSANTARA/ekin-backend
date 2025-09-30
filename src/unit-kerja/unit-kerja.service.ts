@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpStatus, NotFoundException, Inject, forwardRef } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
@@ -8,7 +8,6 @@ import { FilterUnitKerjaDto } from './dto/filter-unit-kerja.dto';
 import { UnitOrganisasiDto } from './dto/unit-organisasi.dto';
 import { FilterUnitOrganisasiDto } from './dto/filter-unit-organisasi.dto';
 import { UserService } from '../user/user.service';
-import { UnitKerjaModule } from './unit-kerja.module';
 
 // Interface untuk ResponseDto
 
@@ -17,6 +16,7 @@ export class UnitKerjaService {
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 
