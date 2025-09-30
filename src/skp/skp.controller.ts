@@ -41,17 +41,19 @@ export class SkpController {
   @Get('user/:userId')
   findByUserId(
     @Param('userId') userId: string,
+    @Query() filterSkpDto: FilterSkpDto,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.skpService.findByUserId(userId, token);
+    return this.skpService.findByUserId(userId, filterSkpDto, token);
   }
 
   @Get(':id/bawahan')
   findByAtasanSkpId(
     @Param('id') id: string,
+    @Query() filterSkpDto: FilterSkpDto,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.skpService.findByAtasanSkpId(id, token);
+    return this.skpService.findByAtasanSkpId(id, filterSkpDto, token);
   }
 
   @Get(':id/matriks')
@@ -62,6 +64,15 @@ export class SkpController {
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.skpService.getMatriks(id, token, skpId, rhkId);
+  }
+
+  @Get(':id/penilaian/:penilaianId')
+  findOneWithPenilaian(
+    @Param('id') id: string,
+    @Param('penilaianId') penilaianId: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.skpService.findOneWithPenilaian(id, penilaianId, token);
   }
 
   @Get(':id')

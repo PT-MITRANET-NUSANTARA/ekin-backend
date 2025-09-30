@@ -255,16 +255,20 @@ export class RhkService {
     }
   }
 
-  async findBySkpId(skpId: string, token: string, rhkId?: string): Promise<ApiResponse> {
+  async findBySkpId(
+    skpId: string,
+    token: string,
+    rhkId?: string,
+  ): Promise<ApiResponse> {
     try {
       // Buat kondisi where dasar
       const whereCondition: any = { skp_id: skpId };
-      
+
       // Tambahkan filter rhk_id jika ada
       if (rhkId) {
         whereCondition.id = rhkId;
       }
-      
+
       const rhks = await this.rhkRepository.find({
         where: whereCondition,
         order: { id: 'DESC' },
@@ -353,12 +357,12 @@ export class RhkService {
     try {
       // Buat kondisi where dasar
       const whereCondition: any = { rhk_atasan_id: rhkAtasanId };
-      
+
       // Tambahkan filter skp_id jika ada
       if (skpId) {
         whereCondition.skp_id = skpId;
       }
-      
+
       const rhks = await this.rhkRepository.find({
         where: whereCondition,
         order: { id: 'DESC' },
@@ -483,6 +487,117 @@ export class RhkService {
         status: true,
         message: 'RHK berhasil diperbarui',
         data: updatedRhk,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
+  async findBySkpIdAndPeriodePenilaian(
+    skpId: string,
+    periodePenilaianId: string,
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      // Pertama, ambil rhk_penilaian berdasarkan skp_id dan periode_penilaian_id
+      const rhkPenilaianQuery = `
+        SELECT rhk_id FROM rhk_penilaian 
+        WHERE skp_id = '${skpId}' AND periode_penilaian_id = '${periodePenilaianId}'
+      `;
+
+      const rhkPenilaianResult =
+        await this.rhkRepository.query(rhkPenilaianQuery);
+
+      if (!rhkPenilaianResult || rhkPenilaianResult.length === 0) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message:
+            'Tidak ada RHK yang ditemukan untuk SKP ID dan periode penilaian yang diberikan',
+          data: [],
+        };
+      }
+
+      // Ambil semua rhk_id yang ada di rhk_penilaian
+      const rhkIds = rhkPenilaianResult.map((item) => item.rhk_id);
+
+      // Ambil data RHK berdasarkan rhk_id yang ada di rhk_penilaian
+      const rhks = await this.rhkRepository
+        .createQueryBuilder('rhk')
+        .leftJoinAndSelect('rhk.rkts_id', 'rkts')
+        .where('rhk.id IN (:...rhkIds)', { rhkIds })
+        .orderBy('rhk.id', 'DESC')
+        .getMany();
+
+      // Ambil data SKP
+      const skpQuery = `
+        SELECT * FROM skp 
+        WHERE id = '${skpId}'
+      `;
+      const skpResult = await this.rhkRepository.query(skpQuery);
+      const skp = skpResult.length > 0 ? skpResult[0] : null;
+
+      // Ambil aspek dan indikator kinerja untuk setiap RHK
+      const rhksWithAspek = await Promise.all(
+        rhks.map(async (rhk) => {
+          const aspekQuery = `
+            SELECT * FROM aspek 
+            WHERE rhk_id = '${rhk.id}'
+            ORDER BY created_at DESC
+          `;
+
+          const aspek = await this.rhkRepository.query(aspekQuery);
+
+          // Ambil indikator kinerja untuk setiap aspek
+          const aspekWithIndikator = await Promise.all(
+            aspek.map(async (asp) => {
+              if (asp.indikator_kinerja_id) {
+                const indikatorQuery = `
+                  SELECT * FROM indikator_kinerja 
+                  WHERE id = '${asp.indikator_kinerja_id}'
+                `;
+
+                const indikatorResult =
+                  await this.rhkRepository.query(indikatorQuery);
+                const indikator =
+                  indikatorResult.length > 0 ? indikatorResult[0] : null;
+
+                return {
+                  ...asp,
+                  indikator_kinerja: {
+                    name: indikator.name,
+                    target: indikator.target,
+                    satuan: indikator.satuan,
+                  },
+                };
+              }
+
+              return {
+                ...asp,
+                indikator_kinerja: null,
+              };
+            }),
+          );
+
+          return {
+            ...rhk,
+            skp: skp,
+            aspek: aspekWithIndikator || [],
+          };
+        }),
+      );
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message:
+          'Daftar RHK berdasarkan SKP ID dan periode penilaian berhasil diambil',
+        data: rhksWithAspek,
       };
     } catch (error) {
       return {

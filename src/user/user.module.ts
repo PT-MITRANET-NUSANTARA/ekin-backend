@@ -8,10 +8,10 @@ import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
 
 @Module({
   imports: [
-    ConfigModule, 
-    HttpModule, 
+    ConfigModule,
+    HttpModule,
     forwardRef(() => AuthModule),
-    forwardRef(() => UnitKerjaModule)
+    forwardRef(() => UnitKerjaModule),
   ],
   controllers: [UserController],
   providers: [UserService],

@@ -42,16 +42,30 @@ export class RhkController {
   findBySkpId(
     @Param('skpId') skpId: string,
     @Headers('authorization') token: string,
+    @Query('rhkId') rhkId?: string,
   ): Promise<ApiResponse> {
-    return this.rhkService.findBySkpId(skpId, token);
+    return this.rhkService.findBySkpId(skpId, token, rhkId);
   }
 
-  @Get('atasan/:rhkAtasanId')
-  findByRhkAtasanId(
-    @Param('rhkAtasanId') rhkAtasanId: string,
+  @Get('skp/:skpId/periode/:periodePenilaianId')
+  findBySkpIdAndPeriodePenilaian(
+    @Param('skpId') skpId: string,
+    @Param('periodePenilaianId') periodePenilaianId: string,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.rhkService.findByRhkAtasanId(rhkAtasanId, token);
+    return this.rhkService.findBySkpIdAndPeriodePenilaian(
+      skpId,
+      periodePenilaianId,
+      token,
+    );
+  }
+
+  @Get(':id/bawahan')
+  findByRhkAtasanId(
+    @Param('id') id: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.findByRhkAtasanId(id, token);
   }
 
   @Get(':id')

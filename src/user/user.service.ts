@@ -171,7 +171,6 @@ export class UserService {
           }),
         );
 
-
         if (!response.data.success) {
           return {
             code: HttpStatus.BAD_REQUEST,
@@ -194,7 +193,7 @@ export class UserService {
             (unor) =>
               // unor.id === user.unor.id &&
               unor.namaJabatan.toLowerCase() ===
-                user.nama_jabatan.toLowerCase(),
+              user.nama_jabatan.toLowerCase(),
           );
         });
 
@@ -204,7 +203,7 @@ export class UserService {
           unorUsers = unorUsers.filter(
             (user) =>
               user.nama_asn?.toLowerCase().includes(searchLower) ||
-              user.nip_asn?.toLowerCase().includes(searchLower) 
+              user.nip_asn?.toLowerCase().includes(searchLower),
           );
         }
 

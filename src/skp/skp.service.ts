@@ -263,6 +263,98 @@ export class SkpService {
     }
   }
 
+  async findOneWithPenilaian(
+    id: string,
+    penilaianId: string,
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      const skp = await this.skpRepository.findOne({
+        where: { id },
+      });
+
+      if (!skp) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message: `SKP dengan ID ${id} tidak ditemukan`,
+          data: null,
+        };
+      }
+
+      // Ambil informasi unit kerja
+      const unitResponse = await this.unitKerjaService.findById(
+        Number(skp.unit_id),
+        token,
+      );
+
+      // Populate SKP atasan jika atasan_skp_id tidak null
+      let atasanSkp: any = null;
+      if (skp.atasan_skp_id && skp.atasan_skp_id.length > 0) {
+        // Populate semua SKP atasan dalam array
+        const atasanSkpPromises = skp.atasan_skp_id.map(async (atasanSkpId) => {
+          const atasanSkpData = await this.skpRepository.findOne({
+            where: { id: atasanSkpId },
+          });
+
+          if (atasanSkpData) {
+            const atasanUnitResponse = await this.unitKerjaService.findById(
+              Number(atasanSkpData.unit_id),
+              token,
+            );
+
+            return {
+              ...atasanSkpData,
+              unit: atasanUnitResponse.status ? atasanUnitResponse.data : null,
+            };
+          }
+          return null;
+        });
+
+        // Filter out null values
+        const atasanSkpResults = await Promise.all(atasanSkpPromises);
+        atasanSkp = atasanSkpResults.filter((item) => item !== null);
+      }
+
+      // Ambil data perilaku berdasarkan skp_id
+      const perilakuResponse = await this.perilakuService.findBySkpId(
+        id,
+        token,
+      );
+      const perilakuData = perilakuResponse.status ? perilakuResponse.data : [];
+
+      // Ambil data RHK berdasarkan skp_id dan periode_penilaian_id
+      const rhkResponse = await this.rhkService.findBySkpIdAndPeriodePenilaian(
+        id,
+        penilaianId,
+        token,
+      );
+      const rhkData = rhkResponse.status ? rhkResponse.data : [];
+
+      const skpWithUnit = {
+        ...skp,
+        unit: unitResponse.status ? unitResponse.data : null,
+        atasan_skp: atasanSkp,
+        perilaku_id: perilakuData,
+        rhk: rhkData, // Menambahkan data RHK berdasarkan periode penilaian ke respons
+      };
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'SKP dengan penilaian berhasil diambil',
+        data: skpWithUnit,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
   async findOne(id: string, token: string): Promise<ApiResponse> {
     try {
       const skp = await this.skpRepository.findOne({
@@ -348,10 +440,10 @@ export class SkpService {
   }
 
   async getMatriks(
-    id: string, 
-    token: string, 
-    skpId?: string, 
-    rhkId?: string
+    id: string,
+    token: string,
+    skpId?: string,
+    rhkId?: string,
   ): Promise<ApiResponse> {
     try {
       // Gunakan findOne untuk mendapatkan data SKP dasar
@@ -379,7 +471,7 @@ export class SkpService {
         const childRhkResponse = await this.rhkService.findByRhkAtasanId(
           rhk.id,
           token,
-          skpId
+          skpId,
         );
         const childRhkList = childRhkResponse.status
           ? childRhkResponse.data
@@ -417,12 +509,54 @@ export class SkpService {
     }
   }
 
-  async findByUserId(userId: string, token: string): Promise<ApiResponse> {
+  async findByUserId(
+    userId: string,
+    filterSkpDto: FilterSkpDto,
+    token: string,
+  ): Promise<ApiResponse> {
     try {
-      const skpList = await this.skpRepository.find({
-        where: { user_id: userId },
-        order: { created_at: 'DESC' },
-      });
+      const {
+        page = 1,
+        perPage = 10,
+        unit_id,
+        renstra_id,
+        status,
+        pendekatan,
+      } = filterSkpDto;
+
+      // Buat query builder
+      const queryBuilder = this.skpRepository.createQueryBuilder('skp');
+
+      // Filter wajib berdasarkan user_id
+      queryBuilder.where('skp.user_id = :user_id', { user_id: userId });
+
+      // Tambahkan filter tambahan jika ada
+      if (unit_id) {
+        queryBuilder.andWhere('skp.unit_id = :unit_id', { unit_id });
+      }
+
+      if (renstra_id) {
+        queryBuilder.andWhere('skp.renstra_id = :renstra_id', { renstra_id });
+      }
+
+      if (status) {
+        queryBuilder.andWhere('skp.status = :status', { status });
+      }
+
+      if (pendekatan) {
+        queryBuilder.andWhere('skp.pendekatan = :pendekatan', { pendekatan });
+      }
+
+      // Hitung total data
+      const total = await queryBuilder.getCount();
+      const totalPages = Math.ceil(total / perPage);
+      const offset = (page - 1) * perPage;
+
+      // Tambahkan pagination dan ordering
+      queryBuilder.skip(offset).take(perPage).orderBy('skp.created_at', 'DESC');
+
+      // Ambil data
+      const skpList = await queryBuilder.getMany();
 
       if (skpList.length === 0) {
         return {
@@ -430,6 +564,12 @@ export class SkpService {
           status: true,
           message: `Tidak ada SKP yang ditemukan untuk user ID ${userId}`,
           data: [],
+          pagination: {
+            current_page: Number(page),
+            per_page: Number(perPage),
+            total: 0,
+            last_page: 0,
+          },
         };
       }
 
@@ -481,11 +621,20 @@ export class SkpService {
 
       const skpWithUnit = await Promise.all(skpWithUnitPromises);
 
+      // Buat pagination meta
+      const pagination = {
+        current_page: Number(page),
+        per_page: Number(perPage),
+        total: total,
+        last_page: totalPages,
+      };
+
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Daftar SKP berhasil ditemukan',
         data: skpWithUnit,
+        pagination,
       };
     } catch (error) {
       return {
@@ -499,9 +648,19 @@ export class SkpService {
 
   async findByAtasanSkpId(
     atasanSkpId: string,
+    filterSkpDto: FilterSkpDto,
     token: string,
   ): Promise<ApiResponse> {
     try {
+      const {
+        page = 1,
+        perPage = 10,
+        unit_id,
+        renstra_id,
+        status,
+        pendekatan,
+      } = filterSkpDto;
+
       // Cari SKP yang memiliki atasan_skp_id yang mengandung atasanSkpId
       const queryBuilder = this.skpRepository.createQueryBuilder('skp');
 
@@ -510,8 +669,32 @@ export class SkpService {
         atasanSkpId: `%${atasanSkpId}%`,
       });
 
-      queryBuilder.orderBy('skp.created_at', 'DESC');
+      // Tambahkan filter tambahan jika ada
+      if (unit_id) {
+        queryBuilder.andWhere('skp.unit_id = :unit_id', { unit_id });
+      }
 
+      if (renstra_id) {
+        queryBuilder.andWhere('skp.renstra_id = :renstra_id', { renstra_id });
+      }
+
+      if (status) {
+        queryBuilder.andWhere('skp.status = :status', { status });
+      }
+
+      if (pendekatan) {
+        queryBuilder.andWhere('skp.pendekatan = :pendekatan', { pendekatan });
+      }
+
+      // Hitung total data
+      const total = await queryBuilder.getCount();
+      const totalPages = Math.ceil(total / perPage);
+      const offset = (page - 1) * perPage;
+
+      // Tambahkan pagination dan ordering
+      queryBuilder.skip(offset).take(perPage).orderBy('skp.created_at', 'DESC');
+
+      // Ambil data
       const skpList = await queryBuilder.getMany();
 
       if (skpList.length === 0) {
@@ -520,6 +703,12 @@ export class SkpService {
           status: true,
           message: `Tidak ada SKP yang ditemukan untuk atasan SKP ID ${atasanSkpId}`,
           data: [],
+          pagination: {
+            current_page: Number(page),
+            per_page: Number(perPage),
+            total: 0,
+            last_page: 0,
+          },
         };
       }
 
@@ -571,11 +760,20 @@ export class SkpService {
 
       const skpWithUnit = await Promise.all(skpWithUnitPromises);
 
+      // Buat pagination meta
+      const pagination = {
+        current_page: Number(page),
+        per_page: Number(perPage),
+        total: total,
+        last_page: totalPages,
+      };
+
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Daftar SKP berhasil ditemukan',
         data: skpWithUnit,
+        pagination,
       };
     } catch (error) {
       return {
