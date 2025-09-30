@@ -542,6 +542,15 @@ export class RhkService {
       const skpResult = await this.rhkRepository.query(skpQuery);
       const skp = skpResult.length > 0 ? skpResult[0] : null;
 
+      // Ambil rencana aksi untuk setiap RHK berdasarkan periode penilaian
+      const rencanaAksiQuery = `
+        SELECT * FROM rencana_aksi 
+        WHERE skp_id = '${skpId}' 
+        AND periode_penilaian_id = '${periodePenilaianId}'
+        AND rhk_id IN (${rhkIds.map(id => `'${id}'`).join(',')})
+      `;
+      const rencanaAksiResult = await this.rhkRepository.query(rencanaAksiQuery);
+
       // Ambil aspek dan indikator kinerja untuk setiap RHK
       const rhksWithAspek = await Promise.all(
         rhks.map(async (rhk) => {
@@ -584,10 +593,16 @@ export class RhkService {
             }),
           );
 
+          // Filter rencana aksi untuk RHK ini
+          const rencanaAksi = rencanaAksiResult.filter(
+            (ra) => ra.rhk_id === rhk.id
+          );
+
           return {
             ...rhk,
             skp: skp,
             aspek: aspekWithIndikator || [],
+            rencana_aksi: rencanaAksi || [],
           };
         }),
       );
