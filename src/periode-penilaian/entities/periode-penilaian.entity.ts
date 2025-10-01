@@ -23,6 +23,9 @@ export class PeriodePenilaian {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  renstra_id: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

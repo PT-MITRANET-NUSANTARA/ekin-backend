@@ -40,13 +40,21 @@ export class PeriodePenilaianService {
     }
   }
 
-  async findAll(unitId: string, token: string): Promise<ApiResponse> {
+  async findAll(unitId: string, renstraId: string, token: string): Promise<ApiResponse> {
     try {
       let query =
         this.periodePenilaianRepository.createQueryBuilder('periode_penilaian');
 
       if (unitId) {
         query = query.where('periode_penilaian.unit_id = :unitId', { unitId });
+      }
+      
+      if (renstraId) {
+        if (unitId) {
+          query = query.andWhere('periode_penilaian.renstra_id = :renstraId', { renstraId });
+        } else {
+          query = query.where('periode_penilaian.renstra_id = :renstraId', { renstraId });
+        }
       }
 
       const periodePenilaian = await query.getMany();

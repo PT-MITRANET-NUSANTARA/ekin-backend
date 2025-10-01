@@ -37,9 +37,10 @@ export class PeriodePenilaianController {
   @Get()
   findAll(
     @Query('unit_id') unitId: string,
+    @Query('renstra_id') renstraId: string,
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
-    return this.periodePenilaianService.findAll(unitId, token);
+    return this.periodePenilaianService.findAll(unitId, renstraId, token);
   }
 
   @Get(':id')
