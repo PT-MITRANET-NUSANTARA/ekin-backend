@@ -17,8 +17,8 @@ export class PerjanjianKinerja {
   @Column({ type: 'varchar', length: 255 })
   unor_id: string;
 
-  @Column({ type: 'int' })
-  skp_id: number;
+  @Column()
+  skp_id: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   file: string;
