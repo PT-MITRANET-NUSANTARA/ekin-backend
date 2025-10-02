@@ -11,7 +11,7 @@ export class CreatePerjanjianKinerjaDto {
 
   @IsNotEmpty()
   @IsString()
-  skp_id: number;
+  skp_id: string;
 
   // File akan ditangani oleh FileInterceptor
   // Tidak perlu validasi di sini karena file diupload sebagai multipart/form-data

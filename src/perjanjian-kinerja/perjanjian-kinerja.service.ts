@@ -62,19 +62,13 @@ export class PerjanjianKinerjaService {
         };
       }
 
-      const decodedToken = decodeJwt(token);
-      const userId = decodedToken.sub;
-
       // Simpan file path jika ada file yang diupload
       let filePath: string | null = null;
       if (file) {
         filePath = file.path;
       }
 
-      const perjanjianKinerja = this.perjanjianKinerjaRepository.create({
-        ...createPerjanjianKinerjaDto,
-        created_by: userId,
-      });
+      const perjanjianKinerja = this.perjanjianKinerjaRepository.create(createPerjanjianKinerjaDto);
 
       if (filePath) {
         perjanjianKinerja.file = filePath;
@@ -384,7 +378,7 @@ export class PerjanjianKinerjaService {
     try {
       const perjanjianKinerjaList = await this.perjanjianKinerjaRepository.find(
         {
-          where: { skp_id: Number(skpId) },
+          where: { skp_id: skpId },
         },
       );
 

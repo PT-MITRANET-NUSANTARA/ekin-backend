@@ -28,10 +28,4 @@ export class PerjanjianKinerja {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  created_by: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  updated_by: string;
 }
