@@ -10,7 +10,7 @@ export class CreatePerjanjianKinerjaDto {
   unor_id: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   skp_id: number;
 
   // File akan ditangani oleh FileInterceptor
