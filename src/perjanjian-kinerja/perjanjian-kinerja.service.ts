@@ -382,9 +382,11 @@ export class PerjanjianKinerjaService {
 
   async findBySkpId(skpId: string, token: string): Promise<ApiResponse> {
     try {
-      const perjanjianKinerjaList = await this.perjanjianKinerjaRepository.find({
-        where: { skp_id: Number(skpId) },
-      });
+      const perjanjianKinerjaList = await this.perjanjianKinerjaRepository.find(
+        {
+          where: { skp_id: Number(skpId) },
+        },
+      );
 
       if (perjanjianKinerjaList.length === 0) {
         return {
@@ -396,26 +398,30 @@ export class PerjanjianKinerjaService {
       }
 
       // Tambahkan informasi unit kerja untuk setiap perjanjian kinerja
-      const perjanjianKinerjaWithUnitPromises = perjanjianKinerjaList.map(async (perjanjianKinerja) => {
-        const unitResponse = await this.unitKerjaService.findById(
-          Number(perjanjianKinerja.unit_id),
-          token,
-        );
+      const perjanjianKinerjaWithUnitPromises = perjanjianKinerjaList.map(
+        async (perjanjianKinerja) => {
+          const unitResponse = await this.unitKerjaService.findById(
+            Number(perjanjianKinerja.unit_id),
+            token,
+          );
 
-        const unorResponse = await this.unitKerjaService.findUnorById(
-          Number(perjanjianKinerja.unit_id),
-          token,
-          perjanjianKinerja.unor_id,
-        );
+          const unorResponse = await this.unitKerjaService.findUnorById(
+            Number(perjanjianKinerja.unit_id),
+            token,
+            perjanjianKinerja.unor_id,
+          );
 
-        return {
-          ...perjanjianKinerja,
-          unit: unitResponse.status ? unitResponse.data : null,
-          unor: unorResponse.status ? unorResponse.data : null,
-        };
-      });
+          return {
+            ...perjanjianKinerja,
+            unit: unitResponse.status ? unitResponse.data : null,
+            unor: unorResponse.status ? unorResponse.data : null,
+          };
+        },
+      );
 
-      const perjanjianKinerjaWithUnit = await Promise.all(perjanjianKinerjaWithUnitPromises);
+      const perjanjianKinerjaWithUnit = await Promise.all(
+        perjanjianKinerjaWithUnitPromises,
+      );
 
       return {
         code: HttpStatus.OK,

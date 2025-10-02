@@ -232,11 +232,11 @@ export class SkpService {
         }
 
         // Ambil data perjanjian kinerja berdasarkan skp_id
-        const perjanjianKinerjaResponse = await this.perjanjianKinerjaService.findBySkpId(
-          skp.id,
-          token,
-        );
-        const perjanjianKinerjaData = perjanjianKinerjaResponse.status ? perjanjianKinerjaResponse.data : [];
+        const perjanjianKinerjaResponse =
+          await this.perjanjianKinerjaService.findBySkpId(skp.id, token);
+        const perjanjianKinerjaData = perjanjianKinerjaResponse.status
+          ? perjanjianKinerjaResponse.data
+          : [];
 
         return {
           ...skp,
@@ -622,10 +622,17 @@ export class SkpService {
           atasanSkp = atasanSkpResults.filter((item) => item !== null);
         }
 
+        const perjanjianKinerjaResponse =
+          await this.perjanjianKinerjaService.findBySkpId(skp.id, token);
+        const perjanjianKinerjaData = perjanjianKinerjaResponse.status
+          ? perjanjianKinerjaResponse.data
+          : [];
+
         return {
           ...skp,
           unit_id: unitResponse.status ? unitResponse.data : null,
           atasan_skp_id: atasanSkp,
+          perjanjian_kinerja: perjanjianKinerjaData,
         };
       });
 
