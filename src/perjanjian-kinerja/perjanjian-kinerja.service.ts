@@ -3,6 +3,7 @@ import {
   NotFoundException,
   HttpStatus,
   BadRequestException,
+  StreamableFile,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,6 +14,8 @@ import { FilterPerjanjianKinerjaDto } from './dto/filter-perjanjian-kinerja.dto'
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
 import { decodeJwt } from '../common/utils/jwt.util';
+import { createReadStream, existsSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class PerjanjianKinerjaService {
@@ -333,6 +336,92 @@ export class PerjanjianKinerjaService {
         status: true,
         message: 'Perjanjian kinerja berhasil dihapus',
         data: null,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
+  async downloadFile(id: string): Promise<StreamableFile> {
+    try {
+      const perjanjianKinerja = await this.perjanjianKinerjaRepository.findOne({
+        where: { id: Number(id) },
+      });
+
+      if (!perjanjianKinerja) {
+        throw new NotFoundException(
+          `Perjanjian Kinerja dengan ID ${id} tidak ditemukan`,
+        );
+      }
+
+      if (!perjanjianKinerja.file) {
+        throw new NotFoundException('File tidak ditemukan');
+      }
+
+      const filePath = join(
+        process.cwd(),
+        'uploads/perjanjian-kinerja',
+        perjanjianKinerja.file,
+      );
+
+      if (!existsSync(filePath)) {
+        throw new NotFoundException('File tidak ditemukan di server');
+      }
+
+      const file = createReadStream(filePath);
+      return new StreamableFile(file);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findBySkpId(skpId: string, token: string): Promise<ApiResponse> {
+    try {
+      const perjanjianKinerjaList = await this.perjanjianKinerjaRepository.find({
+        where: { skp_id: Number(skpId) },
+      });
+
+      if (perjanjianKinerjaList.length === 0) {
+        return {
+          code: HttpStatus.OK,
+          status: true,
+          message: `Tidak ada Perjanjian Kinerja yang ditemukan untuk SKP ID ${skpId}`,
+          data: [],
+        };
+      }
+
+      // Tambahkan informasi unit kerja untuk setiap perjanjian kinerja
+      const perjanjianKinerjaWithUnitPromises = perjanjianKinerjaList.map(async (perjanjianKinerja) => {
+        const unitResponse = await this.unitKerjaService.findById(
+          Number(perjanjianKinerja.unit_id),
+          token,
+        );
+
+        const unorResponse = await this.unitKerjaService.findUnorById(
+          Number(perjanjianKinerja.unit_id),
+          token,
+          perjanjianKinerja.unor_id,
+        );
+
+        return {
+          ...perjanjianKinerja,
+          unit: unitResponse.status ? unitResponse.data : null,
+          unor: unorResponse.status ? unorResponse.data : null,
+        };
+      });
+
+      const perjanjianKinerjaWithUnit = await Promise.all(perjanjianKinerjaWithUnitPromises);
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Daftar Perjanjian Kinerja berhasil diambil',
+        data: perjanjianKinerjaWithUnit,
       };
     } catch (error) {
       return {

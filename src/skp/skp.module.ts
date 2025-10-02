@@ -8,6 +8,7 @@ import { AuthModule } from '../auth/auth.module';
 import { PerilakuModule } from '../perilaku/perilaku.module';
 import { UserModule } from '../user/user.module';
 import { RhkModule } from '../rhk/rhk.module';
+import { PerjanjianKinerjaModule } from '../perjanjian-kinerja/perjanjian-kinerja.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RhkModule } from '../rhk/rhk.module';
     AuthModule,
     UserModule,
     RhkModule,
+    PerjanjianKinerjaModule,
   ],
   controllers: [SkpController],
   providers: [SkpService],

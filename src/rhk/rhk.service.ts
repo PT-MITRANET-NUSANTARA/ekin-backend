@@ -547,9 +547,10 @@ export class RhkService {
         SELECT * FROM rencana_aksi 
         WHERE skp_id = '${skpId}' 
         AND periode_penilaian_id = '${periodePenilaianId}'
-        AND rhk_id IN (${rhkIds.map(id => `'${id}'`).join(',')})
+        AND rhk_id IN (${rhkIds.map((id) => `'${id}'`).join(',')})
       `;
-      const rencanaAksiResult = await this.rhkRepository.query(rencanaAksiQuery);
+      const rencanaAksiResult =
+        await this.rhkRepository.query(rencanaAksiQuery);
 
       // Ambil aspek dan indikator kinerja untuk setiap RHK
       const rhksWithAspek = await Promise.all(
@@ -595,7 +596,7 @@ export class RhkService {
 
           // Filter rencana aksi untuk RHK ini
           const rencanaAksi = rencanaAksiResult.filter(
-            (ra) => ra.rhk_id === rhk.id
+            (ra) => ra.rhk_id === rhk.id,
           );
 
           return {

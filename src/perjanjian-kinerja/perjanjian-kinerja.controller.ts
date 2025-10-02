@@ -11,10 +11,14 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Res,
+  StreamableFile,
+  Header,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Response } from 'express';
 import { PerjanjianKinerjaService } from './perjanjian-kinerja.service';
 import { CreatePerjanjianKinerjaDto } from './dto/create-perjanjian-kinerja.dto';
 import { UpdatePerjanjianKinerjaDto } from './dto/update-perjanjian-kinerja.dto';
@@ -110,5 +114,16 @@ export class PerjanjianKinerjaController {
     @Headers('authorization') token: string,
   ): Promise<ApiResponse> {
     return this.perjanjianKinerjaService.remove(id, token);
+  }
+
+  @Get(':id/download')
+  @Header('Content-Type', 'application/octet-stream')
+  @Header('Content-Disposition', 'attachment')
+  async downloadFile(
+    @Param('id') id: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    const file = await this.perjanjianKinerjaService.downloadFile(id);
+    return file;
   }
 }

@@ -14,6 +14,7 @@ import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
 import { PerilakuService } from '../perilaku/perilaku.service';
 import { UserService } from '../user/user.service';
 import { RhkService } from '../rhk/rhk.service';
+import { PerjanjianKinerjaService } from '../perjanjian-kinerja/perjanjian-kinerja.service';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { perilakuTemplate } from '../common/data/perilaku-template';
 
@@ -26,6 +27,7 @@ export class SkpService {
     private perilakuService: PerilakuService,
     private userService: UserService,
     private rhkService: RhkService,
+    private perjanjianKinerjaService: PerjanjianKinerjaService,
   ) {}
 
   async create(
@@ -229,10 +231,18 @@ export class SkpService {
           atasanSkp = atasanSkpResults.filter((item) => item !== null);
         }
 
+        // Ambil data perjanjian kinerja berdasarkan skp_id
+        const perjanjianKinerjaResponse = await this.perjanjianKinerjaService.findBySkpId(
+          skp.id,
+          token,
+        );
+        const perjanjianKinerjaData = perjanjianKinerjaResponse.status ? perjanjianKinerjaResponse.data : [];
+
         return {
           ...skp,
           unit_id: unitResponse.status ? unitResponse.data : null,
           atasan_skp_id: atasanSkp,
+          perjanjian_kinerja: perjanjianKinerjaData,
         };
       });
 

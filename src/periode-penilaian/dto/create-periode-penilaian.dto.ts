@@ -1,4 +1,10 @@
-import { IsDateString, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreatePeriodePenilaianDto {
   @IsNotEmpty()
@@ -16,7 +22,7 @@ export class CreatePeriodePenilaianDto {
   @IsNotEmpty()
   @IsString()
   name: string;
-  
+
   @IsOptional()
   @IsUUID()
   renstra_id?: string;
