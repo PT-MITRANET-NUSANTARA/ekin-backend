@@ -155,6 +155,7 @@ export class AuthService {
       profileData.isAdmin = false;
       profileData.isBupati = false;
       profileData.isJpt = false;
+      profileData.pimpinan = null;
 
       // Cek apakah user adalah admin atau bupati
       if (setting) {
@@ -189,6 +190,59 @@ export class AuthService {
           } catch (jptError) {
             console.error('Error checking JPT status:', jptError.message);
             // Jika gagal memeriksa status JPT, tetap lanjutkan dengan isJpt = false
+          }
+
+          // Ambil data unor untuk mendapatkan pimpinan
+          try {
+            if (profileData.posjab && profileData.posjab.nama_jabatan) {
+              const unorResponse = await this.unitKerjaService.findAllUnor(
+                profileData.posjab.unor.induk.id_simpeg,
+                token,
+              );
+              if (unorResponse.status && unorResponse.data) {
+                const unorList = unorResponse.data;
+                // Cari unor yang nama jabatannya cocok dengan nama jabatan user saat ini
+                const matchingUnor = unorList.find((unor) => {
+                  // Normalisasi string untuk perbandingan (ubah ke lowercase dan hapus spasi berlebih)
+                  const normalizedUnorJabatan =
+                    unor.namaJabatan
+                      ?.toLowerCase()
+                      .trim()
+                      .replace(/\s+/g, ' ') || '';
+                  const normalizedProfileJabatan =
+                    profileData.posjab.nama_jabatan
+                      ?.toLowerCase()
+                      .trim()
+                      .replace(/\s+/g, ' ') || '';
+
+                  // Cek juga apakah salah satu string berisi string lainnya
+                  const isExactMatch =
+                    normalizedUnorJabatan === normalizedProfileJabatan;
+                  const unorContainsProfile = normalizedUnorJabatan.includes(
+                    normalizedProfileJabatan,
+                  );
+                  const profileContainsUnor = normalizedProfileJabatan.includes(
+                    normalizedUnorJabatan,
+                  );
+
+                  // Gunakan kecocokan persis atau kecocokan sebagian jika diperlukan
+                  return (
+                    isExactMatch || unorContainsProfile || profileContainsUnor
+                  );
+                });
+
+                // Jika ditemukan, set pimpinan = unor tersebut, jika tidak pimpinan tetap null
+                if (matchingUnor) {
+                  profileData.pimpinan = matchingUnor;
+                }
+              }
+            }
+          } catch (unorError) {
+            console.error(
+              'Error fetching unor data for pimpinan:',
+              unorError.message,
+            );
+            // Jika gagal mendapatkan data unor, tetap lanjutkan tanpa mengubah pimpinan
           }
 
           // Ambil data umpeg berdasarkan unit dan jabatan

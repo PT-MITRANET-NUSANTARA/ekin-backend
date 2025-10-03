@@ -75,6 +75,15 @@ export class SkpController {
     return this.skpService.findOneWithPenilaian(id, penilaianId, token);
   }
 
+  @Get(':id/penilaian/:penilaianId/nilai')
+  findOneWithPenilaianNilai(
+    @Param('id') id: string,
+    @Param('penilaianId') penilaianId: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.skpService.findOneWithPenilaianNilai(id, penilaianId, token);
+  }
+
   @Get(':id')
   findOne(
     @Param('id') id: string,

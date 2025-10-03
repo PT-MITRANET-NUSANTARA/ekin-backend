@@ -68,7 +68,9 @@ export class PerjanjianKinerjaService {
         filePath = file.path;
       }
 
-      const perjanjianKinerja = this.perjanjianKinerjaRepository.create(createPerjanjianKinerjaDto);
+      const perjanjianKinerja = this.perjanjianKinerjaRepository.create(
+        createPerjanjianKinerjaDto,
+      );
 
       if (filePath) {
         perjanjianKinerja.file = filePath;

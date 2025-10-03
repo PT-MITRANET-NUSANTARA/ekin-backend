@@ -17,12 +17,18 @@ import { RhkService } from '../rhk/rhk.service';
 import { PerjanjianKinerjaService } from '../perjanjian-kinerja/perjanjian-kinerja.service';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { perilakuTemplate } from '../common/data/perilaku-template';
+import { FeedbackPerilaku } from '../feedback-perilaku/entities/feedback-perilaku.entity';
+import { FeedbackAspek } from '../feedback-aspek/entities/feedback-aspek.entity';
 
 @Injectable()
 export class SkpService {
   constructor(
     @InjectRepository(Skp)
     private skpRepository: Repository<Skp>,
+    @InjectRepository(FeedbackPerilaku)
+    private feedbackPerilakuRepository: Repository<FeedbackPerilaku>,
+    @InjectRepository(FeedbackAspek)
+    private feedbackAspekRepository: Repository<FeedbackAspek>,
     private unitKerjaService: UnitKerjaService,
     private perilakuService: PerilakuService,
     private userService: UserService,
@@ -339,7 +345,56 @@ export class SkpService {
         penilaianId,
         token,
       );
-      const rhkData = rhkResponse.status ? rhkResponse.data : [];
+      let rhkData = rhkResponse.status ? rhkResponse.data : [];
+
+      // Ambil data feedback aspek untuk setiap aspek di RHK
+      if (rhkData && rhkData.length > 0) {
+        rhkData = await Promise.all(
+          rhkData.map(async (rhk) => {
+            if (rhk.aspek && rhk.aspek.length > 0) {
+              const aspekWithFeedback = await Promise.all(
+                rhk.aspek.map(async (aspek) => {
+                  try {
+                    // Cari feedback aspek berdasarkan aspek_id dan periode_penilaian_id
+                    const feedbackAspek = await this.feedbackAspekRepository
+                      .createQueryBuilder('feedback')
+                      .where('feedback.aspek_id = :aspek_id', {
+                        aspek_id: aspek.id,
+                      })
+                      .andWhere(
+                        'feedback.periode_penilaian_id = :periode_penilaian_id',
+                        {
+                          periode_penilaian_id: penilaianId,
+                        },
+                      )
+                      .getOne();
+
+                    // Tambahkan feedback_aspek sebagai objek tunggal atau null
+                    return {
+                      ...aspek,
+                      feedback_aspek: feedbackAspek || null,
+                    };
+                  } catch (error) {
+                    console.error(
+                      `Error getting feedback for aspek ${aspek.id}:`,
+                      error,
+                    );
+                    return {
+                      ...aspek,
+                      feedback_aspek: null,
+                    };
+                  }
+                }),
+              );
+              return {
+                ...rhk,
+                aspek: aspekWithFeedback,
+              };
+            }
+            return rhk;
+          }),
+        );
+      }
 
       const skpWithUnit = {
         ...skp,
@@ -352,7 +407,139 @@ export class SkpService {
       return {
         code: HttpStatus.OK,
         status: true,
-        message: 'SKP dengan penilaian berhasil diambil',
+        message: 'Data SKP dengan penilaian berhasil diambil',
+        data: skpWithUnit,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
+  async findOneWithPenilaianNilai(
+    id: string,
+    penilaianId: string,
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      const skp = await this.skpRepository.findOne({
+        where: { id },
+      });
+
+      if (!skp) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message: `SKP dengan ID ${id} tidak ditemukan`,
+          data: null,
+        };
+      }
+
+      // Ambil informasi unit kerja
+      const unitResponse = await this.unitKerjaService.findById(
+        Number(skp.unit_id),
+        token,
+      );
+
+      // Populate SKP atasan jika atasan_skp_id tidak null
+      let atasanSkp: any = null;
+      if (skp.atasan_skp_id && skp.atasan_skp_id.length > 0) {
+        // Populate semua SKP atasan dalam array
+        const atasanSkpPromises = skp.atasan_skp_id.map(async (atasanSkpId) => {
+          const atasanSkpData = await this.skpRepository.findOne({
+            where: { id: atasanSkpId },
+          });
+
+          if (atasanSkpData) {
+            const atasanUnitResponse = await this.unitKerjaService.findById(
+              Number(atasanSkpData.unit_id),
+              token,
+            );
+
+            return {
+              ...atasanSkpData,
+              unit: atasanUnitResponse.status ? atasanUnitResponse.data : null,
+            };
+          }
+          return null;
+        });
+
+        // Filter out null values
+        const atasanSkpResults = await Promise.all(atasanSkpPromises);
+        atasanSkp = atasanSkpResults.filter((item) => item !== null);
+      }
+
+      // Ambil data perilaku berdasarkan skp_id
+      const perilakuResponse = await this.perilakuService.findBySkpId(
+        id,
+        token,
+      );
+      let perilakuData = perilakuResponse.status ? perilakuResponse.data : [];
+
+      // Ambil data RHK berdasarkan skp_id dan periode_penilaian_id
+      const rhkResponse = await this.rhkService.findBySkpIdAndPeriodePenilaian(
+        id,
+        penilaianId,
+        token,
+      );
+      const rhkData = rhkResponse.status ? rhkResponse.data : [];
+
+      // Ambil data feedback perilaku untuk setiap perilaku
+      if (perilakuData && perilakuData.length > 0) {
+        // Modifikasi data perilaku untuk menambahkan feedback_perilaku sebagai objek tunggal
+        perilakuData = await Promise.all(
+          perilakuData.map(async (perilaku) => {
+            try {
+              // Cari feedback perilaku berdasarkan perilaku_id dan periode_penilaian_id
+              const feedbackQuery = await this.feedbackPerilakuRepository
+                .createQueryBuilder('feedback')
+                .where('feedback.perilaku_id = :perilaku_id', {
+                  perilaku_id: perilaku.id,
+                })
+                .andWhere(
+                  'feedback.periode_penilaian_id = :periode_penilaian_id',
+                  {
+                    periode_penilaian_id: penilaianId,
+                  },
+                )
+                .getOne();
+
+              // Tambahkan feedback_perilaku sebagai objek tunggal atau null
+              return {
+                ...perilaku,
+                feedback_perilaku: feedbackQuery || null,
+              };
+            } catch (error) {
+              console.error(
+                `Error getting feedback for perilaku ${perilaku.id}:`,
+                error,
+              );
+              return {
+                ...perilaku,
+                feedback_perilaku: null,
+              };
+            }
+          }),
+        );
+      }
+
+      const skpWithUnit = {
+        ...skp,
+        unit: unitResponse.status ? unitResponse.data : null,
+        atasan_skp: atasanSkp,
+        perilaku_id: perilakuData,
+        rhk: rhkData,
+      };
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message:
+          'Data SKP dengan penilaian dan feedback perilaku berhasil diambil',
         data: skpWithUnit,
       };
     } catch (error) {
