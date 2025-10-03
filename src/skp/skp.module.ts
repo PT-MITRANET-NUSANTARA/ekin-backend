@@ -11,10 +11,11 @@ import { RhkModule } from '../rhk/rhk.module';
 import { PerjanjianKinerjaModule } from '../perjanjian-kinerja/perjanjian-kinerja.module';
 import { FeedbackPerilaku } from '../feedback-perilaku/entities/feedback-perilaku.entity';
 import { FeedbackAspek } from '../feedback-aspek/entities/feedback-aspek.entity';
+import { Penilaian } from '../penilaian/entities/penilaian.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Skp, FeedbackPerilaku, FeedbackAspek]),
+    TypeOrmModule.forFeature([Skp, FeedbackPerilaku, FeedbackAspek, Penilaian]),
     UnitKerjaModule,
     PerilakuModule,
     AuthModule,
