@@ -350,54 +350,7 @@ export class SkpService {
       );
       let rhkData = rhkResponse.status ? rhkResponse.data : [];
 
-      // Ambil data feedback aspek untuk setiap aspek di RHK
-      if (rhkData && rhkData.length > 0) {
-        rhkData = await Promise.all(
-          rhkData.map(async (rhk) => {
-            if (rhk.aspek && rhk.aspek.length > 0) {
-              const aspekWithFeedback = await Promise.all(
-                rhk.aspek.map(async (aspek) => {
-                  try {
-                    // Cari feedback aspek berdasarkan aspek_id dan periode_penilaian_id
-                    const feedbackAspek = await this.feedbackAspekRepository
-                      .createQueryBuilder('feedback')
-                      .where('feedback.aspek_id = :aspek_id', {
-                        aspek_id: aspek.id,
-                      })
-                      .andWhere(
-                        'feedback.periode_penilaian_id = :periode_penilaian_id',
-                        {
-                          periode_penilaian_id: penilaianId,
-                        },
-                      )
-                      .getOne();
 
-                    // Tambahkan feedback_aspek sebagai objek tunggal atau null
-                    return {
-                      ...aspek,
-                      feedback_aspek: feedbackAspek || null,
-                    };
-                  } catch (error) {
-                    console.error(
-                      `Error getting feedback for aspek ${aspek.id}:`,
-                      error,
-                    );
-                    return {
-                      ...aspek,
-                      feedback_aspek: null,
-                    };
-                  }
-                }),
-              );
-              return {
-                ...rhk,
-                aspek: aspekWithFeedback,
-              };
-            }
-            return rhk;
-          }),
-        );
-      }
 
       const skpWithUnit = {
         ...skp,
@@ -574,7 +527,56 @@ export class SkpService {
         penilaianId,
         token,
       );
-      const rhkData = rhkResponse.status ? rhkResponse.data : [];
+      let rhkData = rhkResponse.status ? rhkResponse.data : [];
+
+      // Ambil data feedback aspek untuk setiap aspek di RHK
+      if (rhkData && rhkData.length > 0) {
+        rhkData = await Promise.all(
+          rhkData.map(async (rhk) => {
+            if (rhk.aspek && rhk.aspek.length > 0) {
+              const aspekWithFeedback = await Promise.all(
+                rhk.aspek.map(async (aspek) => {
+                  try {
+                    // Cari feedback aspek berdasarkan aspek_id dan periode_penilaian_id
+                    const feedbackAspek = await this.feedbackAspekRepository
+                      .createQueryBuilder('feedback')
+                      .where('feedback.aspek_id = :aspek_id', {
+                        aspek_id: aspek.id,
+                      })
+                      .andWhere(
+                        'feedback.periode_penilaian_id = :periode_penilaian_id',
+                        {
+                          periode_penilaian_id: penilaianId,
+                        },
+                      )
+                      .getOne();
+
+                    // Tambahkan feedback_aspek sebagai objek tunggal atau null
+                    return {
+                      ...aspek,
+                      feedback_aspek: feedbackAspek || null,
+                    };
+                  } catch (error) {
+                    console.error(
+                      `Error getting feedback for aspek ${aspek.id}:`,
+                      error,
+                    );
+                    return {
+                      ...aspek,
+                      feedback_aspek: null,
+                    };
+                  }
+                }),
+              );
+              return {
+                ...rhk,
+                aspek: aspekWithFeedback,
+              };
+            }
+            return rhk;
+          }),
+        );
+      }
 
       // Ambil data feedback perilaku untuk setiap perilaku
       if (perilakuData && perilakuData.length > 0) {
