@@ -378,8 +378,6 @@ export class SkpService {
 
   async findOneWithPenilaianNilaiSkp(
     id: string,
-    penilaianId: string,
-    skpDinilaiId: string,
     token: string,
   ): Promise<ApiResponse> {
     try {
@@ -397,12 +395,7 @@ export class SkpService {
       }
 
       // Ambil data penilaian berdasarkan penilaianId dan skpDinilaiId
-      const penilaian = await this.penilaianRepository.findOne({
-        where: {
-          periode_penilaian_id: penilaianId,
-          skp_dinilai_id: skpDinilaiId,
-        },
-      });
+
 
       // Ambil informasi unit kerja
       const unitResponse = await this.unitKerjaService.findById(
@@ -442,7 +435,6 @@ export class SkpService {
         ...skp,
         unit: unitResponse.status ? unitResponse.data : null,
         atasan_skp: atasanSkp,
-        penilaian: penilaian || null,
       };
 
       return {
@@ -479,6 +471,13 @@ export class SkpService {
           data: null,
         };
       }
+
+      const penilaian = await this.penilaianRepository.findOne({
+        where: {
+          periode_penilaian_id: penilaianId,
+          skp_dinilai_id: id,
+        },
+      });
 
       // Ambil informasi unit kerja
       const unitResponse = await this.unitKerjaService.findById(
@@ -623,6 +622,7 @@ export class SkpService {
         atasan_skp: atasanSkp,
         perilaku_id: perilakuData,
         rhk: rhkData,
+        penilaian: penilaian || null,
       };
 
       return {
