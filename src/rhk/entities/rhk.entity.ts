@@ -50,6 +50,9 @@ export class Rhk {
   @Column({ nullable: true })
   penugasan: string;
 
+  @Column({ type: 'json', nullable: true })
+  realisasi: Record<string, string>[];
+
   @ManyToMany(() => Rkt)
   @JoinTable({
     name: 'rhk_rkt',

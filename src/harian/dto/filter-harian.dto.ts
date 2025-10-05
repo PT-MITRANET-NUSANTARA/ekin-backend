@@ -29,8 +29,12 @@ export class FilterHarianDto {
   date?: Date;
 
   @IsOptional()
-  @IsInt()
-  skp_id?: number;
+  @IsString()
+  skp_id?: string;
+  
+  @IsOptional()
+  @IsString()
+  rhk_id?: string;
 
   @IsOptional()
   @IsBoolean()
@@ -44,4 +48,14 @@ export class FilterHarianDto {
   @IsOptional()
   @IsUUID()
   rencana_aksi_id?: string;
+  
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  start_date_time?: Date;
+  
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  end_date_time?: Date;
 }

@@ -20,8 +20,12 @@ export class CreateHarianDto {
   date: Date;
 
   @IsOptional()
-  @IsInt()
-  skp_id: number;
+  @IsString()
+  skp_id: string;
+  
+  @IsOptional()
+  @IsString()
+  rhk_id: string;
 
   @IsNotEmpty()
   @IsBoolean()

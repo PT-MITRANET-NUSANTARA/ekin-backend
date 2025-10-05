@@ -59,6 +59,25 @@ export class RhkController {
       token,
     );
   }
+  
+  @Get(':id/periode-penilaian/:periodePenilaianId/realisasi')
+  findRealisasi(
+    @Param('id') id: string,
+    @Param('periodePenilaianId') periodePenilaianId: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.findRealisasi(id, periodePenilaianId, token);
+  }
+  
+  @Patch(':id/periode-penilaian/:periodePenilaianId/realisasi')
+  updateRealisasi(
+    @Param('id') id: string,
+    @Param('periodePenilaianId') periodePenilaianId: string,
+    @Body() realisasiData: { realisasi: Record<string, string>[] },
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.rhkService.updateRealisasi(id, periodePenilaianId, realisasiData.realisasi, token);
+  }
 
   @Get(':id/bawahan')
   findByRhkAtasanId(

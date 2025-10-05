@@ -17,8 +17,11 @@ export class Harian {
   @Column({ type: 'date' })
   date: Date;
 
-  @Column({ type: 'int', nullable: true })
-  skp_id: number;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  skp_id: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  rhk_id: string;
 
   @Column({ type: 'boolean', default: false })
   is_skp: boolean;

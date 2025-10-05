@@ -407,30 +407,41 @@ export class UnitKerjaService {
         throw new NotFoundException('Unit Kerja tidak ditemukan');
       }
 
-      console.log('id sapk', unitKerja.id_sapk.toString());
+      // Perbaikan: Menggunakan endpoint /jabatan-unor/ alih-alih /jabatan/
+      // dan memastikan id_sapk dikonversi ke string dengan benar
+      // const idSapk = unitKerja.id_sapk.toString();
+      // console.log('id sapk', idSapk);
+      // console.log("url", `${apiUrl}/jabatan/${idSapk}`)
 
-      const response_jabatan = await firstValueFrom(
-        this.httpService.get(
-          `${apiUrl}/jabatan/${unitKerja.id_sapk.toString()}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          },
-        ),
-      );
+      // const response_jabatan = await firstValueFrom(
+      //   this.httpService.get(
+      //     `${apiUrl}/jabatan/${idSapk}`,
+      //     {
+      //       headers: {
+      //         Authorization: token,
+      //       },
+      //     },
+      //   ),
+      // );
+
+      const userRes = await this.userService.findUsersByUnitId(String(id),token);
+      const userData = userRes.data;
+      const uniqueNamaJabatan = [...new Set(userData.map(item => item.nama_jabatan))];
+
+      console.log("response", uniqueNamaJabatan);
 
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Berhasil mengambil data jabatan',
-        data: response_jabatan.data.mapData,
+        data: uniqueNamaJabatan,
       };
     } catch (error) {
+      console.error('Error fetching jabatan:', error.response?.data || error.message);
       return {
-        code: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        code: error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: error.message || 'Gagal mengambil data jabatan',
+        message: `Gagal mengambil data jabatan: ${error.response?.data?.message || error.message}`,
         data: null,
       };
     }

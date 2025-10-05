@@ -16,11 +16,9 @@ export class SettingsService {
   async getLatestSetting(): Promise<ApiResponse> {
     try {
       // Get the most recent setting
-      const latestSetting = await this.settingRepository.findOne({
-        order: {
-          createdAt: 'DESC',
-        },
-      });
+      const latestSetting = await this.settingRepository.createQueryBuilder('setting')
+        .orderBy('setting.createdAt', 'DESC')
+        .getOne();
 
       if (!latestSetting) {
         return {
@@ -38,10 +36,11 @@ export class SettingsService {
         data: latestSetting,
       };
     } catch (error) {
+      console.error('Error getting latest setting:', error);
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         status: false,
-        message: 'Gagal mendapatkan setting terbaru',
+        message: `Gagal mendapatkan setting terbaru: ${error.message}`,
         data: null,
       };
     }

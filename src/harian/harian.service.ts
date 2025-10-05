@@ -69,9 +69,12 @@ export class HarianService {
         user_id,
         date,
         skp_id,
+        rhk_id,
         is_skp,
         search,
         rencana_aksi_id,
+        start_date_time,
+        end_date_time,
       } = filterDto;
 
       const queryBuilder = this.harianRepository
@@ -89,6 +92,10 @@ export class HarianService {
 
       if (skp_id !== undefined) {
         queryBuilder.andWhere('harian.skp_id = :skp_id', { skp_id });
+      }
+      
+      if (rhk_id !== undefined) {
+        queryBuilder.andWhere('harian.rhk_id = :rhk_id', { rhk_id });
       }
 
       if (is_skp !== undefined) {

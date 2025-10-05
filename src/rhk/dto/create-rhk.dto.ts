@@ -33,5 +33,9 @@ export class CreateRhkDto {
 
   @IsArray()
   @IsOptional()
+  realisasi?: Record<string, string>[];
+
+  @IsArray()
+  @IsOptional()
   rkts_id?: string[];
 }

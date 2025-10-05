@@ -664,4 +664,70 @@ export class RhkService {
     // Biasanya token diproses oleh JwtAuthGuard dan informasi user tersedia di req.user
     return token.split(' ')[1]?.substring(0, 10) || 'system';
   }
+
+  async findRealisasi(
+    id: string,
+    periodePenilaianId: string,
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      // Cari RHK berdasarkan ID
+      const rhk = await this.rhkRepository.findOne({ where: { id } });
+      
+      if (!rhk) {
+        throw new NotFoundException(`RHK dengan ID ${id} tidak ditemukan`);
+      }
+      
+      // Mengembalikan data realisasi dari RHK
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Data realisasi RHK',
+        data: rhk.realisasi || null,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+  
+  async updateRealisasi(
+    id: string,
+    periodePenilaianId: string,
+    realisasi: Record<string, string>[],
+    token: string,
+  ): Promise<ApiResponse> {
+    try {
+      // Cari RHK berdasarkan ID
+      const rhk = await this.rhkRepository.findOne({ where: { id } });
+      
+      if (!rhk) {
+        throw new NotFoundException(`RHK dengan ID ${id} tidak ditemukan`);
+      }
+      
+      // Update field realisasi
+      rhk.realisasi = realisasi;
+      
+      // Simpan perubahan
+      await this.rhkRepository.save(rhk);
+      
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Realisasi RHK berhasil diperbarui',
+        data: rhk.realisasi,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
 }
