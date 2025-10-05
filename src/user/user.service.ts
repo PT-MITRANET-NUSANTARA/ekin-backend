@@ -397,6 +397,44 @@ export class UserService {
     }
   }
 
+  async findUserByJabatanAndUnor(
+    unitId: string,
+    unorId: string,
+    jabatan: string,
+    token: string,
+  ): Promise<ApiResponse> {
+    console.log('unitId', unitId);
+    console.log('unorId', unorId);
+    console.log('jabatan', jabatan);
+    try {
+      const users = await this.findUsersByUnitId(
+        unitId,
+        token,
+      );
+
+      console.log("user", users);
+
+      const filteredUser = users.data.find((user) =>
+        user.nama_jabatan?.toLowerCase().includes(jabatan.toLowerCase()) &&
+        user.unor.id === unorId,
+      );
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Berhasil mengambil data user',
+        data: filteredUser,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: error.message || 'Gagal mengambil data user',
+        data: null,
+      };
+    }
+  }
+
   async findUserByNip(userNip: string, token: string): Promise<ApiResponse> {
     try {
       const apiUrl = this.configService.get<string>('idasn.apiUrl');

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { firstValueFrom } from 'rxjs';
+import { find, firstValueFrom } from 'rxjs';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { UnitKerjaDto } from './dto/unit-kerja.dto';
 import { FilterUnitKerjaDto } from './dto/filter-unit-kerja.dto';
@@ -368,11 +368,15 @@ export class UnitKerjaService {
         }),
       );
 
+      const rootUnit = response_unor.data.mapData[0];
+      const hierarchy = await this.recursiveUserHierachy(rootUnit, String(id), rootUnit.id, token);
+      console.log("hier", hierarchy);
+
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Berhasil mengambil data unit kerja',
-        data: response_unor.data.mapData[0],
+        data: hierarchy,
       };
     } catch (error) {
       return {
@@ -382,6 +386,27 @@ export class UnitKerjaService {
         data: null,
       };
     }
+  }
+
+  async recursiveUserHierachy(
+    data: any,
+    unitId: string,
+    unorId: string,
+    token: string
+  ) {
+    const pimpinan = await this.userService.findUserByJabatanAndUnor(unitId, unorId, data.namaJabatan, token);
+
+    const bawahan = await Promise.all(
+      (data.bawahan || []).map((child: any) =>
+        this.recursiveUserHierachy(child, unitId, child.id, token)
+      )
+    );
+
+    return {
+      ...data,
+      user: pimpinan.data,
+      bawahan,
+    };
   }
 
   async findAllJabatan(id: number, token: string): Promise<ApiResponse> {
