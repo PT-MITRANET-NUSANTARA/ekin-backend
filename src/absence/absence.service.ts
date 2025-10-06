@@ -94,6 +94,38 @@ export class AbsenceService {
     }
   }
 
+  async findByUserId(userId: string, token: string): Promise<ApiResponse> {
+    try {
+      const absences = await this.absenceRepository.find({
+        where: { user_id: userId },
+        order: { date: 'DESC' },
+      });
+
+      if (absences.length === 0) {
+        return {
+          code: HttpStatus.OK,
+          status: true,
+          message: 'Tidak ada data absensi untuk user ini',
+          data: [],
+        };
+      }
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Data absensi berhasil diambil',
+        data: absences,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: 'Terjadi kesalahan saat mengambil data absensi: ' + error.message,
+        data: null,
+      };
+    }
+  }
+
   async findOne(id: string, token: string): Promise<ApiResponse> {
     try {
       const absence = await this.absenceRepository.findOne({

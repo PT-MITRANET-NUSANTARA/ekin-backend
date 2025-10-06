@@ -6,6 +6,6 @@ export class CreateUmpegDto {
   unit_id: string;
 
   @IsArray()
-  @IsString({ each: true })
+  @IsString()
   jabatan: string[];
 }

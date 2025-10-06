@@ -14,7 +14,7 @@ export class Umpeg {
   @Column()
   unit_id: string;
 
-  @Column('simple-array')
+  @Column('json', { nullable: true })
   jabatan: string[];
 
   @CreateDateColumn()

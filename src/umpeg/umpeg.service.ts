@@ -37,9 +37,12 @@ export class UmpegService {
       }
 
       // Buat Umpeg
+      // Pastikan jabatan tidak terpecah karena koma
       const umpeg = this.umpegRepository.create({
         unit_id: createUmpegDto.unit_id,
-        jabatan: createUmpegDto.jabatan,
+        jabatan: Array.isArray(createUmpegDto.jabatan) 
+          ? createUmpegDto.jabatan 
+          : [createUmpegDto.jabatan],
       });
 
       const savedUmpeg = await this.umpegRepository.save(umpeg);
@@ -195,10 +198,24 @@ export class UmpegService {
         }
       }
 
+      console.log("jabatan", updateUmpegDto.jabatan);
+
+      // Pastikan jabatan tidak terpecah karena koma
+      let jabatanToUpdate = updateUmpegDto.jabatan;
+      
+      // Jika jabatan adalah array dengan satu string yang berisi koma
+      if (Array.isArray(jabatanToUpdate) && jabatanToUpdate.length === 1) {
+        // Simpan sebagai array dengan satu elemen, jangan split berdasarkan koma
+        jabatanToUpdate = [jabatanToUpdate[0]];
+      } else if (!Array.isArray(jabatanToUpdate) && jabatanToUpdate) {
+        // Jika bukan array, jadikan array dengan satu elemen
+        jabatanToUpdate = [jabatanToUpdate];
+      }
+
       // Update properti
       await this.umpegRepository.update(id, {
         ...(updateUmpegDto.unit_id && { unit_id: updateUmpegDto.unit_id }),
-        ...(updateUmpegDto.jabatan && { jabatan: updateUmpegDto.jabatan }),
+        ...(updateUmpegDto.jabatan && { jabatan: jabatanToUpdate }),
       });
 
       const updatedUmpeg = await this.umpegRepository.findOne({

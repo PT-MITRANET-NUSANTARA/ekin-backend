@@ -57,6 +57,11 @@ export class HarianController {
     return this.harianService.findAll(filterDto);
   }
 
+  @Get('date/:date')
+  async findByDate(@Param('date') date: string): Promise<ApiResponse> {
+    return this.harianService.findByDate(date);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<ApiResponse> {
     return this.harianService.findOne(id);

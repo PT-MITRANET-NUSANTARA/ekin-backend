@@ -38,6 +38,14 @@ export class AbsenceController {
     return this.absenceService.findAll(filterAbsenceDto, token);
   }
 
+  @Get('user/:user_id')
+  async findByUserId(
+    @Param('user_id') userId: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.absenceService.findByUserId(userId, token);
+  }
+
   @Get(':id')
   async findOne(
     @Param('id') id: string,

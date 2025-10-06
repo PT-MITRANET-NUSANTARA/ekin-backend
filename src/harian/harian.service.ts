@@ -184,6 +184,42 @@ export class HarianService {
     }
   }
 
+  async findByDate(date: string): Promise<ApiResponse> {
+    try {
+      // Konversi string date ke objek Date
+      const dateObj = new Date(date);
+      
+      const harians = await this.harianRepository.find({
+        where: { date: dateObj },
+        relations: ['rencana_aksi'],
+        order: { created_at: 'DESC' }
+      });
+
+      if (harians.length === 0) {
+        return {
+          code: HttpStatus.OK,
+          status: true,
+          message: `Tidak ada data harian untuk tanggal ${date}`,
+          data: [],
+        };
+      }
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: `Data harian untuk tanggal ${date} berhasil ditemukan`,
+        data: harians,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.BAD_REQUEST,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
   async update(
     id: string,
     updateHarianDto: UpdateHarianDto,
