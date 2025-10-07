@@ -50,6 +50,9 @@ export class Harian {
   @Column({ type: 'varchar', length: 255, nullable: true })
   user_id: string;
 
+  @Column({ type: 'varchar', length: 20, default: 'BELUM' })
+  status: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 

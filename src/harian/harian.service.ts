@@ -12,6 +12,8 @@ import { Harian } from './entities/harian.entity';
 import { FilterHarianDto } from './dto/filter-harian.dto';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
 import { RencanaAksi } from '../rencana-aksi/entities/rencana-aksi.entity';
+import { RhkService } from '../rhk/rhk.service';
+import { SkpService } from '../skp/skp.service';
 
 @Injectable()
 export class HarianService {
@@ -20,6 +22,8 @@ export class HarianService {
     private readonly harianRepository: Repository<Harian>,
     @InjectRepository(RencanaAksi)
     private readonly rencanaAksiRepository: Repository<RencanaAksi>,
+    private readonly rhkService: RhkService,
+    private readonly skpService: SkpService,
   ) {}
 
   async create(createHarianDto: CreateHarianDto): Promise<ApiResponse> {
@@ -61,7 +65,7 @@ export class HarianService {
     }
   }
 
-  async findAll(filterDto: FilterHarianDto): Promise<ApiResponse> {
+  async findAll(filterDto: FilterHarianDto, token?: string): Promise<ApiResponse> {
     try {
       const {
         page = 1,
@@ -119,16 +123,59 @@ export class HarianService {
       const total = await queryBuilder.getCount();
 
       // Terapkan paginasi
-      const data = await queryBuilder
+      const harianList = await queryBuilder
         .skip((page - 1) * perPage)
         .take(perPage)
         .getMany();
+
+      // Populate data RHK untuk setiap harian jika token tersedia
+      const harianWithRelationsPromises = harianList.map(async (harian) => {
+        console.log("harian", harian);
+        let rhkData = null;
+        let skpData = null;
+
+        // Populate RHK jika rhk_id ada dan token tersedia
+        if (harian.rhk_id && token) {
+          try {
+            const rhkResponse = await this.rhkService.findOne(harian.rhk_id, token);
+            console.log("rhkResponse", rhkResponse)
+            console.log("harian", harian.rhk_id)
+            if (rhkResponse.status) {
+              rhkData = rhkResponse.data;
+            }
+          } catch (error) {
+            console.error(`Error fetching RHK data for ID ${harian.rhk_id}:`, error.message);
+          }
+        }
+
+        // Populate SKP jika skp_id ada dan token tersedia
+        if (harian.skp_id && token) {
+          try {
+            // Asumsikan ada SkpService yang diinjeksi dan memiliki metode findOne
+            // Jika tidak ada, Anda perlu menginjeksi SkpService di constructor
+            const skpResponse = await this.skpService.findOne(harian.skp_id, token);
+            if (skpResponse.status) {
+              skpData = skpResponse.data;
+            }
+          } catch (error) {
+            console.error(`Error fetching SKP data for ID ${harian.skp_id}:`, error.message);
+          }
+        }
+
+        return {
+          ...harian,
+          rhk: rhkData,
+          skp: skpData,
+        };
+      });
+
+      const harianWithRelations = await Promise.all(harianWithRelationsPromises);
 
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Data harian berhasil diambil',
-        data,
+        data: harianWithRelations,
         pagination: {
           current_page: Number(page),
           per_page: Number(perPage),
@@ -204,11 +251,32 @@ export class HarianService {
         };
       }
 
+      // Mengambil data RHK untuk setiap harian yang memiliki rhk_id
+      const result = await Promise.all(
+        harians.map(async (harian) => {
+          // Jika harian memiliki rhk_id, ambil data RHK
+          if (harian.rhk_id) {
+            try {
+              const rhkResponse = await this.rhkService.findOne(harian.rhk_id, '');
+              if (rhkResponse.status) {
+                return {
+                  ...harian,
+                  rhk: rhkResponse.data
+                };
+              }
+            } catch (error) {
+              console.error(`Error fetching RHK for ID ${harian.rhk_id}: ${error.message}`);
+            }
+          }
+          return harian;
+        })
+      );
+
       return {
         code: HttpStatus.OK,
         status: true,
         message: `Data harian untuk tanggal ${date} berhasil ditemukan`,
-        data: harians,
+        data: result,
       };
     } catch (error) {
       return {

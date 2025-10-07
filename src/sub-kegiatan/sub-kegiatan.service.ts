@@ -63,8 +63,6 @@ export class SubKegiatanService {
         createSubKegiatanDto.indikator_kinerja,
       );
 
-      console.log(indikatorKinerjas);
-
       // Buat sub kegiatan dengan referensi ke indikator kinerja
       const subKegiatan = new SubKegiatan();
       subKegiatan.name = createSubKegiatanDto.name;

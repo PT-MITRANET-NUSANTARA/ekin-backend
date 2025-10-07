@@ -11,6 +11,8 @@ import { UserModule } from '../user/user.module';
 import { UnitKerjaModule } from '../unit-kerja/unit-kerja.module';
 import { UmpegModule } from '../umpeg/umpeg.module';
 import { VerificatorModule } from '../verificator/verificator.module';
+import { AbsenceModule } from '../absence/absence.module';
+import { HarianModule } from '../harian/harian.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { VerificatorModule } from '../verificator/verificator.module';
     forwardRef(() => UnitKerjaModule),
     forwardRef(() => UmpegModule),
     forwardRef(() => VerificatorModule),
+    forwardRef(() => AbsenceModule),
+    forwardRef(() => HarianModule),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwksService, JwtAuthGuard],

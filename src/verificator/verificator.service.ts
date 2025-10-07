@@ -33,9 +33,6 @@ export class VerificatorService {
         token,
       );
 
-      console.log('unit', unitKerja);
-      console.log('unit-id', createVerificatorDto.unit_id);
-
       if (!unitKerja.status) {
         return {
           code: HttpStatus.BAD_REQUEST,

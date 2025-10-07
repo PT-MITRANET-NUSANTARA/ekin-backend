@@ -370,7 +370,6 @@ export class UnitKerjaService {
 
       const rootUnit = response_unor.data.mapData[0];
       const hierarchy = await this.recursiveUserHierachy(rootUnit, String(id), rootUnit.id, token);
-      console.log("hier", hierarchy);
 
       return {
         code: HttpStatus.OK,
@@ -452,8 +451,6 @@ export class UnitKerjaService {
       const userRes = await this.userService.findUsersByUnitId(String(id),token);
       const userData = userRes.data;
       const uniqueNamaJabatan = [...new Set(userData.map(item => item.nama_jabatan))];
-
-      console.log("response", uniqueNamaJabatan);
 
       return {
         code: HttpStatus.OK,

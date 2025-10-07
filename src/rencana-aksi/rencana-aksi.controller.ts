@@ -35,6 +35,11 @@ export class RencanaAksiController {
     return this.rencanaAksiService.findBySkpId(skpId);
   }
 
+  @Get('rhk/:rhkId')
+  findByRhkId(@Param('rhkId') rhkId: string) {
+    return this.rencanaAksiService.findByRhkId(rhkId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.rencanaAksiService.findOne(id);

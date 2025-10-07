@@ -147,7 +147,6 @@ export class UserService {
       const unitKerjaHierachyRes =
         await this.unitKerjaService.findUnorHierarchy(Number(unitId), token);
       const unitKerjaHierachy = unitKerjaHierachyRes.data;
-      console.log(unitKerjaHierachy);
       if (isJpt) {
         const unitKerjaHierachyRes =
           await this.unitKerjaService.findUnorHierarchy(Number(unitId), token);
@@ -246,8 +245,6 @@ export class UserService {
             },
           }),
         );
-
-        console.log('response', response.data);
 
         if (!response.data.success) {
           return {
@@ -403,16 +400,11 @@ export class UserService {
     jabatan: string,
     token: string,
   ): Promise<ApiResponse> {
-    console.log('unitId', unitId);
-    console.log('unorId', unorId);
-    console.log('jabatan', jabatan);
     try {
       const users = await this.findUsersByUnitId(
         unitId,
         token,
       );
-
-      console.log("user", users);
 
       const filteredUser = users.data.find((user) =>
         user.nama_jabatan?.toLowerCase().includes(jabatan.toLowerCase()) &&

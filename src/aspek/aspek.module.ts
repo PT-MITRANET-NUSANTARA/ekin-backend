@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AspekService } from './aspek.service';
 import { AspekController } from './aspek.controller';
@@ -9,8 +9,8 @@ import { IndikatorKinerjaModule } from '../indikator-kinerja/indikator-kinerja.m
 @Module({
   imports: [
     TypeOrmModule.forFeature([Aspek]),
-    AuthModule,
-    IndikatorKinerjaModule,
+    forwardRef(() => AuthModule),
+    IndikatorKinerjaModule
   ],
   controllers: [AspekController],
   providers: [AspekService],

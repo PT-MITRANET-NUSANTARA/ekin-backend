@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PerjanjianKinerjaService } from './perjanjian-kinerja.service';
 import { PerjanjianKinerjaController } from './perjanjian-kinerja.controller';
@@ -10,7 +10,7 @@ import { AuthModule } from '../auth/auth.module';
   imports: [
     TypeOrmModule.forFeature([PerjanjianKinerja]),
     UnitKerjaModule,
-    AuthModule,
+    forwardRef(() => AuthModule),
   ],
   controllers: [PerjanjianKinerjaController],
   providers: [PerjanjianKinerjaService],

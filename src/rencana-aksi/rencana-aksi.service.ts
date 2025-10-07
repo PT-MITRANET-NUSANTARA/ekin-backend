@@ -112,6 +112,17 @@ export class RencanaAksiService {
     };
   }
 
+  async findByRhkId(rhkId: string) {
+    const rencanaAksi = await this.rencanaAksiRepository.find({
+      where: { rhk_id: rhkId },
+    });
+    return {
+      status: true,
+      message: 'Rencana Aksi berhasil ditemukan',
+      data: rencanaAksi,
+    };
+  }
+
   async update(id: string, updateRencanaAksiDto: UpdateRencanaAksiDto) {
     const rencanaAksi = await this.rencanaAksiRepository.findOne({
       where: { id },

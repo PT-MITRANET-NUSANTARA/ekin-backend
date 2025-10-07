@@ -69,6 +69,10 @@ export class UpdateHarianDto extends PartialType(CreateHarianDto) {
   user_id?: string;
 
   @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
   @IsArray()
   @IsUUID('all', { each: true })
   rencana_aksi_ids?: string[];

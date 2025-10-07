@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { SkpService } from './skp.service';
 import { SkpController } from './skp.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,8 +17,8 @@ import { Penilaian } from '../penilaian/entities/penilaian.entity';
   imports: [
     TypeOrmModule.forFeature([Skp, FeedbackPerilaku, FeedbackAspek, Penilaian]),
     UnitKerjaModule,
-    PerilakuModule,
-    AuthModule,
+    forwardRef(() => PerilakuModule),
+    forwardRef(() => AuthModule),
     UserModule,
     RhkModule,
     PerjanjianKinerjaModule,

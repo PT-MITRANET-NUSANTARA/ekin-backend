@@ -10,6 +10,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFiles,
+  Headers,
 } from '@nestjs/common';
 import { HarianService } from './harian.service';
 import { CreateHarianDto } from './dto/create-harian.dto';
@@ -53,13 +54,34 @@ export class HarianController {
   }
 
   @Get()
-  async findAll(@Query() filterDto: FilterHarianDto): Promise<ApiResponse> {
-    return this.harianService.findAll(filterDto);
+  async findAll(
+    @Query() filterDto: FilterHarianDto,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.harianService.findAll(filterDto, token);
   }
 
   @Get('date/:date')
   async findByDate(@Param('date') date: string): Promise<ApiResponse> {
     return this.harianService.findByDate(date);
+  }
+
+  @Get('user/:user_id')
+  async findByUserId(@Param('user_id') user_id: string): Promise<ApiResponse> {
+    const filterDto = new FilterHarianDto();
+    filterDto.user_id = user_id;
+    return this.harianService.findAll(filterDto);
+  }
+
+  @Get('user/:user_id/date/:date')
+  async findByUserIdAndDate(
+    @Param('user_id') user_id: string,
+    @Param('date') date: string,
+  ): Promise<ApiResponse> {
+    const filterDto = new FilterHarianDto();
+    filterDto.user_id = user_id;
+    filterDto.date = new Date(date);
+    return this.harianService.findAll(filterDto);
   }
 
   @Get(':id')

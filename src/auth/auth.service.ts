@@ -18,6 +18,8 @@ import { UserService } from '../user/user.service';
 import { UnitKerjaService } from '../unit-kerja/unit-kerja.service';
 import { UmpegService } from '../umpeg/umpeg.service';
 import { VerificatorService } from '../verificator/verificator.service';
+import { AbsenceService } from '../absence/absence.service';
+import { HarianService } from '../harian/harian.service';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +32,8 @@ export class AuthService {
     private readonly unitKerjaService: UnitKerjaService,
     private readonly umpegService: UmpegService,
     private readonly verificatorService: VerificatorService,
+    private readonly absenceService: AbsenceService,
+    private readonly harianService: HarianService,
   ) {}
 
   async getPhoto(id: string, token: string, res: Response): Promise<void> {
@@ -141,6 +145,79 @@ export class AuthService {
   extractAccessToken(redirectUri: string): string | null {
     const match = redirectUri.match(/access_token=([^&]*)/);
     return match ? match[1] : null;
+  }
+  
+  async getDashboard(user: any, token: string): Promise<ApiResponse> {
+    try {
+      // Mendapatkan data profil user
+      const profileResponse = await this.getProfile(user, token);
+      const profileData = profileResponse.data;
+      
+      // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      
+      // Mendapatkan data absence hari ini
+      let absenceData = null;
+      try {
+        const absenceResponse = await this.absenceService.findAll(
+          { date: new Date(formattedDate), user_id: profileData.nipBaru },
+          token,
+        );
+        if (absenceResponse.status && absenceResponse.data && absenceResponse.data.length > 0) {
+          absenceData = absenceResponse.data[0];
+        }
+      } catch (error) {
+        console.error('Error fetching absence data:', error.message);
+      }
+      
+      // Mendapatkan data harian hari ini
+      let harianData = null;
+      try {
+        const harianResponse = await this.harianService.findByDate(formattedDate);
+        if (harianResponse.status && harianResponse.data && harianResponse.data.length > 0) {
+          harianData = harianResponse.data;
+        }
+      } catch (error) {
+        console.error('Error fetching harian data:', error.message);
+      }
+      
+      // Mendapatkan data settings
+      let settingsData: any = null;
+      try {
+        const settings = await this.settingRepository.find();
+        if (settings && settings.length > 0) {
+          settingsData = {
+            default_harian_time_start: settings[0].default_harian_time_start,
+            default_harian_time_end: settings[0].default_harian_time_end,
+            default_break_time_start: settings[0].default_break_time_start,
+            default_break_time_end: settings[0].default_break_time_end,
+            default_total_minuetes: settings[0].default_total_minuetes
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching settings data:', error.message);
+      }
+      
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Dashboard data berhasil diambil',
+        data: {
+          profile: profileData,
+          absence: absenceData,
+          harian: harianData,
+          settings: settingsData,
+        },
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Failed to get dashboard data: ${error.message}`,
+        data: null,
+      };
+    }
   }
 
   async getProfile(user: any, token: string): Promise<ApiResponse> {

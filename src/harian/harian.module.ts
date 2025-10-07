@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HarianService } from './harian.service';
 import { HarianController } from './harian.controller';
@@ -8,11 +8,15 @@ import { AuthModule } from '../auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { existsSync, mkdirSync } from 'fs';
+import { RhkModule } from '../rhk/rhk.module';
+import { SkpModule } from '../skp/skp.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Harian, RencanaAksi]),
-    AuthModule,
+    forwardRef(() => AuthModule),
+    RhkModule,
+    SkpModule,
     MulterModule.register({
       storage: diskStorage({
         destination: (req, file, cb) => {

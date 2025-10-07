@@ -44,6 +44,16 @@ export class AuthController {
   ): Promise<ApiResponse> {
     return this.authService.getProfile(user, token);
   }
+  
+  // Dashboard endpoint - returns user profile, absence, and harian data
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard')
+  getDashboard(
+    @CurrentUser() user: any,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.authService.getDashboard(user, token);
+  }
 
   // Protected endpoint - verify token
   @UseGuards(JwtAuthGuard)
