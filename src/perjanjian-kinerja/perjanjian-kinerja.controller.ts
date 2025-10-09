@@ -71,6 +71,14 @@ export class PerjanjianKinerjaController {
     );
   }
 
+  @Get('skp/:skp_id/template')
+  getTemplate(
+    @Param('skp_id') skp_id: string,
+    @Headers('authorization') token: string,
+  ): Promise<ApiResponse> {
+    return this.perjanjianKinerjaService.getTemplate(skp_id, token);
+  }
+
   @Get(':id')
   findOne(
     @Param('id') id: string,

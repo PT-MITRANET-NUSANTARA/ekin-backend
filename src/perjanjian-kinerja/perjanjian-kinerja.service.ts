@@ -6,7 +6,7 @@ import {
   StreamableFile,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { CreatePerjanjianKinerjaDto } from './dto/create-perjanjian-kinerja.dto';
 import { UpdatePerjanjianKinerjaDto } from './dto/update-perjanjian-kinerja.dto';
 import { PerjanjianKinerja } from './entities/perjanjian-kinerja.entity';
@@ -424,6 +424,178 @@ export class PerjanjianKinerjaService {
         status: true,
         message: 'Daftar Perjanjian Kinerja berhasil diambil',
         data: perjanjianKinerjaWithUnit,
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: `Terjadi kesalahan: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
+  async getTemplate(skpId: string, token: string): Promise<ApiResponse> {
+    try {
+      // Inject dependencies
+      const dataSource = this.perjanjianKinerjaRepository.manager.connection;
+      const rhkRepository = dataSource.getRepository('rhk');
+      const rktRepository = dataSource.getRepository('rkt');
+      const subKegiatanRepository = dataSource.getRepository('sub_kegiatan');
+      const kegiatanRepository = dataSource.getRepository('kegiatan');
+      const programRepository = dataSource.getRepository('program');
+      const tujuanRepository = dataSource.getRepository('tujuan');
+      const skpRepository = dataSource.getRepository('skp');
+
+      // Ambil data SKP berdasarkan ID
+      const skp = await skpRepository.findOne({
+        where: { id: skpId },
+      });
+
+      if (!skp) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message: 'SKP tidak ditemukan',
+          data: null,
+        };
+      }
+
+      const atasan_skp = await skpRepository.findOne({
+        where: {id: skp.atasan_skp_id[skp.atasan_skp_id.length - 1]}
+      })
+
+      // 1. Ambil semua RHK dari SKP ID
+      const rhks = await rhkRepository.find({
+        where: { skp_id: skpId },
+        relations: ['rkts_id'],
+      });
+
+      // Inisialisasi array untuk menyimpan ID RKT yang unik
+      let uniqueRktIds = new Set<string>();
+
+      // Fungsi rekursif untuk mencari RHK atasan sampai menemukan yang rhk_atasan_id null
+      const findRootRhk = async (rhkId: string): Promise<any> => {
+        const rhk = await rhkRepository.findOne({
+          where: { id: rhkId },
+          relations: ['rkts_id'],
+        });
+
+        if (!rhk) return null;
+        console.log("rhk", rhk);
+
+        // Jika rhk_atasan_id null, ini adalah RHK root yang kita cari
+        if (rhk.rhk_atasan_id === null) {
+          return rhk;
+        }
+
+        // Jika tidak, lanjutkan pencarian ke atas
+        return await findRootRhk(rhk.rhk_atasan_id);
+      };
+
+      // 2. Proses setiap RHK
+      for (const rhk of rhks) {
+        if (rhk.rhk_atasan_id === null) {
+          // Jika rhk_atasan_id null, ambil langsung rkts_id
+          if (rhk.rkts_id && Array.isArray(rhk.rkts_id)) {
+            rhk.rkts_id.forEach(rkt => uniqueRktIds.add(rkt.id));
+          }
+        } else {
+          // Jika rhk_atasan_id tidak null, cari RHK root secara rekursif
+          const rootRhk = await findRootRhk(rhk.rhk_atasan_id);
+          
+          if (rootRhk && rootRhk.rkts_id && Array.isArray(rootRhk.rkts_id)) {
+            // Jika menemukan RHK root, ambil rkts_id dari sana
+            rootRhk.rkts_id.forEach(rkt => uniqueRktIds.add(rkt.id));
+          } else if (rhk.rkts_id && Array.isArray(rhk.rkts_id)) {
+            // Jika tidak menemukan RHK root, gunakan rkts_id dari RHK saat ini
+            rhk.rkts_id.forEach(rkt => uniqueRktIds.add(rkt.id));
+          }
+        }
+      }
+
+      console.log("rhk", rhks);
+      console.log("unique-rkt", uniqueRktIds);
+
+      // 3. Ambil semua RKT berdasarkan ID yang unik
+      const rktIds = Array.from(uniqueRktIds);
+      const rkts = await rktRepository.find({
+        where: { id: In(rktIds) },
+        relations: ['sub_kegiatan_id'],
+      });
+
+      // 4. Ambil semua sub_kegiatan_id dari RKT
+      let uniqueSubKegiatanIds = new Set<string>();
+      rkts.forEach(rkt => {
+        if (rkt.sub_kegiatan_id && Array.isArray(rkt.sub_kegiatan_id)) {
+          rkt.sub_kegiatan_id.forEach(subKegiatan => {
+            uniqueSubKegiatanIds.add(subKegiatan.id);
+          });
+        }
+      });
+
+      // 5. Ambil semua SubKegiatan berdasarkan ID yang unik
+      const subKegiatanIds = Array.from(uniqueSubKegiatanIds);
+      const subKegiatans = await subKegiatanRepository.find({
+        where: { id: In(subKegiatanIds) },
+        relations: ['kegiatan_id'],
+      });
+
+      // 6. Ambil semua kegiatan_id dari SubKegiatan
+      let uniqueKegiatanIds = new Set<string>();
+      subKegiatans.forEach(subKegiatan => {
+        if (subKegiatan.kegiatan_id) {
+          uniqueKegiatanIds.add(subKegiatan.kegiatan_id.id);
+        }
+      });
+
+      // 7. Ambil semua Kegiatan berdasarkan ID yang unik
+      const kegiatanIds = Array.from(uniqueKegiatanIds);
+      const kegiatans = await kegiatanRepository.find({
+        where: { id: In(kegiatanIds) },
+        relations: ['program_id'],
+      });
+
+      // 8. Ambil semua program_id dari Kegiatan
+      let uniqueProgramIds = new Set<string>();
+      kegiatans.forEach(kegiatan => {
+        if (kegiatan.program_id) {
+          uniqueProgramIds.add(kegiatan.program_id.id);
+        }
+      });
+
+      // 9. Ambil semua Program berdasarkan ID yang unik
+      const programIds = Array.from(uniqueProgramIds);
+      const programs = await programRepository.find({
+        where: { id: In(programIds) },
+        relations: ['tujuan_id', 'indikator_kinerja_id'],
+      });
+
+      // 10. Ambil semua tujuan_id dari Program
+      let uniqueTujuanIds = new Set<string>();
+      programs.forEach(program => {
+        if (program.tujuan_id) {
+          uniqueTujuanIds.add(program.tujuan_id.id);
+        }
+      });
+
+      // 11. Ambil semua Tujuan berdasarkan ID yang unik
+      const tujuanIds = Array.from(uniqueTujuanIds);
+      const tujuans = await tujuanRepository.find({
+        where: { id: In(tujuanIds) },
+        relations: ['renstra', 'indikator_kinerja_id'],
+      });
+
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Template perjanjian kinerja berhasil diambil',
+        data: {
+          skp,
+          atasan_skp,
+          programs,
+          tujuans,
+        },
       };
     } catch (error) {
       return {
