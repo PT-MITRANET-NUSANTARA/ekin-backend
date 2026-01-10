@@ -1,0 +1,16 @@
+# Prevent large/secret files from being copied into Docker build context
+node_modules
+dist
+.git
+.gitignore
+coverage
+test
+docs
+*.log
+npm-debug.log*
+.env*
+*.pem
+*.key
+*.crt
+Dockerfile
+docker-compose*.yml
