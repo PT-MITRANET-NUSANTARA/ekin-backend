@@ -34,7 +34,6 @@ COPY package*.json ./
 
 # Expose HTTP app and microservice ports
 EXPOSE 3000
-EXPOSE 3001
 
 # Start the NestJS app
 CMD ["node", "dist/main.js"]
