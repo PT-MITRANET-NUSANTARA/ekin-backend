@@ -315,6 +315,13 @@ export class RktService {
         updateRktDto.input_indikator_kinerja &&
         updateRktDto.input_indikator_kinerja.length > 0
       ) {
+        if (rkt.input_indikator_kinerja && rkt.input_indikator_kinerja.length) {
+          await Promise.all(
+            rkt.input_indikator_kinerja.map(async (ik) => {
+              await this.indikatorKinerjaService.remove(ik.id);
+            }),
+          );
+        }
         const inputIndikatorKinerjas =
           await this.indikatorKinerjaService.createMany(
             updateRktDto.input_indikator_kinerja,
@@ -326,6 +333,16 @@ export class RktService {
         updateRktDto.output_indikator_kinerja &&
         updateRktDto.output_indikator_kinerja.length > 0
       ) {
+        if (
+          rkt.output_indikator_kinerja &&
+          rkt.output_indikator_kinerja.length
+        ) {
+          await Promise.all(
+            rkt.output_indikator_kinerja.map(async (ik) => {
+              await this.indikatorKinerjaService.remove(ik.id);
+            }),
+          );
+        }
         const outputIndikatorKinerjas =
           await this.indikatorKinerjaService.createMany(
             updateRktDto.output_indikator_kinerja,
@@ -337,6 +354,16 @@ export class RktService {
         updateRktDto.outcome_indikator_kinerja &&
         updateRktDto.outcome_indikator_kinerja.length > 0
       ) {
+        if (
+          rkt.outcome_indikator_kinerja &&
+          rkt.outcome_indikator_kinerja.length
+        ) {
+          await Promise.all(
+            rkt.outcome_indikator_kinerja.map(async (ik) => {
+              await this.indikatorKinerjaService.remove(ik.id);
+            }),
+          );
+        }
         const outcomeIndikatorKinerjas =
           await this.indikatorKinerjaService.createMany(
             updateRktDto.outcome_indikator_kinerja,
@@ -344,30 +371,20 @@ export class RktService {
         rkt.outcome_indikator_kinerja = outcomeIndikatorKinerjas;
       }
 
-      // Update properti lainnya
-      await this.rktRepository.update(id, {
-        name: updateRktDto.name,
-        unit_id: updateRktDto.unit_id,
-        label: updateRktDto.label,
-        total_anggaran: updateRktDto.total_anggaran,
-        renstra_id: updateRktDto.renstra_id,
-      });
+      if (updateRktDto.name) rkt.name = updateRktDto.name;
+      if (updateRktDto.unit_id) rkt.unit_id = updateRktDto.unit_id;
+      if (updateRktDto.label) rkt.label = updateRktDto.label;
+      if (updateRktDto.total_anggaran)
+        rkt.total_anggaran = updateRktDto.total_anggaran;
+      if (updateRktDto.renstra_id) rkt.renstra_id = updateRktDto.renstra_id;
 
-      const updatedRkt = await this.rktRepository.findOne({
-        where: { id },
-        relations: [
-          'sub_kegiatan_id',
-          'input_indikator_kinerja',
-          'output_indikator_kinerja',
-          'outcome_indikator_kinerja',
-        ],
-      });
+      const savedRkt = await this.rktRepository.save(rkt);
 
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'RKT berhasil diperbarui',
-        data: updatedRkt,
+        data: savedRkt,
       };
     } catch (error) {
       return {
