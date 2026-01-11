@@ -217,10 +217,18 @@ export class SubKegiatanService {
     token: string,
   ): Promise<ApiResponse> {
     try {
-      const subKegiatan = await this.findOne(id, token);
+      const entity = await this.subKegiatanRepository.findOne({
+        where: { id },
+        relations: ['indikator_kinerja_id'],
+      });
 
-      if (!subKegiatan.status) {
-        return subKegiatan;
+      if (!entity) {
+        return {
+          code: HttpStatus.NOT_FOUND,
+          status: false,
+          message: `Sub Kegiatan dengan ID ${id} tidak ditemukan`,
+          data: null,
+        };
       }
 
       // Verifikasi unit_id jika ada
@@ -256,30 +264,41 @@ export class SubKegiatanService {
         }
       }
 
-      await this.subKegiatanRepository.update(id, {
-        name: updateSubKegiatanDto.name,
-        unit_id: updateSubKegiatanDto.unit_id,
-        total_anggaran: updateSubKegiatanDto.total_anggaran,
-        kegiatan_id: updateSubKegiatanDto.kegiatan_id
-          ? { id: updateSubKegiatanDto.kegiatan_id }
-          : undefined,
-      });
+      if (updateSubKegiatanDto.name) entity.name = updateSubKegiatanDto.name;
+      if (updateSubKegiatanDto.unit_id)
+        entity.unit_id = updateSubKegiatanDto.unit_id;
+      if (updateSubKegiatanDto.total_anggaran)
+        entity.total_anggaran = updateSubKegiatanDto.total_anggaran;
+      if (updateSubKegiatanDto.kegiatan_id)
+        entity.kegiatan_id = { id: updateSubKegiatanDto.kegiatan_id } as Kegiatan;
 
       // Update indikator kinerja jika ada
       if (
         updateSubKegiatanDto.indikator_kinerja &&
         updateSubKegiatanDto.indikator_kinerja.length > 0
       ) {
-        // Implementasi update indikator kinerja
+        if (entity.indikator_kinerja_id && entity.indikator_kinerja_id.length) {
+          await Promise.all(
+            entity.indikator_kinerja_id.map(async (ik) => {
+              await this.indikatorKinerjaService.remove(ik.id);
+            }),
+          );
+        }
+
+        const indikatorKinerjas = await this.indikatorKinerjaService.createMany(
+          updateSubKegiatanDto.indikator_kinerja,
+        );
+
+        entity.indikator_kinerja_id = indikatorKinerjas;
       }
 
-      const updatedSubKegiatan = await this.findOne(id, token);
+      const saved = await this.subKegiatanRepository.save(entity);
 
       return {
         code: HttpStatus.OK,
         status: true,
         message: 'Sub Kegiatan berhasil diperbarui',
-        data: updatedSubKegiatan.data,
+        data: saved,
       };
     } catch (error) {
       return {
