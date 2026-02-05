@@ -35,6 +35,7 @@ import { PenilaianModule } from './penilaian/penilaian.module';
 import { AbsenceModule } from './absence/absence.module';
 import { HarianModule } from './harian/harian.module';
 import { LogsModule } from './logs/logs.module';
+import { CalenderModule } from './calender/calender.module';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { LogsModule } from './logs/logs.module';
     AbsenceModule,
     HarianModule,
     LogsModule,
+    CalenderModule,
   ],
   controllers: [AppController],
   providers: [

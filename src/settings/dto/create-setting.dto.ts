@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsNumber,
   IsDate,
+  IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -36,4 +37,8 @@ export class CreateSettingDto {
   @IsOptional()
   @IsString()
   bupati_id: string;
+
+  @IsOptional()
+  @IsArray()
+  default_work_days?: string[];
 }

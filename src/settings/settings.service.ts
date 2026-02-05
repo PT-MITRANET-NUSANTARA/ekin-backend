@@ -69,6 +69,7 @@ export class SettingsService {
         default_break_time_end: new Date(new Date().setHours(12, 0, 0, 0)),
         default_total_minuetes: 480, // 8 jam = 480 menit
         bupati_id: '197904012005011015',
+        default_work_days: ['MON', 'TUE', 'WED', 'THU', 'FRI'],
       });
 
       const savedSetting = await this.settingRepository.save(defaultSetting);
