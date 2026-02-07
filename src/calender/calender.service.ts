@@ -123,6 +123,46 @@ export class CalenderService {
     }
   }
 
+  async findByUnit(
+    unitId: string,
+    filterDto: FilterCalenderDto,
+  ): Promise<ApiResponse> {
+    try {
+      const { search, page = 1, perPage = 10 } = filterDto;
+      const where = search
+        ? [{ unit_id: unitId, holiday_name: Like(`%${search}%`) }]
+        : { unit_id: unitId };
+      const skip = (page - 1) * perPage;
+      const total = await this.calenderRepository.count({ where });
+      const lastPage = Math.ceil(total / perPage);
+      const data = await this.calenderRepository.find({
+        where,
+        skip,
+        take: perPage,
+        order: { date: 'ASC' },
+      });
+      return {
+        code: HttpStatus.OK,
+        status: true,
+        message: 'Daftar calender berdasarkan unit_id berhasil diambil',
+        data,
+        pagination: {
+          current_page: page,
+          per_page: perPage,
+          total,
+          last_page: lastPage,
+        },
+      };
+    } catch (error) {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: false,
+        message: 'Gagal mengambil calender berdasarkan unit_id',
+        data: null,
+      };
+    }
+  }
+
   async update(
     id: string,
     updateCalenderDto: UpdateCalenderDto,

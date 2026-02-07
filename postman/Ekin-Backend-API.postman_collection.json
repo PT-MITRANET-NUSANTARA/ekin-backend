@@ -377,6 +377,36 @@
             "description": "Menghapus calender berdasarkan ID"
           },
           "response": []
+        },
+        {
+          "name": "Get Calender by Unit ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/calender/unit/{{unit_id}}?page={{page}}&perPage={{per_page}}",
+              "host": ["{{base_url}}"],
+              "path": ["calender", "unit", "{{unit_id}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "perPage",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Mendapatkan daftar calender berdasarkan unit_id dengan paginasi"
+          },
+          "response": []
         }
       ],
       "description": "Endpoint untuk manajemen Calender (unit_id + date unik)"

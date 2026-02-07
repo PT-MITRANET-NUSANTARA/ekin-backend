@@ -35,6 +35,14 @@ export class CalenderController {
     return this.calenderService.findAll(filterDto);
   }
 
+  @Get('unit/:unitId')
+  findByUnit(
+    @Param('unitId') unitId: string,
+    @Query() filterDto: FilterCalenderDto,
+  ): Promise<ApiResponse> {
+    return this.calenderService.findByUnit(unitId, filterDto);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<ApiResponse> {
     return this.calenderService.findOne(id);
